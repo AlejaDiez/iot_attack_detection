@@ -1,0 +1,15 @@
+<svg
+    class="connection"
+    [style]="{
+        left: 'calc(50% + ' + (origin.x + destination.x) / 2 + 'px)',
+        top: 'calc(50% - ' + (origin.y + destination.y) / 2 + 'px)',
+        width: w + 'px',
+        height: h + 'px',
+    }">
+    <line
+        class="line"
+        [attr.x1]="origin.x - tx"
+        [attr.y1]="ty - origin.y"
+        [attr.x2]="destination.x - tx"
+        [attr.y2]="ty - destination.y" />
+</svg>

@@ -1,0 +1,37 @@
+.connection {
+    position: absolute;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transform-origin: center;
+}
+
+.line {
+    stroke-width: 1.5px;
+    stroke: var(--border);
+    stroke-linecap: round;
+}
+
+.connection.active .line {
+    stroke-width: 3px;
+    stroke: var(--primary);
+    stroke-dasharray: 10;
+    animation-name: dash;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: normal; /* origin -> destination */
+}
+
+.connection.active.reverse .line {
+    animation-direction: reverse; /* origin <- destination */
+}
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 100%;
+    }
+
+    to {
+        stroke-dashoffset: 0%;
+    }
+}

@@ -1,1 +1,11 @@
-<h1>IoT Simulator</h1>
+<app-canvas>
+    <app-node #nodeR ip="192.168.0.1" name="Router" type="router"></app-node>
+    <app-node #nodeA ip="192.168.0.31" name="RPi4" type="iot"></app-node>
+    <app-node
+        #nodeB
+        ip="192.168.0.24"
+        name="Ordenador"
+        type="computer"></app-node>
+    <app-connection [origin]="nodeR" [destination]="nodeA"></app-connection>
+    <app-connection [origin]="nodeR" [destination]="nodeB"></app-connection>
+</app-canvas>

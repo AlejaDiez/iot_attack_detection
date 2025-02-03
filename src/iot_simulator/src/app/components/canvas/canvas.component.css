@@ -1,0 +1,25 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+    background-color: var(--background);
+    cursor: default;
+}
+
+.canvas {
+    position: relative;
+    width: 4000px;
+    height: 4000px;
+}
+
+.canvas.grid {
+    background-image: radial-gradient(
+        circle,
+        var(--border) 1.5px,
+        transparent 1.5px
+    );
+    background-size: 20px 20px;
+}
