@@ -1,5 +1,4 @@
 <div
-    #id
     class="node"
     [ngClass]="{
         'moving': moving,
@@ -7,8 +6,8 @@
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
-    }"
-    [ngSwitch]="node.type">
+    }">
+    @switch (node.type) { @case ("router") {
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -18,8 +17,7 @@
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
-        stroke-linejoin="round"
-        *ngSwitchCase="'router'">
+        stroke-linejoin="round">
         <rect width="20" height="8" x="2" y="14" rx="2" />
         <path d="M6.01 18H6" />
         <path d="M10.01 18H10" />
@@ -27,6 +25,7 @@
         <path d="M17.84 7.17a4 4 0 0 0-5.66 0" />
         <path d="M20.66 4.34a8 8 0 0 0-11.31 0" />
     </svg>
+    } @case ("computer") {
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -36,8 +35,21 @@
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
-        stroke-linejoin="round"
-        *ngSwitchCase="'iot'">
+        stroke-linejoin="round">
+        <path
+            d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
+    </svg>
+    } @case ("iot") {
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
         <rect width="16" height="16" x="4" y="4" rx="2" />
         <rect width="6" height="6" x="9" y="9" rx="1" />
         <path d="M15 2v2" />
@@ -49,20 +61,7 @@
         <path d="M9 2v2" />
         <path d="M9 20v2" />
     </svg>
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        *ngSwitchCase="'computer'">
-        <path
-            d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
-    </svg>
+    } }
 </div>
 <div
     class="node-info"

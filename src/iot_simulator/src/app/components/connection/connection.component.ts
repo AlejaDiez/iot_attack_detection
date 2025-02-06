@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Connection } from "../../models/connection";
+import { Position } from "../../models/position";
 
 @Component({
     selector: "app-connection",
@@ -9,38 +10,28 @@ import { Connection } from "../../models/connection";
 })
 export class ConnectionComponent {
     @Input()
-    connection!: Connection;
+    public connection!: Connection;
 
-    get w(): number {
-        return (
-            Math.abs(
-                this.connection.destination.position.x -
-                    this.connection.origin.position.x
-            ) + 60
-        );
+    public get origin(): Position {
+        return this.connection.origin.position;
     }
-    get h(): number {
-        return (
-            Math.abs(
-                this.connection.destination.position.y -
-                    this.connection.origin.position.y
-            ) + 60
-        );
+
+    public get destination(): Position {
+        return this.connection.destination.position;
     }
-    get tx(): number {
-        return (
-            (this.connection.origin.position.x +
-                this.connection.destination.position.x) /
-                2 -
-            this.w / 2
-        );
+
+    public get w(): number {
+        return Math.abs(this.destination.x - this.origin.x) + 60;
     }
-    get ty(): number {
-        return (
-            (this.connection.origin.position.y +
-                this.connection.destination.position.y) /
-                2 +
-            this.h / 2
-        );
+
+    public get h(): number {
+        return Math.abs(this.destination.y - this.origin.y) + 60;
+    }
+
+    public get t(): Position {
+        return {
+            x: (this.origin.x + this.destination.x) / 2 - this.w / 2,
+            y: (this.origin.y + this.destination.y) / 2 + this.h / 2,
+        };
     }
 }
