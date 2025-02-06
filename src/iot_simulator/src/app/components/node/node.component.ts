@@ -7,6 +7,7 @@ import {
     OnDestroy,
     ViewChild,
 } from "@angular/core";
+import { Device } from "../../models/device";
 
 @Component({
     selector: "app-node",
@@ -15,16 +16,10 @@ import {
     styleUrl: "node.component.css",
 })
 export class NodeComponent implements AfterViewInit, OnDestroy {
-    @ViewChild("node")
-    node!: ElementRef<HTMLDivElement>;
+    @ViewChild("id")
+    id!: ElementRef<HTMLDivElement>;
     @Input()
-    name: string = "";
-    @Input()
-    ip: string = "";
-    @Input()
-    type: string = "router";
-    x: number = Math.random() * (300 - -300) + -300;
-    y: number = Math.random() * (300 - -300) + -300;
+    node!: Device;
     moving: boolean = false;
 
     private mouseDown(event: MouseEvent): void {
@@ -35,21 +30,25 @@ export class NodeComponent implements AfterViewInit, OnDestroy {
 
     private mouseMove(event: MouseEvent): void {
         if (this.moving) {
-            this.x += event.movementX;
-            this.y -= event.movementY;
+            this.node.move({
+                x: this.node.position.x + event.movementX,
+                y: this.node.position.y - event.movementY,
+            });
         }
     }
 
     private mouseUp(event: MouseEvent): void {
         if (this.moving) {
             this.moving = false;
-            this.x = Math.round(this.x / 20) * 20;
-            this.y = Math.round(this.y / 20) * 20;
+            this.node.move({
+                x: Math.round(this.node.position.x / 20) * 20,
+                y: Math.round(this.node.position.y / 20) * 20,
+            });
         }
     }
 
     ngAfterViewInit(): void {
-        this.node.nativeElement.addEventListener(
+        this.id.nativeElement.addEventListener(
             "mousedown",
             this.mouseDown.bind(this)
         );
@@ -58,7 +57,7 @@ export class NodeComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.node.nativeElement.removeEventListener(
+        this.id.nativeElement.removeEventListener(
             "mousedown",
             this.mouseDown.bind(this)
         );

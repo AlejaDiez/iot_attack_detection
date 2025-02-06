@@ -1,11 +1,7 @@
 <app-canvas>
-    <app-node #nodeR ip="192.168.0.1" name="Router" type="router"></app-node>
-    <app-node #nodeA ip="192.168.0.31" name="RPi4" type="iot"></app-node>
-    <app-node
-        #nodeB
-        ip="192.168.0.24"
-        name="Ordenador"
-        type="computer"></app-node>
-    <app-connection [origin]="nodeR" [destination]="nodeA"></app-connection>
-    <app-connection [origin]="nodeR" [destination]="nodeB"></app-connection>
+    @for (node of nodes; track node) {
+    <app-node [node]="node"></app-node>
+    } @for (connection of nodes[0].connections; track connection) {
+    <app-connection [connection]="connection"></app-connection>
+    }
 </app-canvas>
