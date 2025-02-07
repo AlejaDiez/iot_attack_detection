@@ -7,13 +7,13 @@
 
 .line {
     stroke-width: 1.5px;
-    stroke: var(--border);
+    stroke: hsl(var(--border));
     stroke-linecap: round;
 }
 
 .connection.active .line {
     stroke-width: 3px;
-    stroke: var(--primary);
+    stroke: hsl(var(--primary));
     stroke-dasharray: 10;
     animation-name: dash;
     animation-duration: 5s;

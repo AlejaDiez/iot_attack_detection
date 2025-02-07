@@ -6,10 +6,10 @@
     align-items: center;
     width: 60px;
     height: 60px;
-    border: 1.5px solid var(--border);
+    border: 1.5px solid hsl(var(--border));
     border-radius: var(--radius);
-    background-color: var(--card);
-    color: var(--card-foreground);
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
     box-shadow: var(--shadow);
     transform: translate(-50%, -50%);
     transform-origin: center;
@@ -27,14 +27,14 @@
 
 .node.selected {
     z-index: 50;
-    border: 0px solid var(--primary);
-    background-color: var(--primary);
-    color: var(--primary-foreground);
+    border: 0px solid hsl(var(--primary));
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 }
 
 .node.active {
     z-index: 30;
-    border: 3px solid var(--primary);
+    border: 3px solid hsl(var(--primary));
 }
 
 .node-info {
@@ -51,6 +51,7 @@
     transform-origin: center;
     transition: opacity 100ms, top 100ms, left 100ms;
     cursor: default;
+    pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -69,6 +70,6 @@
 }
 
 .node-info .ip {
-    color: var(--muted-foreground);
+    color: hsl(var(--muted-foreground));
     opacity: 0.6;
 }

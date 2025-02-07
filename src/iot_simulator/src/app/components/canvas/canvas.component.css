@@ -5,7 +5,7 @@
     width: 100vw;
     height: 100vh;
     overflow: scroll;
-    background-color: var(--background);
+    background-color: hsl(var(--background));
     cursor: default;
 }
 
@@ -18,7 +18,7 @@
 .canvas.grid {
     background-image: radial-gradient(
         circle,
-        var(--border) 1.5px,
+        hsl(var(--border)) 1.5px,
         transparent 1.5px
     );
     background-size: 20px 20px;

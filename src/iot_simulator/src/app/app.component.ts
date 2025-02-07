@@ -5,15 +5,25 @@ import { ConnectionComponent } from "./components/connection/connection.componen
 import { Device, DeviceType } from "./models/device";
 import { Router } from "./models/router";
 import { CommonModule } from "@angular/common";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
     selector: "app-root",
     templateUrl: "app.component.html",
     imports: [
         CommonModule,
+        RouterOutlet,
         CanvasComponent,
         NodeComponent,
         ConnectionComponent,
+    ],
+    styles: [
+        `
+            .router {
+                position: relative;
+                z-index: 1;
+            }
+        `,
     ],
 })
 export class AppComponent {
