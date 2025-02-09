@@ -1,14 +1,3 @@
-.container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: scroll;
-    background-color: hsl(var(--background));
-    cursor: default;
-}
-
 .canvas {
     position: relative;
     width: 4000px;

@@ -1,77 +1,26 @@
 <div
+    hlmCard
     class="node"
-    [ngClass]="{
-        'moving': moving,
-    }"
+    [ngClass]="{ moving, active, selected}"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
     }">
-    @switch (node.type) { @case ("router") {
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round">
-        <rect width="20" height="8" x="2" y="14" rx="2" />
-        <path d="M6.01 18H6" />
-        <path d="M10.01 18H10" />
-        <path d="M15 10v4" />
-        <path d="M17.84 7.17a4 4 0 0 0-5.66 0" />
-        <path d="M20.66 4.34a8 8 0 0 0-11.31 0" />
-    </svg>
-    } @case ("computer") {
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round">
-        <path
-            d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
-    </svg>
-    } @case ("iot") {
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round">
-        <rect width="16" height="16" x="4" y="4" rx="2" />
-        <rect width="6" height="6" x="9" y="9" rx="1" />
-        <path d="M15 2v2" />
-        <path d="M15 20v2" />
-        <path d="M2 15h2" />
-        <path d="M2 9h2" />
-        <path d="M20 15h2" />
-        <path d="M20 9h2" />
-        <path d="M9 2v2" />
-        <path d="M9 20v2" />
-    </svg>
+    @switch (node.type) { @case("router") {
+    <ng-icon name="lucideRouter" size="24"></ng-icon>
+    } @case("iot") {
+    <ng-icon name="lucideCpu" size="24"></ng-icon>
+    } @case("computer") {
+    <ng-icon name="lucideLaptop" size="24"></ng-icon>
     } }
 </div>
 <div
     class="node-info"
-    [ngClass]="{
-    'moving': moving,
-}"
+    [ngClass]="{ moving, active, selected}"
     [ngStyle]="{
-    left: 'calc(50% + 30px + ' + node.position.x + 'px)',
-    top: 'calc(50% - ' + node.position.y + 'px)',
-}">
-    <span class="text-lg name">{{ node.name }}</span>
-    <span class="text-sm ip">{{ node.ip }}</span>
+        left: 'calc(50% + ' + node.position.x + 'px)',
+        top: 'calc(50% - ' + node.position.y + 'px)',
+    }">
+    <span class="text-lg font-bold">{{ node.name }}</span>
+    <span class="text-sm text-muted-foreground opacity-60">{{ node.ip }}</span>
 </div>

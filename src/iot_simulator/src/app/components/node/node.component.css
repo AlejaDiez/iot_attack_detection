@@ -1,3 +1,7 @@
+:host {
+    display: contents;
+}
+
 .node {
     position: absolute;
     z-index: 20;
@@ -6,35 +10,31 @@
     align-items: center;
     width: 60px;
     height: 60px;
-    border: 1.5px solid hsl(var(--border));
-    border-radius: var(--radius);
-    background-color: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    box-shadow: var(--shadow);
+    @apply rounded-xl;
     transform: translate(-50%, -50%);
     transform-origin: center;
-    transition: transform 100ms, top 100ms, left 100ms, border 100ms,
-        background-color 100ms, color 100ms;
+    transition: top 100ms, left 100ms, border 100ms, color 100ms,
+        background-color 100ms, transform 100ms;
     cursor: pointer;
 }
 
 .node.moving {
-    z-index: 40;
+    z-index: 30;
     cursor: grabbing;
     transform: translate(-50%, -50%) scale(1.2);
     transition: transform 100ms;
 }
 
 .node.selected {
-    z-index: 50;
-    border: 0px solid hsl(var(--primary));
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    z-index: 30;
+    @apply border-0 border-primary;
+    @apply text-primary-foreground;
+    @apply bg-primary;
 }
 
 .node.active {
     z-index: 30;
-    border: 3px solid hsl(var(--primary));
+    @apply border-2 border-primary;
 }
 
 .node-info {
@@ -46,30 +46,16 @@
     justify-content: center;
     width: auto;
     height: 60px;
-    margin-left: 12px;
+    margin-left: calc(30px + 12px);
     transform: translate(0, -50%);
     transform-origin: center;
-    transition: opacity 100ms, top 100ms, left 100ms;
-    cursor: default;
+    transition: top 100ms, left 100ms, opacity 100ms;
     pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
+    @apply select-none;
 }
 
 .node-info.moving,
 .node-info.selected {
     opacity: 0;
     transition: opacity 100ms;
-}
-
-.node-info .name {
-    font-weight: 600;
-}
-
-.node-info .ip {
-    color: hsl(var(--muted-foreground));
-    opacity: 0.6;
 }

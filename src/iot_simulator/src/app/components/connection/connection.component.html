@@ -1,5 +1,5 @@
 <svg
-    class="connection"
+    class="absolute z-0 -translate-x-1/2 -translate-y-1/2 origin-center"
     [style]="{
         left: 'calc(50% + ' + (origin.x + destination.x) / 2 + 'px)',
         top: 'calc(50% - ' + (origin.y + destination.y) / 2 + 'px)',
@@ -7,9 +7,10 @@
         height: h + 'px',
     }">
     <line
-        class="line"
         [attr.x1]="origin.x - t.x"
         [attr.y1]="t.y - origin.y"
         [attr.x2]="destination.x - t.x"
-        [attr.y2]="t.y - destination.y" />
+        [attr.y2]="t.y - destination.y"
+        class="connection"
+        [ngClass]="{ active, reverse }" />
 </svg>

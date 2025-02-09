@@ -1,29 +1,20 @@
-.connection {
-    position: absolute;
-    z-index: 0;
-    transform: translate(-50%, -50%);
-    transform-origin: center;
+:host {
+    display: contents;
 }
 
-.line {
-    stroke-width: 1.5px;
-    stroke: hsl(var(--border));
+.connection {
+    @apply stroke-1 stroke-border;
     stroke-linecap: round;
 }
 
-.connection.active .line {
-    stroke-width: 3px;
-    stroke: hsl(var(--primary));
+.connection.active {
+    @apply stroke-2 stroke-primary;
     stroke-dasharray: 10;
-    animation-name: dash;
-    animation-duration: 5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: normal; /* origin -> destination */
+    animation: dash 5s linear 0ms infinite normal forwards;
 }
 
-.connection.active.reverse .line {
-    animation-direction: reverse; /* origin <- destination */
+.connection.active.reverse {
+    animation-direction: reverse;
 }
 
 @keyframes dash {

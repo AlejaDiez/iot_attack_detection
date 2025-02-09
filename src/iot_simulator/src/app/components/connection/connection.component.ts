@@ -1,16 +1,19 @@
+import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { Connection } from "../../models/connection";
 import { Position } from "../../models/position";
 
 @Component({
     selector: "app-connection",
-    imports: [],
-    templateUrl: "./connection.component.html",
-    styleUrl: "./connection.component.css",
+    imports: [CommonModule],
+    templateUrl: "connection.component.html",
+    styleUrl: "connection.component.css",
 })
 export class ConnectionComponent {
     @Input()
     public connection!: Connection;
+    public active: boolean = false;
+    public reverse: boolean = false;
 
     public get origin(): Position {
         return this.connection.origin.position;

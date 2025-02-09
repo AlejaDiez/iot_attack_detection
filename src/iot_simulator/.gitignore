@@ -5,7 +5,8 @@
 /node_modules
 npm-debug.log
 yarn-error.log
-/.angular/cache
+/.angular
+/.nx
 .sass-cache/
 /connect.lock
 /coverage

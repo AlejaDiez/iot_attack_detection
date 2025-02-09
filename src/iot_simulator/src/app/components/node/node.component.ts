@@ -1,18 +1,14 @@
 import { CommonModule } from "@angular/common";
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    HostListener,
-    Input,
-    OnDestroy,
-    ViewChild,
-} from "@angular/core";
+import { Component, HostListener, Input } from "@angular/core";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideCpu, lucideLaptop, lucideRouter } from "@ng-icons/lucide";
+import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 import { Device } from "../../models/device";
 
 @Component({
     selector: "app-node",
-    imports: [CommonModule],
+    imports: [CommonModule, HlmCardModule, NgIcon],
+    providers: [provideIcons({ lucideRouter, lucideCpu, lucideLaptop })],
     templateUrl: "node.component.html",
     styleUrl: "node.component.css",
 })
@@ -20,6 +16,8 @@ export class NodeComponent {
     @Input()
     public node!: Device;
     public moving: boolean = false;
+    public active: boolean = false;
+    public selected: boolean = false;
 
     @HostListener("mousedown", ["$event"])
     private _mouseDown(event: MouseEvent): void {

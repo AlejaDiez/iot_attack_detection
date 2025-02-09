@@ -1,15 +1,14 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
 import { CanvasComponent } from "./components/canvas/canvas.component";
-import { NodeComponent } from "./components/node/node.component";
 import { ConnectionComponent } from "./components/connection/connection.component";
+import { NodeComponent } from "./components/node/node.component";
 import { Device, DeviceType } from "./models/device";
 import { Router } from "./models/router";
-import { CommonModule } from "@angular/common";
-import { RouterOutlet } from "@angular/router";
 
 @Component({
     selector: "app-root",
-    templateUrl: "app.component.html",
     imports: [
         CommonModule,
         RouterOutlet,
@@ -17,14 +16,7 @@ import { RouterOutlet } from "@angular/router";
         NodeComponent,
         ConnectionComponent,
     ],
-    styles: [
-        `
-            .router {
-                position: relative;
-                z-index: 1;
-            }
-        `,
-    ],
+    templateUrl: "app.component.html",
 })
 export class AppComponent {
     nodes: Device[] = [
