@@ -1,0 +1,26 @@
+<div
+    hlmCard
+    class="node"
+    [ngClass]="{ moving, active, selected}"
+    [ngStyle]="{
+        left: 'calc(50% + ' + node.position.x + 'px)',
+        top: 'calc(50% - ' + node.position.y + 'px)',
+    }">
+    @switch (node.type) { @case("router") {
+    <ng-icon name="lucideRouter" size="24"></ng-icon>
+    } @case("iot") {
+    <ng-icon name="lucideCpu" size="24"></ng-icon>
+    } @case("computer") {
+    <ng-icon name="lucideLaptop" size="24"></ng-icon>
+    } }
+</div>
+<div
+    class="node-info"
+    [ngClass]="{ moving, active, selected}"
+    [ngStyle]="{
+        left: 'calc(50% + ' + node.position.x + 'px)',
+        top: 'calc(50% - ' + node.position.y + 'px)',
+    }">
+    <span class="text-lg font-bold">{{ node.name }}</span>
+    <span class="text-sm text-muted-foreground opacity-60">{{ node.ip }}</span>
+</div>

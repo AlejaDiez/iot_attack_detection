@@ -1,0 +1,14 @@
+.canvas {
+    position: relative;
+    width: 4000px;
+    height: 4000px;
+}
+
+.canvas.grid {
+    background-image: radial-gradient(
+        circle,
+        hsl(var(--border)) 1.5px,
+        transparent 1.5px
+    );
+    background-size: 20px 20px;
+}

@@ -1,0 +1,96 @@
+<hlm-menu-bar class="w-fit">
+    <button hlmMenuBarItem [brnMenuTriggerFor]="file">Archivo</button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="edit">Edición</button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="view">Ver</button>
+</hlm-menu-bar>
+
+<ng-template #file>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button hlmMenuItem>
+                Nuevo archivo
+                <hlm-menu-shortcut>⌘N</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem>
+                Abrir archivo
+                <hlm-menu-shortcut>⌘O</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+        <hlm-menu-separator />
+        <hlm-menu-group>
+            <button hlmMenuItem>
+                Cerrar
+                <hlm-menu-shortcut>⌘W</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem>
+                Guardar
+                <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>
+
+<ng-template #edit>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button hlmMenuItem>
+                Deshacer
+                <hlm-menu-shortcut>⌘Z</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem>
+                Rehacer
+                <hlm-menu-shortcut>⇧⌘Z</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+        <hlm-menu-separator />
+        <hlm-menu-group>
+            <button hlmMenuItem>
+                Cortar
+                <hlm-menu-shortcut>⌘X</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem>
+                Copiar
+                <hlm-menu-shortcut>⌘C</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem>
+                Pegar
+                <hlm-menu-shortcut>⌘V</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>
+
+<ng-template #view>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button hlmMenuItemCheckbox>
+                <hlm-menu-item-check />
+                Alto contraste
+            </button>
+            <button hlmMenuItemCheckbox checked>
+                <hlm-menu-item-check />
+                Mostrar cuadrícula
+            </button>
+        </hlm-menu-group>
+        <hlm-menu-separator />
+        <button inset hlmMenuItem>
+            Centrar
+            <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
+        </button>
+        <hlm-menu-separator />
+        <hlm-menu-group>
+            <button inset hlmMenuItem>
+                Tamaño original
+                <hlm-menu-shortcut>⌘0</hlm-menu-shortcut>
+            </button>
+            <button inset hlmMenuItem>
+                Maximizar
+                <hlm-menu-shortcut>⌘+</hlm-menu-shortcut>
+            </button>
+            <button inset hlmMenuItem>
+                Minimizar
+                <hlm-menu-shortcut>⌘-</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>

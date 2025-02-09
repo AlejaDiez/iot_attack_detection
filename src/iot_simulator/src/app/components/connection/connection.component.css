@@ -1,0 +1,28 @@
+:host {
+    display: contents;
+}
+
+.connection {
+    @apply stroke-1 stroke-border;
+    stroke-linecap: round;
+}
+
+.connection.active {
+    @apply stroke-2 stroke-primary;
+    stroke-dasharray: 10;
+    animation: dash 5s linear 0ms infinite normal forwards;
+}
+
+.connection.active.reverse {
+    animation-direction: reverse;
+}
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 100%;
+    }
+
+    to {
+        stroke-dashoffset: 0%;
+    }
+}

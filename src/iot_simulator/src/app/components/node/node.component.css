@@ -1,0 +1,61 @@
+:host {
+    display: contents;
+}
+
+.node {
+    position: absolute;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    @apply rounded-xl;
+    transform: translate(-50%, -50%);
+    transform-origin: center;
+    transition: top 100ms, left 100ms, border 100ms, color 100ms,
+        background-color 100ms, transform 100ms;
+    cursor: pointer;
+}
+
+.node.moving {
+    z-index: 30;
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.2);
+    transition: transform 100ms;
+}
+
+.node.selected {
+    z-index: 30;
+    @apply border-0 border-primary;
+    @apply text-primary-foreground;
+    @apply bg-primary;
+}
+
+.node.active {
+    z-index: 30;
+    @apply border-2 border-primary;
+}
+
+.node-info {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: auto;
+    height: 60px;
+    margin-left: calc(30px + 12px);
+    transform: translate(0, -50%);
+    transform-origin: center;
+    transition: top 100ms, left 100ms, opacity 100ms;
+    pointer-events: none;
+    @apply select-none;
+}
+
+.node-info.moving,
+.node-info.selected {
+    opacity: 0;
+    transition: opacity 100ms;
+}
