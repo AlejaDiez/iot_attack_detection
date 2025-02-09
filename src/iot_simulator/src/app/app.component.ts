@@ -6,6 +6,7 @@ import { ConnectionComponent } from "./components/connection/connection.componen
 import { NodeComponent } from "./components/node/node.component";
 import { Device, DeviceType } from "./models/device";
 import { Router } from "./models/router";
+import { MenuBarComponent } from "./components/menu-bar/menu-bar.component";
 
 @Component({
     selector: "app-root",
@@ -15,6 +16,7 @@ import { Router } from "./models/router";
         CanvasComponent,
         NodeComponent,
         ConnectionComponent,
+        MenuBarComponent
     ],
     templateUrl: "app.component.html",
 })
