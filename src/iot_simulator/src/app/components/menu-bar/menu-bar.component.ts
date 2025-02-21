@@ -23,24 +23,15 @@ import {
     selector: "app-menu-bar",
     imports: [
         BrnMenuTriggerDirective,
-
         HlmMenuComponent,
         HlmMenuBarComponent,
-        HlmSubMenuComponent,
         HlmMenuItemDirective,
-        HlmMenuItemSubIndicatorComponent,
-        HlmMenuLabelComponent,
         HlmMenuShortcutComponent,
         HlmMenuSeparatorComponent,
-        HlmMenuItemIconDirective,
         HlmMenuBarItemDirective,
         HlmMenuItemCheckComponent,
-        HlmMenuItemRadioComponent,
         HlmMenuGroupComponent,
-
-        HlmButtonDirective,
         HlmMenuItemCheckboxDirective,
-        HlmMenuItemRadioDirective,
     ],
     templateUrl: "./menu-bar.component.html",
 })

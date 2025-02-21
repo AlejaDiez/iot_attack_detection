@@ -4,10 +4,11 @@ import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideCpu, lucideLaptop, lucideRouter } from "@ng-icons/lucide";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 import { Device } from "../../models/device";
+import { RouterModule } from "@angular/router";
 
 @Component({
     selector: "app-node",
-    imports: [CommonModule, HlmCardModule, NgIcon],
+    imports: [CommonModule, HlmCardModule, NgIcon, RouterModule],
     providers: [provideIcons({ lucideRouter, lucideCpu, lucideLaptop })],
     templateUrl: "node.component.html",
     styleUrl: "node.component.css",

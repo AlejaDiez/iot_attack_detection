@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-4">
+    <brn-table
+        hlm
+        stickyHeader
+        [dataSource]="networkTraces"
+        [displayedColumns]="['icon', 'source', 'destination', 'length', 'data']"
+        class="border-border block max-h-[280px] overflow-auto rounded-md border">
+        <brn-column-def name="icon" class="w-12">
+            <hlm-th *brnHeaderDef />
+            <hlm-td *brnCellDef="let element">
+                @if (node.ip === element.source) {
+                <ng-icon
+                    name="lucideReply"
+                    size="1rem"
+                    class="text-red-600 dark:text-red-400" />
+                } @else if (node.ip === element.destination) {
+                <ng-icon
+                    name="lucideForward"
+                    size="1rem"
+                    class="text-green-600 dark:text-green-400" />
+                } @else {
+                <ng-icon
+                    name="lucideRepeat"
+                    size="1rem"
+                    class="text-yellow-600 dark:text-yellow-400" />
+                }
+            </hlm-td>
+        </brn-column-def>
+        <brn-column-def name="source" class="w-28">
+            <hlm-th *brnHeaderDef>Origen</hlm-th>
+            <hlm-td *brnCellDef="let element">
+                {{ element.source }}
+            </hlm-td>
+        </brn-column-def>
+        <brn-column-def name="destination" class="w-28">
+            <hlm-th *brnHeaderDef>Destino</hlm-th>
+            <hlm-td *brnCellDef="let element">
+                {{ element.destination }}
+            </hlm-td>
+        </brn-column-def>
+        <brn-column-def name="length" class="w-[86px]">
+            <hlm-th *brnHeaderDef>Longitud</hlm-th>
+            <hlm-td *brnCellDef="let element" class="justify-end">
+                {{ element.length }}
+            </hlm-td>
+        </brn-column-def>
+        <brn-column-def name="data" class="w-56">
+            <hlm-th *brnHeaderDef>Dato</hlm-th>
+            <hlm-td truncate *brnCellDef="let element">
+                {{ element.data }}
+            </hlm-td>
+        </brn-column-def>
+    </brn-table>
+    <div class="flex flex-col gap-2">
+        <textarea
+            hlmInput
+            placeholder="Contenido a enviar"
+            class="w-full h-[100px] resize-none"></textarea>
+        <div class="flex flex-row gap-2 items-center justify-end">
+            <brn-select class="inline-block w-56" placeholder="Ip destino">
+                <hlm-select-trigger class="w-56">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    <hlm-option value="192.168.0.31">192.168.0.31</hlm-option>
+                    <hlm-option value="192.168.0.24">192.168.0.24</hlm-option>
+                </hlm-select-content>
+            </brn-select>
+            <button hlmBtn>Enviar</button>
+        </div>
+    </div>
+</div>

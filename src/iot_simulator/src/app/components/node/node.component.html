@@ -1,7 +1,9 @@
 <div
     hlmCard
     class="node"
-    [ngClass]="{ moving, active, selected}"
+    routerLink="/node/{{ node.ip }}"
+    [ngClass]="{ moving, active }"
+    routerLinkActive="selected"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
@@ -16,7 +18,7 @@
 </div>
 <div
     class="node-info"
-    [ngClass]="{ moving, active, selected}"
+    [ngClass]="{ moving, active }"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',

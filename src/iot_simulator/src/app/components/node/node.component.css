@@ -18,6 +18,10 @@
     cursor: pointer;
 }
 
+.node:focus {
+    @apply ring-0 ring-offset-0;
+}
+
 .node.moving {
     z-index: 30;
     cursor: grabbing;
@@ -54,8 +58,7 @@
     @apply select-none;
 }
 
-.node-info.moving,
-.node-info.selected {
+.node-info.moving {
     opacity: 0;
     transition: opacity 100ms;
 }
