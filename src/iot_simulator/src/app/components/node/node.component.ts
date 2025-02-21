@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, HostListener, Input } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { Device } from "@models/device";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideCpu, lucideLaptop, lucideRouter } from "@ng-icons/lucide";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
-import { Device } from "../../models/device";
-import { RouterModule } from "@angular/router";
 
 @Component({
     selector: "app-node",

@@ -30,7 +30,7 @@ import type { ClassValue } from "clsx";
             class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center rtl:left-auto rtl:right-2"
             [attr.data-state]="this._brnSelectOption.checkedState()">
             @if (this._brnSelectOption.selected()) {
-            <ng-icon hlm aria-hidden="true" name="lucideCheck" />
+            <ng-icon hlm aria-hidden="true" size="1rem" name="lucideCheck" />
             }
         </span>
     `,

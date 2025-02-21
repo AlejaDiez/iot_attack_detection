@@ -12,7 +12,7 @@ import type { ClassValue } from "clsx";
     imports: [NgIcon, HlmIconDirective],
     template: `
         <!-- Using 1rem for size to mimick h-4 w-4 -->
-        <ng-icon hlm size="1rem" name="lucideCheck" />
+        <ng-icon hlm aria-hidden="true" size="1rem" name="lucideCheck" />
     `,
     host: {
         "[class]": "_computedClass()",

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
-import { Connection } from "../../models/connection";
-import { Position } from "../../models/position";
+import { Connection } from "@models/connection";
+import { Position } from "@models/position";
 
 @Component({
     selector: "app-connection",

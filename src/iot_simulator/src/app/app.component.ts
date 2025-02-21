@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { CanvasComponent } from "./components/canvas/canvas.component";
-import { ConnectionComponent } from "./components/connection/connection.component";
-import { NodeComponent } from "./components/node/node.component";
-import { Device, DeviceType } from "./models/device";
-import { Router } from "./models/router";
-import { MenuBarComponent } from "./components/menu-bar/menu-bar.component";
+import { CanvasComponent } from "@components/canvas/canvas.component";
+import { ConnectionComponent } from "@components/connection/connection.component";
+import { MenuBarComponent } from "@components/menu-bar/menu-bar.component";
+import { NodeComponent } from "@components/node/node.component";
+import { Device, DeviceType } from "@models/device";
+import { Router } from "@models/router";
 
 @Component({
     selector: "app-root",
@@ -16,7 +16,7 @@ import { MenuBarComponent } from "./components/menu-bar/menu-bar.component";
         CanvasComponent,
         NodeComponent,
         ConnectionComponent,
-        MenuBarComponent
+        MenuBarComponent,
     ],
     templateUrl: "app.component.html",
 })

@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Device } from "@models/device";
+import { Router } from "@models/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideForward, lucideRepeat, lucideReply } from "@ng-icons/lucide";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
@@ -9,8 +11,6 @@ import { HlmInputModule } from "@spartan-ng/ui-input-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { HlmTableModule } from "@spartan-ng/ui-table-helm";
 import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
-import { Device } from "../../../../models/device";
-import { Router } from "../../../../models/router";
 
 @Component({
     imports: [

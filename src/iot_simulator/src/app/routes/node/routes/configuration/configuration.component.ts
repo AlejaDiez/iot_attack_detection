@@ -2,13 +2,13 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { Device, DeviceType } from "@models/device";
+import { Router } from "@models/router";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmInputModule } from "@spartan-ng/ui-input-helm";
 import { HlmLabelModule } from "@spartan-ng/ui-label-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { HlmSwitchModule } from "@spartan-ng/ui-switch-helm";
-import { Device, DeviceType } from "../../../../models/device";
-import { Router } from "../../../../models/router";
 
 @Component({
     imports: [

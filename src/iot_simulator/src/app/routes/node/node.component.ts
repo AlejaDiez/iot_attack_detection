@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
+import { Device } from "@models/device";
+import { Router } from "@models/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideX } from "@ng-icons/lucide";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
-import { Device } from "../../models/device";
-import { Router } from "../../models/router";
 
 @Component({
     imports: [HlmButtonModule, HlmCardModule, NgIcon, RouterModule],
