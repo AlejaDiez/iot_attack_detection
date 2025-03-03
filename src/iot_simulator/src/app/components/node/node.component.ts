@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, HostListener, Input } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { Device } from "@models/device";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideCpu, lucideLaptop, lucideRouter } from "@ng-icons/lucide";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
+import { Node } from "@models/node";
 
 @Component({
     selector: "app-node",
@@ -14,37 +14,32 @@ import { HlmCardModule } from "@spartan-ng/ui-card-helm";
     styleUrl: "node.component.css",
 })
 export class NodeComponent {
-    @Input()
-    public node!: Device;
-    public moving: boolean = false;
-    public active: boolean = false;
-    public selected: boolean = false;
+    protected dragging: boolean = false;
+    @Input({ required: true })
+    public node!: Node;
 
     @HostListener("mousedown", ["$event"])
     private _mouseDown(event: MouseEvent): void {
         if (event.button === 0) {
-            this.moving = true;
+            this.dragging = true;
         }
     }
 
     @HostListener("document:mousemove", ["$event"])
     private _mouseMove(event: MouseEvent): void {
-        if (this.moving) {
-            this.node.move({
-                x: this.node.position.x + event.movementX,
-                y: this.node.position.y - event.movementY,
-            });
+        if (this.dragging) {
+            this.node.move(event.movementX, -event.movementY);
         }
     }
 
     @HostListener("document:mouseup", ["$event"])
     private _mouseUp(event: MouseEvent): void {
-        if (this.moving) {
-            this.moving = false;
-            this.node.move({
-                x: Math.round(this.node.position.x / 20) * 20,
-                y: Math.round(this.node.position.y / 20) * 20,
-            });
+        if (this.dragging) {
+            this.dragging = false;
+            this.node.moveTo(
+                Math.round(this.node.position.x / 20) * 20,
+                Math.round(this.node.position.y / 20) * 20
+            );
         }
     }
 }

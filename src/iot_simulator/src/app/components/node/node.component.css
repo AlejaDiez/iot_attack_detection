@@ -22,21 +22,21 @@
     @apply ring-0 ring-offset-0;
 }
 
-.node.moving {
+.node.dragging {
     z-index: 30;
     cursor: grabbing;
     transform: translate(-50%, -50%) scale(1.2);
     transition: transform 100ms;
 }
 
-.node.selected {
+.node.focused {
     z-index: 30;
     @apply border-0 border-primary;
     @apply text-primary-foreground;
     @apply bg-primary;
 }
 
-.node.active {
+.node.communicating {
     z-index: 30;
     @apply border-2 border-primary;
 }
@@ -58,7 +58,7 @@
     @apply select-none;
 }
 
-.node-info.moving {
+.node-info.dragging {
     opacity: 0;
     transition: opacity 100ms;
 }

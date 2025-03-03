@@ -1,9 +1,9 @@
 <div
     hlmCard
+    routerLink="/node/{{ node.mac }}"
     class="node"
-    routerLink="/node/{{ node.ip }}"
-    [ngClass]="{ moving, active }"
-    routerLinkActive="selected"
+    [ngClass]="{ dragging, communicating: node.communicating }"
+    routerLinkActive="focused"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
@@ -18,7 +18,7 @@
 </div>
 <div
     class="node-info"
-    [ngClass]="{ moving, active }"
+    [ngClass]="{ dragging, communicating: node.communicating }"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',

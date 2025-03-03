@@ -52,7 +52,7 @@ export interface Packet {
 
     // Datos y tamaño
     /* Datos del paquete */
-    payload?: string | Buffer;
+    payload?: string;
     /* Tamaño del paquete en bytes */
     totalBytes: number;
     /* Tamaño de las cabeceras */

@@ -1,4 +1,5 @@
 import { Position } from "@models/position";
+import { Packet } from "@models/packet";
 
 /**
  * Enum que representa los diferentes tipos de nodos en el simulador IoT.
@@ -18,20 +19,21 @@ export abstract class Node {
     public get mac(): string {
         return this._mac;
     }
-    /* Tipo de nodo */
-    private _type: NodeType;
-    public get type(): NodeType {
-        return this._type;
+    /* Indentificador del nodo en la red */
+    protected abstract _ip?: string;
+    public get ip(): string | undefined {
+        return this._ip;
     }
-    /* Indica si el nodo esta siendo arrastrado */
-    public dragging: boolean;
-    /* Indica si el nodo está seleccionado */
-    public focused: boolean;
+    /* Nombre del nodo */
+    public name: string;
+    /* Tipo de nodo */
+    public type: NodeType;
     /* Indica si el nodo está comunicando */
-    public communicating: boolean;
-    /* Indica si el nodo está en estado de inactividad */
-    public get idle(): boolean {
-        return this.focused === false && this.communicating === false;
+    public abstract get communicating(): boolean;
+    /* Tráfico del nodo */
+    protected _traffic: Packet[];
+    public get traffic(): Packet[] {
+        return [...this._traffic];
     }
     /* Posición del nodo en el esquema de red */
     private _position: Position;
@@ -42,14 +44,15 @@ export abstract class Node {
     /**
      * Crea una instancia de la clase Node.
      *
+     * @param name Nombre del nodo.
+     * @param type Tipo de nodo. 
      * @param position Posición inicial del nodo.
      */
-    public constructor(type: NodeType, position: Position) {
+    public constructor(name: string, type: NodeType, position: Position) {
         this._mac = this._generateMacAddress();
-        this._type = type;
-        this.dragging = false;
-        this.focused = false;
-        this.communicating = false;
+        this.name = name;
+        this.type = type;
+        this._traffic = [];
         this._position = position;
     }
 
@@ -63,6 +66,20 @@ export abstract class Node {
             Math.floor(Math.random() * 16).toString(16)
         );
     }
+
+    /**
+     * Envía un paquete al nodo.
+     *
+     * @param packet Paquete a enviar.
+     */
+    public abstract sendPacket(packet: Packet): void;
+
+    /**
+     * Recibe un paquete del nodo.
+     *
+     * @param packet Paquete recibido.
+     */
+    public abstract receivePacket(packet: Packet): void;
 
     /**
      * Mueve el nodo en el esquema de red.
