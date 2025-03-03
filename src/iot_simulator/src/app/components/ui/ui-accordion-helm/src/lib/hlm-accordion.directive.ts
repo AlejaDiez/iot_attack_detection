@@ -24,7 +24,7 @@ export class HlmAccordionDirective {
         hlm(
             "flex",
             this._brn.orientation() === "horizontal" ? "flex-row" : "flex-col",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

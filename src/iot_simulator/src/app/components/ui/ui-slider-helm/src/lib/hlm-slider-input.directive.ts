@@ -16,7 +16,7 @@ export class HlmSliderInputDirective {
     protected _computedClass = computed(() =>
         hlm(
             "w-full h-5 -top-1.5 left-0 opacity-0 absolute cursor-pointer transition-all",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

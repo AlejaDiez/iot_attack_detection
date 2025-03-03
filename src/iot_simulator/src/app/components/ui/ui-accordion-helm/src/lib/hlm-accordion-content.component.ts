@@ -40,7 +40,7 @@ export class HlmAccordionContentComponent extends BrnAccordionContentComponent {
             () => {
                 this.setClassToCustomElement("pt-1 pb-4");
             },
-            { allowSignalWrites: true }
+            { allowSignalWrites: true },
         );
     }
 }

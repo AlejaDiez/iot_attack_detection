@@ -13,6 +13,6 @@ export class HlmBreadcrumbItemDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
 
     protected readonly _computedClass = computed(() =>
-        hlm("inline-flex items-center gap-1.5", this.userClass())
+        hlm("inline-flex items-center gap-1.5", this.userClass()),
     );
 }

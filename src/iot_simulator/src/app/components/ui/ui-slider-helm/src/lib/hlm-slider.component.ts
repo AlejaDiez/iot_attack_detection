@@ -39,8 +39,8 @@ export class HlmSliderComponent {
         hlm(
             "w-full h-5 flex relative",
             this._brnSlider.disabled() ? "opacity-40" : "",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     private readonly _brnSlider = inject(BRN_SLIDER, { host: true });

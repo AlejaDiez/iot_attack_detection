@@ -28,8 +28,8 @@ export class HlmCardFooterDirective {
     protected _computedClass = computed(() =>
         hlm(
             cardFooterVariants({ direction: this.direction() }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     public readonly direction = input<CardFooterVariants["direction"]>("row");

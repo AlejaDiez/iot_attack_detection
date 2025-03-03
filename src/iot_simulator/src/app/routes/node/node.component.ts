@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { Device } from "@models/device";
+import { Node } from "@models/node";
 import { Router } from "@models/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideX } from "@ng-icons/lucide";
@@ -33,17 +33,14 @@ import { HlmCardModule } from "@spartan-ng/ui-card-helm";
     ],
 })
 export class NodeComponent implements OnInit {
-    protected node!: Device;
+    protected node!: Node;
 
     public constructor(private _route: ActivatedRoute) {}
 
     public ngOnInit(): void {
-        this._route.params.subscribe(({ id }) => {
-            if (id === "192.168.0.1") {
-                this.node = new Router(id, "Router");
-            } else {
-                this.node = new Device(id, "Dispositivo");
-            }
+        this.node = new Router("Router");
+        this._route.parent!.params.subscribe(({ mac }) => {
+            // Get node from network manager service
         });
     }
 }

@@ -48,7 +48,8 @@ export const HLM_SWITCH_VALUE_ACCESSOR = {
             [id]="id()"
             [aria-label]="ariaLabel()"
             [aria-labelledby]="ariaLabelledby()"
-            [aria-describedby]="ariaDescribedby()">
+            [aria-describedby]="ariaDescribedby()"
+        >
             <brn-switch-thumb hlm />
         </brn-switch>
     `,
@@ -60,8 +61,8 @@ export class HlmSwitchComponent {
         hlm(
             "group inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
             this.disabled() ? "cursor-not-allowed opacity-50" : "",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     /** The checked state of the switch. */

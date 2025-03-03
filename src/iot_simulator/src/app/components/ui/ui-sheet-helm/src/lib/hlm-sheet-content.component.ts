@@ -35,7 +35,7 @@ export const sheetVariants = cva(
         defaultVariants: {
             side: "right",
         },
-    }
+    },
 );
 
 @Component({
@@ -74,7 +74,7 @@ export class HlmSheetContentComponent {
             this._renderer.setAttribute(
                 this._element.nativeElement,
                 "data-state",
-                this.state()
+                this.state(),
             );
         });
     }
@@ -83,7 +83,7 @@ export class HlmSheetContentComponent {
     protected _computedClass = computed(() =>
         hlm(
             sheetVariants({ side: this._sideProvider.side() }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

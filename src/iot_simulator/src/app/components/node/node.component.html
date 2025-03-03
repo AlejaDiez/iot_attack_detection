@@ -7,14 +7,19 @@
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
-    }">
-    @switch (node.type) { @case("router") {
-    <ng-icon name="lucideRouter" size="24"></ng-icon>
-    } @case("iot") {
-    <ng-icon name="lucideCpu" size="24"></ng-icon>
-    } @case("computer") {
-    <ng-icon name="lucideLaptop" size="24"></ng-icon>
-    } }
+    }"
+>
+    @switch (node.type) {
+        @case ("router") {
+            <ng-icon name="lucideRouter" size="24" />
+        }
+        @case ("iot") {
+            <ng-icon name="lucideCpu" size="24" />
+        }
+        @case ("computer") {
+            <ng-icon name="lucideLaptop" size="24" />
+        }
+    }
 </div>
 <div
     class="node-info"
@@ -22,7 +27,8 @@
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
-    }">
+    }"
+>
     <span class="text-lg font-bold">{{ node.name }}</span>
     <span class="text-sm text-muted-foreground opacity-60">{{ node.ip }}</span>
 </div>

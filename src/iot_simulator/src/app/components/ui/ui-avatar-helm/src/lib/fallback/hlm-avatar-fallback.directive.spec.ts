@@ -40,7 +40,7 @@ describe("HlmAvatarFallbackDirective", () => {
     it("should contain the default classes if no inputs are provided", () => {
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelector("span").className).toBe(
-            "bg-muted flex h-full items-center justify-center rounded-full w-full"
+            "bg-muted flex h-full items-center justify-center rounded-full w-full",
         );
     });
 
@@ -49,7 +49,7 @@ describe("HlmAvatarFallbackDirective", () => {
 
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelector("span").className).toContain(
-            "test-class"
+            "test-class",
         );
     });
     it("should merge bg-destructive correctly when set as user defined class, therefore removing bg-muted", async () => {
@@ -57,7 +57,7 @@ describe("HlmAvatarFallbackDirective", () => {
 
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelector("span").className).toContain(
-            "bg-destructive"
+            "bg-destructive",
         );
     });
 
@@ -70,7 +70,7 @@ describe("HlmAvatarFallbackDirective", () => {
         it("should remove the bg-muted class from the component", fakeAsync(() => {
             fixture.detectChanges();
             expect(
-                fixture.nativeElement.querySelector("span").className
+                fixture.nativeElement.querySelector("span").className,
             ).not.toContain("bg-muted");
         }));
 
@@ -78,11 +78,11 @@ describe("HlmAvatarFallbackDirective", () => {
             const hex = hexColorFor("fallback2");
             const textCls = isBright(hex) ? "text-black" : "text-white";
             expect(
-                fixture.nativeElement.querySelector("span").className
+                fixture.nativeElement.querySelector("span").className,
             ).toContain(textCls);
             expect(
                 fixture.nativeElement.querySelector("span").style
-                    .backgroundColor
+                    .backgroundColor,
             ).toBe("rgb(144, 53, 149)");
         });
     });

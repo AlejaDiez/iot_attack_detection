@@ -19,7 +19,7 @@ export class HlmCommandComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "w-96 bg-popover border border-border flex flex-col h-full overflow-hidden rounded-md text-popover-foreground",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

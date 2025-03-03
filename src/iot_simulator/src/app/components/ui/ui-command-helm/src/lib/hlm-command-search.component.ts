@@ -19,7 +19,7 @@ export class HlmCommandSearchComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "relative [&_ng-icon]:flex-none border-b border-border flex items-center px-3 space-x-2",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

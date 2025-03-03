@@ -23,7 +23,7 @@ export class HlmAlertDialogHeaderComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "flex flex-col space-y-2 text-center sm:text-left",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

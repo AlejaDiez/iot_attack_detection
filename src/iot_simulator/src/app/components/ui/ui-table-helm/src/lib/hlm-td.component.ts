@@ -24,11 +24,11 @@ import type { ClassValue } from "clsx";
             <ng-content />
         </ng-template>
         @if (truncate()) {
-        <span class="flex-1 truncate">
-            <ng-container [ngTemplateOutlet]="content" />
-        </span>
+            <span class="flex-1 truncate">
+                <ng-container [ngTemplateOutlet]="content" />
+            </span>
         } @else {
-        <ng-container [ngTemplateOutlet]="content" />
+            <ng-container [ngTemplateOutlet]="content" />
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,7 +45,7 @@ export class HlmTdComponent {
         hlm(
             "flex flex-none p-4 items-center [&:has([role=checkbox])]:pr-0",
             this._columnDef?.class(),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

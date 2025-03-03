@@ -14,7 +14,7 @@ export class HlmSliderTrackActiveDirective {
     protected _computedClass = computed(() =>
         hlm(
             "h-full w-full relative -top-2 pointer-events-none overflow-hidden rounded-full transition-all",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

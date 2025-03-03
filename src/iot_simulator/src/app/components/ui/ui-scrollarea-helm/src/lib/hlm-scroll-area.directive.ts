@@ -16,7 +16,7 @@ import type { ClassValue } from "clsx";
 })
 export class HlmScrollAreaDirective {
     protected readonly _computedClass = computed(() =>
-        hlm("block", this.userClass())
+        hlm("block", this.userClass()),
     );
     public readonly userClass = input<ClassValue>("", { alias: "class" });
 }

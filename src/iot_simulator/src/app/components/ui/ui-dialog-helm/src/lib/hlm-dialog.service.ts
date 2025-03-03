@@ -22,7 +22,7 @@ export class HlmDialogService {
 
     public open(
         component: ComponentType<unknown> | TemplateRef<unknown>,
-        options?: Partial<HlmDialogOptions>
+        options?: Partial<HlmDialogOptions>,
     ) {
         const mergedOptions = {
             ...DEFAULT_BRN_DIALOG_OPTIONS,
@@ -30,7 +30,7 @@ export class HlmDialogService {
 
             ...(options ?? {}),
             backdropClass: cssClassesToArray(
-                `${hlmDialogOverlayClass} ${options?.backdropClass ?? ""}`
+                `${hlmDialogOverlayClass} ${options?.backdropClass ?? ""}`,
             ),
             context: {
                 ...(options?.context ?? {}),
@@ -43,7 +43,7 @@ export class HlmDialogService {
             HlmDialogContentComponent,
             undefined,
             mergedOptions.context,
-            mergedOptions
+            mergedOptions,
         );
     }
 }

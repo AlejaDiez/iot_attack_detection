@@ -37,7 +37,8 @@ import {
             [plugins]="plugins()"
             [options]="emblaOptions()"
             [subscribeToEvents]="['init', 'select', 'reInit']"
-            (emblaChange)="onEmblaEvent($event)">
+            (emblaChange)="onEmblaEvent($event)"
+        >
             <ng-content select="hlm-carousel-content" />
         </div>
         <ng-content />
@@ -49,14 +50,14 @@ export class HlmCarouselComponent {
 
     public _userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm("relative", this._userClass())
+        hlm("relative", this._userClass()),
     );
 
     public orientation = input<"horizontal" | "vertical">("horizontal");
     public options: InputSignal<Omit<EmblaOptionsType, "axis"> | undefined> =
         input();
     public plugins: InputSignal<EmblaPluginType[]> = input(
-        [] as EmblaPluginType[]
+        [] as EmblaPluginType[],
     );
 
     protected emblaOptions: Signal<EmblaOptionsType> = computed(() => ({

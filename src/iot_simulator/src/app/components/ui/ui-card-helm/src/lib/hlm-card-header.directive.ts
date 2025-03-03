@@ -28,8 +28,8 @@ export class HlmCardHeaderDirective {
     protected _computedClass = computed(() =>
         hlm(
             cardHeaderVariants({ direction: this.direction() }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     public readonly direction =

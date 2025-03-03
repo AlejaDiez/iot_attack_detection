@@ -29,7 +29,7 @@ export class HlmCarouselItemComponent {
         hlm(
             "min-w-0 shrink-0 grow-0 basis-full",
             this._orientation() === "horizontal" ? "pl-4" : "pt-4",
-            this._userClass()
-        )
+            this._userClass(),
+        ),
     );
 }

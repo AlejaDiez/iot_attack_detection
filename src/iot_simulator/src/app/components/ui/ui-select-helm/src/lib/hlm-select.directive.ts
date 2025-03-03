@@ -12,6 +12,6 @@ import type { ClassValue } from "clsx";
 export class HlmSelectDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm("space-y-2", this.userClass())
+        hlm("space-y-2", this.userClass()),
     );
 }

@@ -22,7 +22,7 @@ export const toggleVariants = cva(
             variant: "default",
             size: "default",
         },
-    }
+    },
 );
 type ToggleVariants = VariantProps<typeof toggleVariants>;
 
@@ -40,7 +40,7 @@ export class HlmToggleDirective {
     protected readonly _computedClass = computed(() =>
         hlm(
             toggleVariants({ variant: this.variant(), size: this.size() }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

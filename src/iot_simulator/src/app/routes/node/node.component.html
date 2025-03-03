@@ -1,9 +1,11 @@
 <div
     hlmCard
-    class="fixed top-1/2 right-5 min-w-[400px] max-w-[calc(100%-2.5rem)] max-h-[calc(100%-2.5rem)] rounded-xl -translate-y-1/2 animate-slide">
+    class="animate-slide fixed right-5 top-1/2 max-h-[calc(100%-2.5rem)] min-w-[400px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl"
+>
     <div
-        class="flex flex-row p-6 justify-between items-start cursor-default select-none">
-        <div class="flex flex-col h-[40px] justify-between items-start">
+        class="flex cursor-default select-none flex-row items-start justify-between p-6"
+    >
+        <div class="flex h-[40px] flex-col items-start justify-between">
             <h3 hlmCardTitle>{{ node.name }}</h3>
             <p hlmCardDescription>{{ node.ip }}</p>
         </div>
@@ -13,25 +15,29 @@
     </div>
     <div hlmCardContent>
         <div
-            class="inline-flex items-center justify-center w-full h-10 mb-4 space-x-1 p-1 rounded-md text-muted-foreground bg-muted">
+            class="mb-4 inline-flex h-10 w-full items-center justify-center space-x-1 rounded-md bg-muted p-1 text-muted-foreground"
+        >
             <button
                 routerLink="network-traffic"
-                class="inline-flex items-center justify-center flex-1 px-3 py-1.5 ring-offset-background rounded-sm text-sm font-medium transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
-                routerLinkActive="bg-background shadow-sm text-foreground">
+                class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                routerLinkActive="bg-background shadow-sm text-foreground"
+            >
                 Tráfico de red
             </button>
-            @if(node.type === 'computer') {
-            <button
-                routerLink="attack"
-                class="inline-flex items-center justify-center flex-1 px-3 py-1.5 ring-offset-background rounded-sm text-sm font-medium transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
-                routerLinkActive="bg-background shadow-sm text-foreground">
-                Ataque
-            </button>
+            @if (node.type === "computer") {
+                <button
+                    routerLink="attack"
+                    class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    routerLinkActive="bg-background shadow-sm text-foreground"
+                >
+                    Ataque
+                </button>
             }
             <button
                 routerLink="configuration"
-                class="inline-flex items-center justify-center flex-1 px-3 py-1.5 ring-offset-background rounded-sm text-sm font-medium transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
-                routerLinkActive="bg-background shadow-sm text-foreground">
+                class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                routerLinkActive="bg-background shadow-sm text-foreground"
+            >
                 Configuración
             </button>
         </div>

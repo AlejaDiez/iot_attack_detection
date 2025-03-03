@@ -26,6 +26,6 @@ export class HlmPaginationDirective {
     });
 
     protected readonly _computedClass = computed(() =>
-        hlm(paginationVariants(), this.userClass())
+        hlm(paginationVariants(), this.userClass()),
     );
 }

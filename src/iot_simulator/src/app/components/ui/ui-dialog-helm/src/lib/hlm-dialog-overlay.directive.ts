@@ -17,7 +17,7 @@ export class HlmDialogOverlayDirective {
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm(hlmDialogOverlayClass, this.userClass())
+        hlm(hlmDialogOverlayClass, this.userClass()),
     );
 
     constructor() {

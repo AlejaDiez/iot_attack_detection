@@ -3,6 +3,15 @@ import { Router } from "@models/router";
 import { Packet } from "./packet";
 
 /**
+ * Enumeración de los estados de transmisión de la conexión.
+ */
+export enum TransmittingStatus {
+    NONE,
+    ROUTER_TO_DEVICE,
+    DEVICE_TO_ROUTER,
+}
+
+/**
  * Representa una conexión entre un dispositivo y un router. A esta conexión se le puede asignar una latencia y permite comunicar ambos dispositivos.
  */
 export class Connection {
@@ -13,7 +22,7 @@ export class Connection {
     /** Latencia de la conexión */
     latency: number;
     /* Indica si la conexión está siendo utilizada */
-    public transmitting: boolean;
+    public transmitting: TransmittingStatus;
 
     /**
      * Crea una instancia de la clase Connection.
@@ -26,7 +35,7 @@ export class Connection {
         this.router = router;
         this.device = device;
         this.latency = latency;
-        this.transmitting = false;
+        this.transmitting = TransmittingStatus.NONE;
     }
 
     /**
@@ -35,11 +44,15 @@ export class Connection {
      * @param packet Paquete a transmitir.
      */
     public spreadPacket(packet: Packet): void {
-        this.transmitting = true;
+        if (packet.srcIP === this.device.ip)
+            this.transmitting = TransmittingStatus.DEVICE_TO_ROUTER;
+        else this.transmitting = TransmittingStatus.ROUTER_TO_DEVICE;
         setTimeout(() => {
-            if (packet.srcIP === this.device.ip) this.router.sendPacket(packet);
-            else this.device.sendPacket(packet);
-            this.transmitting = false;
+            (this.transmitting === TransmittingStatus.DEVICE_TO_ROUTER
+                ? this.router
+                : this.device
+            ).receivePacket(packet);
+            this.transmitting = TransmittingStatus.NONE;
         }, this.latency);
     }
 }

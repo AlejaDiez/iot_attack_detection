@@ -25,7 +25,8 @@ import { HlmPaginationDirective } from "./hlm-pagination.directive";
     template: `
         <div class="flex items-center justify-between gap-2 px-4 py-2">
             <div
-                class="flex items-center gap-1 text-nowrap text-sm text-gray-600">
+                class="flex items-center gap-1 text-nowrap text-sm text-gray-600"
+            >
                 <b>{{ totalItems() }}</b>
                 total items |
                 <b>{{ pages().length }}</b>
@@ -35,26 +36,29 @@ import { HlmPaginationDirective } from "./hlm-pagination.directive";
             <nav hlmPagination>
                 <ul hlmPaginationContent>
                     @if (showEdges() && !isFirstPageActive()) {
-                    <li hlmPaginationItem (click)="goToPrevious()">
-                        <hlm-pagination-previous />
-                    </li>
-                    } @for (page of pages(); track page) {
-                    <li hlmPaginationItem>
-                        @if (page === '...') {
-                        <hlm-pagination-ellipsis />
-                        } @else {
-                        <a
-                            hlmPaginationLink
-                            [isActive]="currentPage() === page"
-                            (click)="currentPage.set(page)">
-                            {{ page }}
-                        </a>
-                        }
-                    </li>
-                    } @if (showEdges() && !isLastPageActive()) {
-                    <li hlmPaginationItem (click)="goToNext()">
-                        <hlm-pagination-next />
-                    </li>
+                        <li hlmPaginationItem (click)="goToPrevious()">
+                            <hlm-pagination-previous />
+                        </li>
+                    }
+                    @for (page of pages(); track page) {
+                        <li hlmPaginationItem>
+                            @if (page === "...") {
+                                <hlm-pagination-ellipsis />
+                            } @else {
+                                <a
+                                    hlmPaginationLink
+                                    [isActive]="currentPage() === page"
+                                    (click)="currentPage.set(page)"
+                                >
+                                    {{ page }}
+                                </a>
+                            }
+                        </li>
+                    }
+                    @if (showEdges() && !isLastPageActive()) {
+                        <li hlmPaginationItem (click)="goToNext()">
+                            <hlm-pagination-next />
+                        </li>
                     }
                 </ul>
             </nav>
@@ -63,15 +67,16 @@ import { HlmPaginationDirective } from "./hlm-pagination.directive";
             <brn-select
                 [(ngModel)]="itemsPerPage"
                 class="ml-auto"
-                placeholder="Page size">
+                placeholder="Page size"
+            >
                 <hlm-select-trigger class="w-fit">
                     <hlm-select-value />
                 </hlm-select-trigger>
                 <hlm-select-content>
                     @for (pageSize of pageSizesWithCurrent(); track pageSize) {
-                    <hlm-option [value]="pageSize"
-                        >{{ pageSize }} / page</hlm-option
-                    >
+                        <hlm-option [value]="pageSize"
+                            >{{ pageSize }} / page</hlm-option
+                        >
                     }
                 </hlm-select-content>
             </brn-select>
@@ -140,10 +145,10 @@ export class HlmNumberedPaginationComponent {
     });
 
     protected readonly isFirstPageActive = computed(
-        () => this.currentPage() === 1
+        () => this.currentPage() === 1,
     );
     protected readonly isLastPageActive = computed(
-        () => this.currentPage() === this.lastPageNumber()
+        () => this.currentPage() === this.lastPageNumber(),
     );
 
     protected readonly lastPageNumber = computed(() => {
@@ -159,7 +164,7 @@ export class HlmNumberedPaginationComponent {
         const correctedCurrentPage = outOfBoundCorrection(
             this.totalItems(),
             this.itemsPerPage(),
-            this.currentPage()
+            this.currentPage(),
         );
 
         if (correctedCurrentPage !== this.currentPage()) {
@@ -171,7 +176,7 @@ export class HlmNumberedPaginationComponent {
             correctedCurrentPage,
             this.itemsPerPage(),
             this.totalItems(),
-            this.maxSize()
+            this.maxSize(),
         );
     });
 
@@ -203,7 +208,7 @@ type Page = number | "...";
 function outOfBoundCorrection(
     totalItems: number,
     itemsPerPage: number,
-    currentPage: number
+    currentPage: number,
 ): number {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     if (totalPages < currentPage && 0 < totalPages) {
@@ -226,7 +231,7 @@ function createPageArray(
     currentPage: number,
     itemsPerPage: number,
     totalItems: number,
-    paginationRange: number
+    paginationRange: number,
 ): Page[] {
     // paginationRange could be a string if passed from attribute, so cast to number.
     paginationRange = +paginationRange;
@@ -250,7 +255,7 @@ function createPageArray(
             i,
             currentPage,
             paginationRange,
-            totalPages
+            totalPages,
         );
         const openingEllipsesNeeded = i === 2 && (isMiddle || isEnd);
         const closingEllipsesNeeded =
@@ -280,7 +285,7 @@ function calculatePageNumber(
     i: number,
     currentPage: number,
     paginationRange: number,
-    totalPages: number
+    totalPages: number,
 ) {
     const halfWay = Math.ceil(paginationRange / 2);
     if (i === paginationRange) {

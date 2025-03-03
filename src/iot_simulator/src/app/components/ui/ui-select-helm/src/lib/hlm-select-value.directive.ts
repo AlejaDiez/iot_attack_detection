@@ -14,7 +14,7 @@ export class HlmSelectValueDirective {
     protected readonly _computedClass = computed(() =>
         hlm(
             "!inline-block ltr:text-left rtl:text-right border-border w-[calc(100%)]] min-w-0 pointer-events-none truncate",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

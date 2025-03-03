@@ -15,7 +15,7 @@ export class HlmDialogHeaderComponent {
     protected _computedClass = computed(() =>
         hlm(
             "flex flex-col space-y-1.5 text-center sm:text-left",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

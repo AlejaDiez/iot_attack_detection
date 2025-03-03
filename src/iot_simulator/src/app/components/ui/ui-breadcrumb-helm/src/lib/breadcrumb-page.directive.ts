@@ -16,6 +16,6 @@ export class HlmBreadcrumbPageDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
 
     protected readonly _computedClass = computed(() =>
-        hlm("font-normal text-foreground", this.userClass())
+        hlm("font-normal text-foreground", this.userClass()),
     );
 }

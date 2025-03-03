@@ -23,8 +23,8 @@ export class HlmMenuLabelComponent {
         hlm(
             "block px-2 py-1.5 text-sm font-semibold",
             this._inset() && "pl-8",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     private readonly _inset = signal<ClassValue>(false);

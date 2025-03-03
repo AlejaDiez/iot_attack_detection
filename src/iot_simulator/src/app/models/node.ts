@@ -1,5 +1,5 @@
-import { Position } from "@models/position";
 import { Packet } from "@models/packet";
+import { Position } from "@models/position";
 
 /**
  * Enum que representa los diferentes tipos de nodos en el simulador IoT.

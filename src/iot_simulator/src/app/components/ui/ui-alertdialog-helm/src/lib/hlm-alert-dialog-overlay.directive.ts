@@ -16,13 +16,13 @@ export class HlmAlertDialogOverlayDirective {
     protected readonly _computedClass = computed(() =>
         hlm(
             "bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     constructor() {
         effect(() =>
-            this._classSettable?.setClassToCustomElement(this._computedClass())
+            this._classSettable?.setClassToCustomElement(this._computedClass()),
         );
     }
 }

@@ -17,6 +17,6 @@ export class HlmAvatarImageDirective {
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm("aspect-square object-cover h-full w-full", this.userClass())
+        hlm("aspect-square object-cover h-full w-full", this.userClass()),
     );
 }

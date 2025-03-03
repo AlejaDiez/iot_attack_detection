@@ -24,7 +24,7 @@ export class HlmTrowComponent {
     protected _computedClass = computed(() =>
         hlm(
             "flex flex border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

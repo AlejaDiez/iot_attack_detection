@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
-import { Connection } from "@models/connection";
+import { Connection, TransmittingStatus } from "@models/connection";
 import { Position } from "@models/position";
 
 @Component({
@@ -10,31 +10,30 @@ import { Position } from "@models/position";
     styleUrl: "connection.component.css",
 })
 export class ConnectionComponent {
-    @Input()
+    @Input({ required: true })
     public connection!: Connection;
-    public active: boolean = false;
-    public reverse: boolean = false;
-
-    public get origin(): Position {
-        return this.connection.origin.position;
+    protected get transmitting(): boolean {
+        return this.connection.transmitting !== TransmittingStatus.NONE;
     }
-
-    public get destination(): Position {
-        return this.connection.destination.position;
+    protected get reverse(): boolean {
+        return this.connection.transmitting === TransmittingStatus.DEVICE_TO_ROUTER;
     }
-
-    public get w(): number {
-        return Math.abs(this.destination.x - this.origin.x) + 60;
+    protected get router(): Position {
+        return this.connection.router.position;
     }
-
-    public get h(): number {
-        return Math.abs(this.destination.y - this.origin.y) + 60;
+    protected get device(): Position {
+        return this.connection.device.position;
     }
-
-    public get t(): Position {
+    protected get w(): number {
+        return Math.abs(this.device.x - this.router.x) + 60;
+    }
+    protected get h(): number {
+        return Math.abs(this.device.y - this.router.y) + 60;
+    }
+    protected get t(): Position {
         return {
-            x: (this.origin.x + this.destination.x) / 2 - this.w / 2,
-            y: (this.origin.y + this.destination.y) / 2 + this.h / 2,
+            x: (this.router.x + this.device.x) / 2 - this.w / 2,
+            y: (this.router.y + this.device.y) / 2 + this.h / 2,
         };
     }
 }

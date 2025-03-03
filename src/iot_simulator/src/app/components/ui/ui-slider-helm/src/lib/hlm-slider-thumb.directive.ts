@@ -20,8 +20,8 @@ export class HlmSliderThumbDirective {
             this._brnSlider.brnSliderTrack()?.brnSliderInput()?.isFocused()
                 ? "ring-2 ring-gray-400"
                 : "",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
     protected _direction = computed(() => this._brnSlider.direction());
 

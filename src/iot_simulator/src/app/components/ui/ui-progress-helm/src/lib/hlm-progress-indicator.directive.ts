@@ -19,17 +19,17 @@ export class HlmProgressIndicatorDirective {
     protected readonly _computedClass = computed(() =>
         hlm(
             "inline-flex transform-gpu h-full w-full flex-1 bg-primary transition-all",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     protected readonly transform = computed(
-        () => `translateX(-${100 - (this._progress.value() ?? 100)}%)`
+        () => `translateX(-${100 - (this._progress.value() ?? 100)}%)`,
     );
 
     protected readonly indeterminate = computed(
         () =>
             this._progress.value() === null ||
-            this._progress.value() === undefined
+            this._progress.value() === undefined,
     );
 }

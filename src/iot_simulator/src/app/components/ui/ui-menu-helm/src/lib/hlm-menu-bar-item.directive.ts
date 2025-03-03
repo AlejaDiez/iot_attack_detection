@@ -16,7 +16,7 @@ export class HlmMenuBarItemDirective {
     protected _computedClass = computed(() =>
         hlm(
             "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

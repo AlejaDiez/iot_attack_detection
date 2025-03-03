@@ -27,14 +27,14 @@ export class HlmTableComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "flex flex-col text-sm [&_hlm-trow:last-child]:border-0",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     // we aria-labelledby to be settable from outside but use the input by default.
     public readonly _labeledByInput = input<string | null | undefined>(
         undefined,
-        { alias: "aria-labelledby" }
+        { alias: "aria-labelledby" },
     );
     public readonly labeledBy = signal<string | null | undefined>(undefined);
 

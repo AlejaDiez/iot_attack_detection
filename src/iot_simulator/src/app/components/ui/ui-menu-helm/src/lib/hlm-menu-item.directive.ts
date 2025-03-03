@@ -16,7 +16,7 @@ export const hlmMenuItemVariants = cva(
     {
         variants: { inset: { true: "pl-8", false: "" } },
         defaultVariants: { inset: false },
-    }
+    },
 );
 export type HlmMenuItemVariants = VariantProps<typeof hlmMenuItemVariants>;
 
@@ -39,7 +39,7 @@ export class HlmMenuItemDirective {
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm(hlmMenuItemVariants({ inset: this._inset() }), this.userClass())
+        hlm(hlmMenuItemVariants({ inset: this._inset() }), this.userClass()),
     );
 
     @Input({ transform: booleanAttribute })

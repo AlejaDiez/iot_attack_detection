@@ -35,7 +35,8 @@ const DIRECTIVES = [
                 class="w-80"
                 hlmInput
                 type="text"
-                placeholder="Your Name" />
+                placeholder="Your Name"
+            />
             <hlm-error data-testid="hlm-error">Your name is required</hlm-error>
             <hlm-hint data-testid="hlm-hint"
                 >This is your public display name.</hlm-hint
@@ -60,7 +61,8 @@ class SingleFormFieldMock {
                 class="w-80"
                 hlmInput
                 type="text"
-                placeholder="Your Name" />
+                placeholder="Your Name"
+            />
             <hlm-error data-testid="hlm-error">Your name is required</hlm-error>
             <hlm-hint data-testid="hlm-hint"
                 >This is your public display name.</hlm-hint

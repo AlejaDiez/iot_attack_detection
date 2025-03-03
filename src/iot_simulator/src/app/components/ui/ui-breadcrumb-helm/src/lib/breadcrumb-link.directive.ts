@@ -33,6 +33,6 @@ export class HlmBreadcrumbLinkDirective {
     public readonly link = input<RouterLink["routerLink"]>();
 
     protected readonly _computedClass = computed(() =>
-        hlm("transition-colors hover:text-foreground", this.userClass())
+        hlm("transition-colors hover:text-foreground", this.userClass()),
     );
 }

@@ -21,6 +21,6 @@ export type CardDescriptionVariants = VariantProps<
 export class HlmCardDescriptionDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm(cardDescriptionVariants(), this.userClass())
+        hlm(cardDescriptionVariants(), this.userClass()),
     );
 }

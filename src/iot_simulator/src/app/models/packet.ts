@@ -65,8 +65,8 @@ export interface Packet {
     tcpFlags: TCPFlags;
 
     // Información temporal
-    /* Momento en que se generó el paquete (ms) */
-    timestamp: number;
+    /* Momento en que se generó el paquete */
+    timestamp: Date;
     /* Tiempo de vida del paquete */
     ttl: number;
 }

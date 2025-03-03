@@ -30,17 +30,22 @@ import { HlmSliderTrackInactiveDirective } from "./hlm-slider-track-inactive.dir
                 <div hlmSliderTrackActiveFill></div>
             </div>
             @if (_brnSlider.showTickMarks()) {
-            <div hlmSliderTickMarks>
-                @for (tickMark of _brnSliderTrack.tickMarks(); track $index) {
-                <div
-                    hlmSliderTickMark
-                    [data]="{
-                        tickMarkIndex: $index,
-                        totalTickMarks: _brnSliderTrack.tickMarks().length
-                    }"
-                    [active]="tickMark"></div>
-                }
-            </div>
+                <div hlmSliderTickMarks>
+                    @for (
+                        tickMark of _brnSliderTrack.tickMarks();
+                        track $index
+                    ) {
+                        <div
+                            hlmSliderTickMark
+                            [data]="{
+                                tickMarkIndex: $index,
+                                totalTickMarks:
+                                    _brnSliderTrack.tickMarks().length,
+                            }"
+                            [active]="tickMark"
+                        ></div>
+                    }
+                </div>
             }
         </div>
     `,
@@ -61,8 +66,8 @@ export class HlmSliderTrackComponent {
     protected _computedClass = computed(() =>
         hlm(
             "flex w-full h-2 px-3 self-center relative transition-all",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     protected readonly _brnSlider = inject(BRN_SLIDER);

@@ -23,7 +23,7 @@ export class HlmAlertDialogFooterComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }
