@@ -42,8 +42,7 @@ import { HlmSliderTrackInactiveDirective } from "./hlm-slider-track-inactive.dir
                                 totalTickMarks:
                                     _brnSliderTrack.tickMarks().length,
                             }"
-                            [active]="tickMark"
-                        ></div>
+                            [active]="tickMark"></div>
                     }
                 </div>
             }

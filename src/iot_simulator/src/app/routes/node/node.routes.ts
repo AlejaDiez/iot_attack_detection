@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
+import { AttackComponent } from "./attack/attack.component";
+import { ConfigurationComponent } from "./configuration/configuration.component";
+import { NetworkTrafficComponent } from "./network-traffic/network-traffic.component";
 import { NodeComponent } from "./node.component";
-import { AttackComponent } from "./routes/attack/attack.component";
-import { ConfigurationComponent } from "./routes/configuration/configuration.component";
-import { NetworkTrafficComponent } from "./routes/network-traffic/network-traffic.component";
 
 export const routes: Routes = [
     {
@@ -12,7 +12,6 @@ export const routes: Routes = [
             { path: "network-traffic", component: NetworkTrafficComponent },
             { path: "attack", component: AttackComponent },
             { path: "configuration", component: ConfigurationComponent },
-            { path: "**", redirectTo: "network-traffic" },
         ],
     },
 ];

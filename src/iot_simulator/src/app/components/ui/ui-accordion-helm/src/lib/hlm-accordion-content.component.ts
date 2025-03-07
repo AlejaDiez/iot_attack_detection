@@ -3,7 +3,6 @@ import {
     Component,
     ViewEncapsulation,
     computed,
-    effect,
     input,
 } from "@angular/core";
 import { BrnAccordionContentComponent } from "@spartan-ng/brain/accordion";
@@ -36,11 +35,6 @@ export class HlmAccordionContentComponent extends BrnAccordionContentComponent {
 
     constructor() {
         super();
-        effect(
-            () => {
-                this.setClassToCustomElement("pt-1 pb-4");
-            },
-            { allowSignalWrites: true },
-        );
+        this.setClassToCustomElement("pt-1 pb-4");
     }
 }

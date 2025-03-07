@@ -15,8 +15,7 @@ import type { ClassValue } from "clsx";
             hlm
             size="none"
             class="h-full w-full"
-            name="lucideChevronRight"
-        />
+            name="lucideChevronRight" />
     `,
     host: {
         "[class]": "_computedClass()",

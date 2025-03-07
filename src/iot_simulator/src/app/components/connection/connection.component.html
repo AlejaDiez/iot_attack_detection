@@ -5,14 +5,12 @@
         top: 'calc(50% - ' + (router.y + device.y) / 2 + 'px)',
         width: w + 'px',
         height: h + 'px',
-    }"
->
+    }">
     <line
         [attr.x1]="router.x - t.x"
         [attr.y1]="t.y - router.y"
         [attr.x2]="device.x - t.x"
         [attr.y2]="t.y - device.y"
         class="connection"
-        [ngClass]="{ transmitting, reverse }"
-    />
+        [ngClass]="{ transmitting, reverse }" />
 </svg>

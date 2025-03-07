@@ -1,17 +1,16 @@
 <div
     hlmCard
-    routerLink="/node/{{ node.mac }}"
     class="node"
     [ngClass]="{ dragging, communicating: node.communicating }"
     routerLinkActive="focused"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
-    }"
->
+    }">
     @switch (node.type) {
         @case ("router") {
             <ng-icon name="lucideRouter" size="24" />
+            <ng-icon name="lucideShield" size="16" class="cyber-shield" />
         }
         @case ("iot") {
             <ng-icon name="lucideCpu" size="24" />
@@ -27,8 +26,7 @@
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
-    }"
->
+    }">
     <span class="text-lg font-bold">{{ node.name }}</span>
     <span class="text-sm text-muted-foreground opacity-60">{{ node.ip }}</span>
 </div>

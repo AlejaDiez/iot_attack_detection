@@ -9,7 +9,7 @@ module.exports = {
                 inter: ["Inter", "sans-serif"],
             },
             zIndex: {
-                "inf": 999
+                inf: 999,
             },
         },
     },

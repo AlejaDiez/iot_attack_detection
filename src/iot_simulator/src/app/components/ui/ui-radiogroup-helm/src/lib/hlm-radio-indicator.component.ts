@@ -13,8 +13,7 @@ const btnLike =
     },
     template: `
         <div
-            class="absolute inset-0 hidden scale-[55%] rounded-full bg-foreground group-[.brn-radio-checked]:inline-block"
-        ></div>
+            class="absolute inset-0 hidden scale-[55%] rounded-full bg-foreground group-[.brn-radio-checked]:inline-block"></div>
         <div class="${btnLike} rounded-full border border-primary"></div>
     `,
 })

@@ -39,14 +39,12 @@ export const HLM_CHECKBOX_VALUE_ACCESSOR = {
             [aria-labelledby]="ariaLabelledby()"
             [aria-describedby]="ariaDescribedby()"
             (changed)="_handleChange()"
-            (touched)="_onTouched?.()"
-        >
+            (touched)="_onTouched?.()">
             <ng-icon
                 [class]="_computedIconClass()"
                 hlm
                 size="sm"
-                name="lucideCheck"
-            />
+                name="lucideCheck" />
         </brn-checkbox>
     `,
     host: {

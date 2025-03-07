@@ -23,6 +23,16 @@
     cursor: pointer;
 }
 
+.node .cyber-shield {
+    position: absolute;
+    transform: translate(8px, 8px);
+}
+
+::ng-deep .node .cyber-shield svg {
+    stroke-width: 2.5px !important;
+    @apply fill-card-foreground text-card;
+}
+
 .node:focus {
     @apply ring-0 ring-offset-0;
 }

@@ -1,7 +1,7 @@
 <form [formGroup]="form" class="flex flex-col gap-4">
     <label hlmLabel>
         Objetivo
-        <brn-select class="inline-block w-full !mt-2" placeholder="Ip destino">
+        <brn-select class="!mt-2 inline-block w-full" placeholder="Ip destino">
             <hlm-select-trigger class="w-full">
                 <hlm-select-value />
             </hlm-select-trigger>
@@ -14,9 +14,9 @@
     <div class="grid grid-cols-3 gap-4">
         <label
             hlmLabel
-            class="flex flex-col items-center gap-3 p-4 border-2 border-muted rounded-md cursor-pointer select-none transition-all hover:bg-accent"
+            class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent"
             [ngClass]="{
-                '!border-primary': form.get('attack_type')!.value === 'dos'
+                '!border-primary': form.get('attack_type')!.value === 'dos',
             }">
             <input
                 type="radio"
@@ -28,9 +28,9 @@
         </label>
         <label
             hlmLabel
-            class="flex flex-col items-center gap-3 p-4 border-2 border-muted rounded-md cursor-pointer select-none transition-all hover:bg-accent"
+            class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent"
             [ngClass]="{
-                '!border-primary': form.get('attack_type')!.value === 'ddos'
+                '!border-primary': form.get('attack_type')!.value === 'ddos',
             }">
             <input
                 type="radio"
@@ -42,9 +42,10 @@
         </label>
         <label
             hlmLabel
-            class="flex flex-col items-center gap-3 p-4 border-2 border-muted rounded-md cursor-pointer select-none transition-all hover:bg-accent"
+            class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent"
             [ngClass]="{
-                '!border-primary': form.get('attack_type')!.value === 'scanning'
+                '!border-primary':
+                    form.get('attack_type')!.value === 'scanning',
             }">
             <input
                 type="radio"

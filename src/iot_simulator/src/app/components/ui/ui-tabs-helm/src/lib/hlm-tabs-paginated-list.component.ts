@@ -38,22 +38,19 @@ import { listVariants } from "./hlm-tabs-list.component";
             [disabled]="_disableScrollBefore || null"
             (click)="_handlePaginatorClick('before')"
             (mousedown)="_handlePaginatorPress('before', $event)"
-            (touchend)="_stopInterval()"
-        >
+            (touchend)="_stopInterval()">
             <ng-icon hlm size="base" name="lucideChevronLeft" />
         </button>
 
         <div
             #tabListContainer
             class="z-[1] flex grow overflow-hidden"
-            (keydown)="_handleKeydown($event)"
-        >
+            (keydown)="_handleKeydown($event)">
             <div
                 class="relative grow transition-transform"
                 #tabList
                 role="tablist"
-                (cdkObserveContent)="_onContentChanges()"
-            >
+                (cdkObserveContent)="_onContentChanges()">
                 <div #tabListInner [class]="_tabListClass()">
                     <ng-content></ng-content>
                 </div>
@@ -72,8 +69,7 @@ import { listVariants } from "./hlm-tabs-list.component";
             [disabled]="_disableScrollAfter || null"
             (click)="_handlePaginatorClick('after')"
             (mousedown)="_handlePaginatorPress('after', $event)"
-            (touchend)="_stopInterval()"
-        >
+            (touchend)="_stopInterval()">
             <ng-icon hlm size="base" name="lucideChevronRight" />
         </button>
     `,

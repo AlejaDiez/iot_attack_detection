@@ -16,7 +16,9 @@ export class ConnectionComponent {
         return this.connection.transmitting !== TransmittingStatus.NONE;
     }
     protected get reverse(): boolean {
-        return this.connection.transmitting === TransmittingStatus.DEVICE_TO_ROUTER;
+        return (
+            this.connection.transmitting === TransmittingStatus.DEVICE_TO_ROUTER
+        );
     }
     protected get router(): Position {
         return this.connection.router.position;

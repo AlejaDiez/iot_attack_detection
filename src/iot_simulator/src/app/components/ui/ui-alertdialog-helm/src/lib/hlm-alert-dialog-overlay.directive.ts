@@ -1,4 +1,4 @@
-import { Directive, computed, effect, input } from "@angular/core";
+import { Directive, computed, effect, input, untracked } from "@angular/core";
 import { hlm, injectCustomClassSettable } from "@spartan-ng/brain/core";
 import type { ClassValue } from "clsx";
 
@@ -15,14 +15,17 @@ export class HlmAlertDialogOverlayDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
         hlm(
-            "bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+            "bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
             this.userClass(),
         ),
     );
 
     constructor() {
-        effect(() =>
-            this._classSettable?.setClassToCustomElement(this._computedClass()),
-        );
+        effect(() => {
+            const classValue = this._computedClass();
+            untracked(() =>
+                this._classSettable?.setClassToCustomElement(classValue),
+            );
+        });
     }
 }

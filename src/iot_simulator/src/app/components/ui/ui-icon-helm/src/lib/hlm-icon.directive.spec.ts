@@ -18,8 +18,7 @@ import { HlmIconDirective } from "./hlm-icon.directive";
             name="lucideCheck"
             [size]="size"
             color="red"
-            strokeWidth="2"
-        />
+            strokeWidth="2" />
     `,
 })
 class HlmMockComponent {

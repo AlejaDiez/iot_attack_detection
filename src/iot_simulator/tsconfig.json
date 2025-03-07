@@ -16,7 +16,6 @@
         "target": "ES2022",
         "module": "ES2022",
         "paths": {
-            "@app/*": ["./src/app/*"],
             "@components/*": ["./src/app/components/*"],
             "@models/*": ["./src/app/models/*"],
             "@routes/*": ["./src/app/routes/*"],
@@ -59,6 +58,9 @@
             ],
             "@spartan-ng/ui-command-helm": [
                 "./src/app/components/ui/ui-command-helm/src/index.ts"
+            ],
+            "@spartan-ng/ui-datepicker-helm": [
+                "./src/app/components/ui/ui-datepicker-helm/src/index.ts"
             ],
             "@spartan-ng/ui-dialog-helm": [
                 "./src/app/components/ui/ui-dialog-helm/src/index.ts"

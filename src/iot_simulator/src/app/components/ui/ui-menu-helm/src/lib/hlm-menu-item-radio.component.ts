@@ -16,8 +16,7 @@ import type { ClassValue } from "clsx";
             hlm
             size="0.5rem"
             class="*:*:fill-current"
-            name="lucideCircle"
-        />
+            name="lucideCircle" />
     `,
     host: {
         "[class]": "_computedClass()",
