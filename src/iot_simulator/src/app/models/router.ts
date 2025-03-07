@@ -28,8 +28,8 @@ export class Router extends Node {
      *
      * @param name Nombre del router.
      */
-    constructor(name: string) {
-        super(name, NodeType.ROUTER, { x: 0, y: 0 });
+    constructor(name: string, position?: { x: number; y: number }) {
+        super(name, NodeType.ROUTER, position);
         this._ip = "192.168.0.1";
         this._arpTable = new Map<string, [string, Connection]>();
     }

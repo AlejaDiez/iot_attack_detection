@@ -1,11 +1,48 @@
-<app-menu-bar class="fixed top-5 left-5 z-inf"></app-menu-bar>
-<div class="relative z-inf">
-    <router-outlet></router-outlet>
-</div>
-<app-canvas>
+<app-menu-bar class="fixed left-5 top-5 z-inf" />
+<div class="relative z-inf"><router-outlet /></div>
+<hlm-toaster richColors theme="system" />
+<app-canvas [brnCtxMenuTriggerFor]="canvasContextMenu">
     @for (node of nodes; track node) {
-    <app-node [node]="node"></app-node>
-    } @for (connection of nodes[0].connections; track connection) {
-    <app-connection [connection]="connection"></app-connection>
+        <app-node
+            [node]="node"
+            [brnCtxMenuTriggerFor]="nodeContextMenu"
+            [brnCtxMenuTriggerData]="{ $implicit: node.mac }" />
+    }
+    @for (connection of connections; track connection) {
+        <app-connection [connection]="connection" />
     }
 </app-canvas>
+
+<ng-template #canvasContextMenu>
+    <hlm-menu class="w-64">
+        <hlm-menu-group>
+            <button hlmMenuItem (click)="addNode($event, 'router')">
+                Insertar router
+                <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem (click)="addNode($event, 'computer')">
+                Insertar ordenador
+                <hlm-menu-shortcut>⌘⇧C</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem (click)="addNode($event, 'iot')">
+                Insertar dispositivo IoT
+                <hlm-menu-shortcut>⌘⇧I</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>
+
+<ng-template #nodeContextMenu let-mac>
+    <hlm-menu class="w-64">
+        <hlm-menu-group>
+            <button hlmMenuItem (click)="nodeTraffic(mac)">
+                Tráfico de red
+            </button>
+            <button hlmMenuItem (click)="nodeConfig(mac)">Configurar</button>
+        </hlm-menu-group>
+        <hlm-menu-separator />
+        <hlm-menu-group>
+            <button hlmMenuItem (click)="deleteNode(mac)">Eliminar</button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>

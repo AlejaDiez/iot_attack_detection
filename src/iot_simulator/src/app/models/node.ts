@@ -45,15 +45,15 @@ export abstract class Node {
      * Crea una instancia de la clase Node.
      *
      * @param name Nombre del nodo.
-     * @param type Tipo de nodo. 
+     * @param type Tipo de nodo.
      * @param position Posición inicial del nodo.
      */
-    public constructor(name: string, type: NodeType, position: Position) {
+    public constructor(name: string, type: NodeType, position?: Position) {
         this._mac = this._generateMacAddress();
         this.name = name;
         this.type = type;
         this._traffic = [];
-        this._position = position;
+        this._position = position ?? { x: 0, y: 0 };
     }
 
     /**
@@ -63,7 +63,7 @@ export abstract class Node {
      */
     private _generateMacAddress(): string {
         return "XX:XX:XX:XX:XX:XX".replace(/X/g, () =>
-            Math.floor(Math.random() * 16).toString(16)
+            Math.floor(Math.random() * 16).toString(16),
         );
     }
 

@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
+import { NodeType } from "@models/node";
+import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
     HlmMenuBarComponent,
@@ -26,6 +28,30 @@ import {
         HlmMenuGroupComponent,
         HlmMenuItemCheckboxDirective,
     ],
-    templateUrl: "./menu-bar.component.html",
+    templateUrl: "menu-bar.component.html",
 })
-export class MenuBarComponent {}
+export class MenuBarComponent {
+    protected get canInsertRouter() {
+        return !this._networkManager.router;
+    }
+
+    constructor(private _networkManager: NetworkManagerService) {}
+
+    @HostListener("document:keydown.meta.shift.r", ["$event"])
+    protected onInsertRouterClick(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.addNode(NodeType.ROUTER);
+    }
+
+    @HostListener("document:keydown.meta.shift.c", ["$event"])
+    protected onInsertComputerClick(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.addNode(NodeType.COMPUTER);
+    }
+
+    @HostListener("document:keydown.meta.shift.i", ["$event"])
+    protected onInsertIoTClick(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.addNode(NodeType.IOT);
+    }
+}

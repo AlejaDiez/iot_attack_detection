@@ -1,6 +1,7 @@
 <hlm-menu-bar class="w-fit">
     <button hlmMenuBarItem [brnMenuTriggerFor]="file">Archivo</button>
     <button hlmMenuBarItem [brnMenuTriggerFor]="edit">Edición</button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="insert">Insertar</button>
     <button hlmMenuBarItem [brnMenuTriggerFor]="view">Ver</button>
 </hlm-menu-bar>
 
@@ -60,6 +61,28 @@
     </hlm-menu>
 </ng-template>
 
+<ng-template #insert>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button
+                hlmMenuItem
+                (click)="onInsertRouterClick()"
+                [disabled]="!canInsertRouter">
+                Router
+                <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem (click)="onInsertComputerClick()">
+                Ordenador
+                <hlm-menu-shortcut>⌘⇧C</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem (click)="onInsertIoTClick()">
+                Dispositivo IoT
+                <hlm-menu-shortcut>⌘⇧I</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>
+
 <ng-template #view>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
@@ -73,10 +96,12 @@
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
-        <button inset hlmMenuItem>
-            Centrar
-            <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
-        </button>
+        <hlm-menu-group>
+            <button inset hlmMenuItem>
+                Centrar
+                <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
             <button inset hlmMenuItem>

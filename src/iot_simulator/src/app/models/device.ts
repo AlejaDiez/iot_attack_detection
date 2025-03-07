@@ -1,7 +1,8 @@
+import { Connection, TransmittingStatus } from "@models/connection";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
+import { Position } from "@models/position";
 import { Router } from "@models/router";
-import { Connection, TransmittingStatus } from "./connection";
 
 /**
  * Clase que representa un dispositivo en la red.
@@ -25,14 +26,11 @@ export class Device extends Node {
      * @param name Nombre del dispositivo.
      * @param type Tipo del dispositivo.
      */
-    constructor(name: string, type: NodeType) {
+    constructor(name: string, type: NodeType, position?: Position) {
         if (type === NodeType.ROUTER)
             throw new Error("Device type cannot be a router");
 
-        super(name, type, {
-            x: Math.floor(Math.random() * 401) - 200,
-            y: Math.floor(Math.random() * 401) - 200,
-        });
+        super(name, type, position);
     }
 
     /**
