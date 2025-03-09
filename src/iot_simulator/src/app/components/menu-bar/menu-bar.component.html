@@ -8,22 +8,22 @@
 <ng-template #file>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onNew($event)">
                 Nuevo archivo
                 <hlm-menu-shortcut>⌘N</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onOpen($event)">
                 Abrir archivo
                 <hlm-menu-shortcut>⌘O</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onClose($event)">
                 Cerrar
                 <hlm-menu-shortcut>⌘W</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onSave($event)">
                 Guardar
                 <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>
             </button>
@@ -66,18 +66,14 @@
         <hlm-menu-group>
             <button
                 hlmMenuItem
-                (click)="onInsertRouterClick()"
+                (click)="onInsertNode($event, 'router')"
                 [disabled]="!canInsertRouter">
                 Router
                 <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem (click)="onInsertComputerClick()">
-                Ordenador
-                <hlm-menu-shortcut>⌘⇧C</hlm-menu-shortcut>
-            </button>
-            <button hlmMenuItem (click)="onInsertIoTClick()">
-                Dispositivo IoT
-                <hlm-menu-shortcut>⌘⇧I</hlm-menu-shortcut>
+            <button hlmMenuItem (click)="onInsertNode($event)">
+                Dispositivo
+                <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>

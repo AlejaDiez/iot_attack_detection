@@ -42,7 +42,7 @@ export class AppComponent {
         return this._networkManager.nodes;
     }
     protected get connections(): Connection[] {
-        return this._networkManager.connections;
+        return this._networkManager.connections ?? [];
     }
 
     public constructor(
@@ -50,19 +50,30 @@ export class AppComponent {
         private _networkManager: NetworkManagerService,
     ) {}
 
-    protected addNode({ clientX, clientY }: MouseEvent, type: string) {
+    protected onInsertNode(event: Event, type?: string) {
+        event.preventDefault();
+        if (event instanceof MouseEvent) {
+            const { clientX, clientY } = event as MouseEvent;
+        }
+
         this._networkManager.addNode(type as NodeType);
     }
 
-    protected deleteNode(mac: string) {
+    protected onDeleteNode(event: Event, mac: string) {
+        event.preventDefault();
+
         this._networkManager.deleteNode(mac);
     }
 
-    protected nodeTraffic(mac: string) {
+    protected onNodeTraffic(event: Event, mac: string) {
+        event.preventDefault();
+
         this._router.navigate([mac, "network-traffic"]);
     }
 
-    protected nodeConfig(mac: string) {
+    protected onNodeConfig(event: Event, mac: string) {
+        event.preventDefault();
+
         this._router.navigate([mac, "configuration"]);
     }
 }

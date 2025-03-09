@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import {
     FormControl,
@@ -28,7 +27,6 @@ export interface AddNodeDialogContext {
     selector: "app-add-node-dialog",
     imports: [
         BrnSelectImports,
-        CommonModule,
         ReactiveFormsModule,
         HlmButtonDirective,
         HlmDialogHeaderComponent,
@@ -82,13 +80,8 @@ export class AddNodeDialogComponent implements OnInit {
         type: new FormControl(null, [Validators.required]),
     });
     protected get title(): string {
-        switch (this._context.type) {
-            case NodeType.ROUTER:
-                return "router";
-            case NodeType.COMPUTER:
-            case NodeType.IOT:
-                return "dispositivo";
-        }
+        if (this._context.type === NodeType.ROUTER) return "router";
+        return "dispositivo";
     }
     protected get type(): string {
         switch (this.form.get("type")?.value) {
@@ -99,31 +92,27 @@ export class AddNodeDialogComponent implements OnInit {
             case NodeType.IOT:
                 return "Dispositivo IoT";
             default:
-                return "Selecciona un tipo";
+                return "Seleccione un tipo";
         }
     }
     protected get types(): { value: string; label: string }[] {
-        switch (this._context.type) {
-            case NodeType.ROUTER:
-                return [
-                    {
-                        value: NodeType.ROUTER,
-                        label: "Router",
-                    },
-                ];
-            case NodeType.COMPUTER:
-            case NodeType.IOT:
-                return [
-                    {
-                        value: NodeType.COMPUTER,
-                        label: "Ordenador",
-                    },
-                    {
-                        value: NodeType.IOT,
-                        label: "Dispositivo IoT",
-                    },
-                ];
-        }
+        if (this._context.type === NodeType.ROUTER)
+            return [
+                {
+                    value: NodeType.ROUTER,
+                    label: "Router",
+                },
+            ];
+        return [
+            {
+                value: NodeType.COMPUTER,
+                label: "Ordenador",
+            },
+            {
+                value: NodeType.IOT,
+                label: "Dispositivo IoT",
+            },
+        ];
     }
 
     constructor(private _ref: BrnDialogRef<AddNodeDialogContext>) {
@@ -131,12 +120,14 @@ export class AddNodeDialogComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.form.get("type")!.setValue(this._context.type);
+        this.form.get("type")!.setValue(this._context.type ?? null);
         if (this._context.type === NodeType.ROUTER)
             this.form.get("type")!.disable();
     }
 
     protected submit() {
+        if (this.form.invalid) return;
+
         this._ref.close(this.form.getRawValue());
     }
 }

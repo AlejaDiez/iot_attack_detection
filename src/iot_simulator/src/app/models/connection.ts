@@ -55,4 +55,13 @@ export class Connection {
             this.transmitting = TransmittingStatus.NONE;
         }, this.latency);
     }
+
+    /**
+     * Convierte la conexión a un objeto plano.
+     *
+     * @returns Objeto plano con los datos de la conexión.
+     */
+    public toObject(): any {
+        return this.latency;
+    }
 }

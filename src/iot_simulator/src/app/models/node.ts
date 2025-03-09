@@ -15,12 +15,12 @@ export enum NodeType {
  */
 export abstract class Node {
     /* Identificador único del nodo */
-    private _mac: string;
+    protected _mac: string;
     public get mac(): string {
         return this._mac;
     }
     /* Indentificador del nodo en la red */
-    protected abstract _ip?: string;
+    protected _ip?: string;
     public get ip(): string | undefined {
         return this._ip;
     }
@@ -102,4 +102,21 @@ export abstract class Node {
         this._position.x = x;
         this._position.y = y;
     }
+
+    /**
+     * Convierte un objeto plano en un nodo.
+     *
+     * @param object Objeto plano a convertir.
+     * @returns Nodo convertido.
+     */
+    public static fromObject(obj: any): Node {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Convierte el nodo en un objeto plano.
+     *
+     * @returns Nodo convertido en objeto plano.
+     */
+    public abstract toObject(): any;
 }

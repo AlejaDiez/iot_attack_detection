@@ -16,17 +16,13 @@
 <ng-template #canvasContextMenu>
     <hlm-menu class="w-64">
         <hlm-menu-group>
-            <button hlmMenuItem (click)="addNode($event, 'router')">
+            <button hlmMenuItem (click)="onInsertNode($event, 'router')">
                 Insertar router
                 <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem (click)="addNode($event, 'computer')">
-                Insertar ordenador
-                <hlm-menu-shortcut>⌘⇧C</hlm-menu-shortcut>
-            </button>
-            <button hlmMenuItem (click)="addNode($event, 'iot')">
-                Insertar dispositivo IoT
-                <hlm-menu-shortcut>⌘⇧I</hlm-menu-shortcut>
+            <button hlmMenuItem (click)="onInsertNode($event)">
+                Insertar dispositivo
+                <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
@@ -35,14 +31,18 @@
 <ng-template #nodeContextMenu let-mac>
     <hlm-menu class="w-64">
         <hlm-menu-group>
-            <button hlmMenuItem (click)="nodeTraffic(mac)">
+            <button hlmMenuItem (click)="onNodeTraffic($event, mac)">
                 Tráfico de red
             </button>
-            <button hlmMenuItem (click)="nodeConfig(mac)">Configurar</button>
+            <button hlmMenuItem (click)="onNodeConfig($event, mac)">
+                Configurar
+            </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem (click)="deleteNode(mac)">Eliminar</button>
+            <button hlmMenuItem (click)="onDeleteNode($event, mac)">
+                Eliminar
+            </button>
         </hlm-menu-group>
     </hlm-menu>
 </ng-template>

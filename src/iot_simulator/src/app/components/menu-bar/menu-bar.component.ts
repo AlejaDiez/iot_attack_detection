@@ -37,21 +37,42 @@ export class MenuBarComponent {
 
     constructor(private _networkManager: NetworkManagerService) {}
 
+    @HostListener("document:keydown.meta.n", ["$event"])
+    protected onNew(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.newNetwork();
+    }
+
+    @HostListener("document:keydown.meta.o", ["$event"])
+    protected onOpen(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.importNetwork();
+    }
+
+    @HostListener("document:keydown.meta.w", ["$event"])
+    protected onClose(event: Event) {
+        event.preventDefault();
+
+        window.close();
+    }
+
+    @HostListener("document:keydown.meta.s", ["$event"])
+    protected onSave(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.exportNetwork();
+    }
+
+    @HostListener("document:keydown.meta.shift.d", ["$event"])
     @HostListener("document:keydown.meta.shift.r", ["$event"])
-    protected onInsertRouterClick(event?: Event) {
-        event?.preventDefault();
-        this._networkManager.addNode(NodeType.ROUTER);
-    }
+    protected onInsertNode(event: Event, type?: string) {
+        event.preventDefault();
+        if (event instanceof KeyboardEvent) {
+            type = (event as KeyboardEvent).key === "r" ? "router" : undefined;
+        }
 
-    @HostListener("document:keydown.meta.shift.c", ["$event"])
-    protected onInsertComputerClick(event?: Event) {
-        event?.preventDefault();
-        this._networkManager.addNode(NodeType.COMPUTER);
-    }
-
-    @HostListener("document:keydown.meta.shift.i", ["$event"])
-    protected onInsertIoTClick(event?: Event) {
-        event?.preventDefault();
-        this._networkManager.addNode(NodeType.IOT);
+        this._networkManager.addNode(type as NodeType);
     }
 }
