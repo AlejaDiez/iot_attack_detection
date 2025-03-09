@@ -6,7 +6,12 @@ import { hlm } from "@spartan-ng/brain/core";
     standalone: true,
     selector: "hlm-command-group",
     template: "<ng-content />",
-    hostDirectives: [BrnCommandGroupDirective],
+    hostDirectives: [
+        {
+            directive: BrnCommandGroupDirective,
+            inputs: ["id"],
+        },
+    ],
     host: {
         "[class]": "_computedClass()",
     },
@@ -19,7 +24,7 @@ export class HlmCommandGroupComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "flex flex-col overflow-hidden p-1 text-foreground data-[hidden]:hidden",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

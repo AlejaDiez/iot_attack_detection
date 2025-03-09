@@ -59,7 +59,7 @@ export class HlmPaginationLinkDirective {
                 variant: this.isActive() ? "outline" : "ghost",
                 size: this.size(),
             }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

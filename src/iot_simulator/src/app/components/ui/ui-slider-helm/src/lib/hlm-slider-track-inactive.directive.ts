@@ -14,7 +14,7 @@ export class HlmSliderTrackInactiveDirective {
     protected _computedClass = computed(() =>
         hlm(
             "w-full h-full bg-secondary rounded-full transition-all",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

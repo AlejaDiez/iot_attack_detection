@@ -8,7 +8,7 @@ export const paginationContentVariants = cva(
     {
         variants: {},
         defaultVariants: {},
-    }
+    },
 );
 export type PaginationContentVariants = VariantProps<
     typeof paginationContentVariants
@@ -24,6 +24,6 @@ export type PaginationContentVariants = VariantProps<
 export class HlmPaginationContentDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm(paginationContentVariants(), this.userClass())
+        hlm(paginationContentVariants(), this.userClass()),
     );
 }

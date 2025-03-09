@@ -8,6 +8,9 @@ module.exports = {
             fontFamily: {
                 inter: ["Inter", "sans-serif"],
             },
+            zIndex: {
+                inf: 999,
+            },
         },
     },
     plugins: [],

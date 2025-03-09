@@ -20,8 +20,8 @@ export class HlmSliderTrackActiveFillDirective {
     protected _computedClass = computed(() =>
         hlm(
             "h-full w-full absolute top-0 pointer-events-none bg-primary ltr:origin-left rtl:origin-right transition-all scale-x-0",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
     protected _direction = computed(() => this._brnSlider.direction());
 

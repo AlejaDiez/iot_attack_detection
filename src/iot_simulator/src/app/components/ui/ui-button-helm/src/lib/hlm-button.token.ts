@@ -12,11 +12,11 @@ const defaultConfig: BrnButtonConfig = {
 };
 
 const BrnButtonConfigToken = new InjectionToken<BrnButtonConfig>(
-    "BrnButtonConfig"
+    "BrnButtonConfig",
 );
 
 export function provideBrnButtonConfig(
-    config: Partial<BrnButtonConfig>
+    config: Partial<BrnButtonConfig>,
 ): ValueProvider {
     return {
         provide: BrnButtonConfigToken,

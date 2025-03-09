@@ -6,7 +6,9 @@ import { hlm } from "@spartan-ng/brain/core";
     standalone: true,
     selector: "input[hlm-command-search-input]",
     template: "",
-    hostDirectives: [BrnCommandSearchInputDirective],
+    hostDirectives: [
+        { directive: BrnCommandSearchInputDirective, inputs: ["value"] },
+    ],
     host: {
         "[class]": "_computedClass()",
     },
@@ -19,7 +21,7 @@ export class HlmCommandSearchInputComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "bg-transparent disabled:cursor-not-allowed disabled:opacity-50 h-11 outline-none placeholder:text-muted-foreground py-3 text-sm w-full",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

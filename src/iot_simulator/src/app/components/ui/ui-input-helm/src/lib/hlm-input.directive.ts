@@ -7,6 +7,7 @@ import {
     inject,
     input,
     signal,
+    untracked,
 } from "@angular/core";
 import { FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { hlm } from "@spartan-ng/brain/core";
@@ -34,7 +35,7 @@ export const inputVariants = cva(
             size: "default",
             error: "auto",
         },
-    }
+    },
 );
 type InputVariants = VariantProps<typeof inputVariants>;
 
@@ -64,15 +65,15 @@ export class HlmInputDirective implements BrnFormFieldControl, DoCheck {
     protected readonly _computedClass = computed(() =>
         hlm(
             inputVariants({ size: this.size(), error: this.state().error() }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     private readonly _injector = inject(Injector);
 
     public readonly ngControl: NgControl | null = this._injector.get(
         NgControl,
-        null
+        null,
     );
 
     private readonly _errorStateTracker: ErrorStateTracker;
@@ -84,7 +85,7 @@ export class HlmInputDirective implements BrnFormFieldControl, DoCheck {
     });
 
     public readonly errorState = computed(() =>
-        this._errorStateTracker.errorState()
+        this._errorStateTracker.errorState(),
     );
 
     constructor() {
@@ -92,17 +93,17 @@ export class HlmInputDirective implements BrnFormFieldControl, DoCheck {
             this._defaultErrorStateMatcher,
             this.ngControl,
             this._parentFormGroup,
-            this._parentForm
+            this._parentForm,
         );
 
-        effect(
-            () => {
+        effect(() => {
+            const error = this._errorStateTracker.errorState();
+            untracked(() => {
                 if (this.ngControl) {
-                    this.setError(this._errorStateTracker.errorState());
+                    this.setError(error);
                 }
-            },
-            { allowSignalWrites: true }
-        );
+            });
+        });
     }
 
     ngDoCheck() {

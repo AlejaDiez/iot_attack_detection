@@ -1,0 +1,39 @@
+exportedAt: "2025-03-09T11:58:01.657Z"
+router:
+    mac: "7e:eb:8b:83:80:be"
+    name: "Router"
+    ip: "192.168.0.1"
+    position:
+        x: 0
+        y: 0
+devices:
+    - mac: 1
+      name: "T"
+      type: "iot"
+      position:
+          x: -180
+          y: 0
+    - mac: "c3:50:83:a1:2b:a9"
+      name: "E"
+      type: "iot"
+      position:
+          x: -100
+          y: 120
+    - mac: "48:90:2d:6d:f6:4a"
+      name: "D"
+      type: "iot"
+      position:
+          x: 100
+          y: 120
+    - mac: "11:20:47:8a:6c:c4"
+      name: "D"
+      type: "iot"
+      position:
+          x: 180
+          y: 0
+    - mac: "ad:96:65:97:a8:bd"
+      name: "Y"
+      type: "computer"
+      position:
+          x: 0
+          y: -120

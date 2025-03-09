@@ -25,7 +25,7 @@ export const labelVariants = cva(
             variant: "default",
             error: "auto",
         },
-    }
+    },
 );
 export type LabelVariants = VariantProps<typeof labelVariants>;
 
@@ -63,8 +63,8 @@ export class HlmLabelDirective {
                 disabled: this._brn?.dataDisabled() ?? "auto",
             }),
             "[&.ng-invalid.ng-touched]:text-destructive",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     setError(error: LabelVariants["error"]): void {

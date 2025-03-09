@@ -7,7 +7,7 @@ export const alertTitleVariants = cva(
     "mb-1 font-medium leading-none tracking-tight",
     {
         variants: {},
-    }
+    },
 );
 export type AlertTitleVariants = VariantProps<typeof alertTitleVariants>;
 
@@ -21,6 +21,6 @@ export type AlertTitleVariants = VariantProps<typeof alertTitleVariants>;
 export class HlmAlertTitleDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm(alertTitleVariants(), this.userClass())
+        hlm(alertTitleVariants(), this.userClass()),
     );
 }

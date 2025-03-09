@@ -14,6 +14,6 @@ import type { ClassValue } from "clsx";
 export class HlmAlertDialogDescriptionDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm("text-sm text-muted-foreground", this.userClass())
+        hlm("text-sm text-muted-foreground", this.userClass()),
     );
 }

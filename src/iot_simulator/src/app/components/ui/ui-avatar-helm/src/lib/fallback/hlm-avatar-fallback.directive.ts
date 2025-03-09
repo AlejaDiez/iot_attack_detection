@@ -38,7 +38,7 @@ export class HlmAvatarFallbackDirective {
         return hlm(
             "flex h-full w-full items-center justify-center rounded-full",
             this._autoColorTextCls() ?? "bg-muted",
-            this._brn?.userClass()
+            this._brn?.userClass(),
         );
     });
 }

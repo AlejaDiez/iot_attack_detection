@@ -40,7 +40,7 @@ describe("HlmAvatarComponent", () => {
     it("should add the default classes if no inputs are provided", () => {
         fixture.detectChanges();
         expect(fixture.nativeElement.className).toBe(
-            "flex h-10 overflow-hidden relative rounded-full shrink-0 w-10"
+            "flex h-10 overflow-hidden relative rounded-full shrink-0 w-10",
         );
     });
 
@@ -70,7 +70,7 @@ describe("HlmAvatarComponent", () => {
         const mockFixture = TestBed.createComponent(MockComponent);
         mockFixture.detectChanges();
         expect(
-            mockFixture.nativeElement.querySelector("span").textContent
+            mockFixture.nativeElement.querySelector("span").textContent,
         ).toBe("fallback");
     });
 });

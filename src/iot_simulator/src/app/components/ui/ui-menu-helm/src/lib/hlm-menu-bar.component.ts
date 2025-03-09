@@ -17,7 +17,7 @@ export class HlmMenuBarComponent {
     protected _computedClass = computed(() =>
         hlm(
             "border-border flex h-10 items-center space-x-1 rounded-md border bg-background p-1",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

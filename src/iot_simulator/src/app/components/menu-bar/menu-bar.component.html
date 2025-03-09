@@ -1,28 +1,29 @@
 <hlm-menu-bar class="w-fit">
     <button hlmMenuBarItem [brnMenuTriggerFor]="file">Archivo</button>
     <button hlmMenuBarItem [brnMenuTriggerFor]="edit">Edición</button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="insert">Insertar</button>
     <button hlmMenuBarItem [brnMenuTriggerFor]="view">Ver</button>
 </hlm-menu-bar>
 
 <ng-template #file>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onNew($event)">
                 Nuevo archivo
                 <hlm-menu-shortcut>⌘N</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onOpen($event)">
                 Abrir archivo
                 <hlm-menu-shortcut>⌘O</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onClose($event)">
                 Cerrar
                 <hlm-menu-shortcut>⌘W</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem>
+            <button hlmMenuItem (click)="onSave($event)">
                 Guardar
                 <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>
             </button>
@@ -60,6 +61,24 @@
     </hlm-menu>
 </ng-template>
 
+<ng-template #insert>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button
+                hlmMenuItem
+                (click)="onInsertNode($event, 'router')"
+                [disabled]="!canInsertRouter">
+                Router
+                <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
+            </button>
+            <button hlmMenuItem (click)="onInsertNode($event)">
+                Dispositivo
+                <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
+</ng-template>
+
 <ng-template #view>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
@@ -73,10 +92,12 @@
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
-        <button inset hlmMenuItem>
-            Centrar
-            <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
-        </button>
+        <hlm-menu-group>
+            <button inset hlmMenuItem>
+                Centrar
+                <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
+            </button>
+        </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
             <button inset hlmMenuItem>

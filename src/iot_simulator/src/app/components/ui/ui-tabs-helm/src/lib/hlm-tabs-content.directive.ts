@@ -25,7 +25,7 @@ export class HlmTabsContentDirective {
     protected _computedClass = computed(() =>
         hlm(
             "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

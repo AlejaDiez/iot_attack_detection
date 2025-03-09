@@ -9,7 +9,12 @@ import { hlm } from "@spartan-ng/brain/core";
     host: {
         "[class]": "_computedClass()",
     },
-    hostDirectives: [BrnCommandListDirective],
+    hostDirectives: [
+        {
+            directive: BrnCommandListDirective,
+            inputs: ["id"],
+        },
+    ],
 })
 export class HlmCommandListComponent {
     /** The user defined class  */
@@ -17,6 +22,9 @@ export class HlmCommandListComponent {
 
     /** The styles to apply  */
     protected readonly _computedClass = computed(() =>
-        hlm("max-h-[300px] overflow-x-hidden overflow-y-auto", this.userClass())
+        hlm(
+            "max-h-[300px] overflow-x-hidden overflow-y-auto",
+            this.userClass(),
+        ),
     );
 }

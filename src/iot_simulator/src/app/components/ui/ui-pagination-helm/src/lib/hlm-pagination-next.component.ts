@@ -44,10 +44,10 @@ export class HlmPaginationNextComponent {
     });
 
     protected readonly size = computed<ButtonVariants["size"]>(() =>
-        this.iconOnly() ? "icon" : "default"
+        this.iconOnly() ? "icon" : "default",
     );
 
     protected readonly _computedClass = computed(() =>
-        hlm("gap-1", !this.iconOnly() ? "pr-2.5" : "", this.userClass())
+        hlm("gap-1", !this.iconOnly() ? "pr-2.5" : "", this.userClass()),
     );
 }

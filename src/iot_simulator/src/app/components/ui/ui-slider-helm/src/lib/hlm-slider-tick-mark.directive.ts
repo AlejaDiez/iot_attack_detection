@@ -25,8 +25,8 @@ export class HlmSliderTickMarkDirective {
         hlm(
             "absolute w-1 h-1 top-0.5 rounded-full rtl:right-0",
             this.active() ? "bg-secondary" : "bg-primary",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
     protected _direction = computed(() => this._brnSlider.direction());
 

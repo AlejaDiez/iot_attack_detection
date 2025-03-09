@@ -13,13 +13,13 @@ const btnLike =
     },
     template: `
         <div
-            class="bg-foreground absolute inset-0 hidden scale-[55%] rounded-full group-[.brn-radio-checked]:inline-block"></div>
-        <div class="border-primary ${btnLike} rounded-full border"></div>
+            class="absolute inset-0 hidden scale-[55%] rounded-full bg-foreground group-[.brn-radio-checked]:inline-block"></div>
+        <div class="${btnLike} rounded-full border border-primary"></div>
     `,
 })
 export class HlmRadioIndicatorComponent {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm("relative inline-flex h-4 w-4", this.userClass())
+        hlm("relative inline-flex h-4 w-4", this.userClass()),
     );
 }

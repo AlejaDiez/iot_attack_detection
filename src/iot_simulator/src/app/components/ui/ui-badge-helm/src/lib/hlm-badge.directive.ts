@@ -45,7 +45,7 @@ export const badgeVariants = cva(
             size: "default",
             static: false,
         },
-    }
+    },
 );
 export type BadgeVariants = VariantProps<typeof badgeVariants>;
 
@@ -64,15 +64,15 @@ export class HlmBadgeDirective {
                 size: this.size(),
                 static: this.static(),
             }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     public readonly variant = input<BadgeVariants["variant"]>("default");
     public readonly static = input<BadgeVariants["static"], BooleanInput>(
         false,
-        { transform: booleanAttribute }
+        { transform: booleanAttribute },
     );
     public readonly size = input<BadgeVariants["size"]>("default");
 }

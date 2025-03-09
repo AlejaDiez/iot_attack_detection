@@ -6,7 +6,13 @@ import { hlm } from "@spartan-ng/brain/core";
     standalone: true,
     selector: "hlm-command",
     template: ` <ng-content /> `,
-    hostDirectives: [BrnCommandDirective],
+    hostDirectives: [
+        {
+            directive: BrnCommandDirective,
+            inputs: ["id", "filter"],
+            outputs: ["valueChange"],
+        },
+    ],
     host: {
         "[class]": "_computedClass()",
     },
@@ -19,7 +25,7 @@ export class HlmCommandComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "w-96 bg-popover border border-border flex flex-col h-full overflow-hidden rounded-md text-popover-foreground",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

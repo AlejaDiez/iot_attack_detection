@@ -16,6 +16,6 @@ export class HlmCommandSeparatorComponent {
 
     /*** The styles to apply  */
     protected readonly _computedClass = computed(() =>
-        hlm("h-px block w-full border-b border-border", this.userClass())
+        hlm("h-px block w-full border-b border-border", this.userClass()),
     );
 }

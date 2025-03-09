@@ -38,12 +38,12 @@ export class HlmAspectRatioDirective implements AfterViewInit {
         },
     });
     protected readonly _computedPaddingBottom = computed(
-        () => `${100 / this.ratio()}%`
+        () => `${100 / this.ratio()}%`,
     );
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm("relative w-full", this.userClass())
+        hlm("relative w-full", this.userClass()),
     );
 
     ngAfterViewInit() {

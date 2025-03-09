@@ -1,22 +1,28 @@
 <div
     hlmCard
     class="node"
-    [ngClass]="{ moving, active, selected}"
+    [ngClass]="{ dragging, communicating: node.communicating }"
+    routerLinkActive="focused"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',
     }">
-    @switch (node.type) { @case("router") {
-    <ng-icon name="lucideRouter" size="24"></ng-icon>
-    } @case("iot") {
-    <ng-icon name="lucideCpu" size="24"></ng-icon>
-    } @case("computer") {
-    <ng-icon name="lucideLaptop" size="24"></ng-icon>
-    } }
+    @switch (node.type) {
+        @case ("router") {
+            <ng-icon name="lucideRouter" size="24" />
+            <ng-icon name="lucideShield" size="16" class="cyber-shield" />
+        }
+        @case ("iot") {
+            <ng-icon name="lucideCpu" size="24" />
+        }
+        @case ("computer") {
+            <ng-icon name="lucideLaptop" size="24" />
+        }
+    }
 </div>
 <div
     class="node-info"
-    [ngClass]="{ moving, active, selected}"
+    [ngClass]="{ dragging, communicating: node.communicating }"
     [ngStyle]="{
         left: 'calc(50% + ' + node.position.x + 'px)',
         top: 'calc(50% - ' + node.position.y + 'px)',

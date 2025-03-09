@@ -16,7 +16,7 @@ export const listVariants = cva(
         defaultVariants: {
             orientation: "horizontal",
         },
-    }
+    },
 );
 type ListVariants = VariantProps<typeof listVariants>;
 
@@ -35,6 +35,9 @@ export class HlmTabsListComponent {
 
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm(listVariants({ orientation: this.orientation() }), this.userClass())
+        hlm(
+            listVariants({ orientation: this.orientation() }),
+            this.userClass(),
+        ),
     );
 }

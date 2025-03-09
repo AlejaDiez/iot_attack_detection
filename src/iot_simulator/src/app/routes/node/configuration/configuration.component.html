@@ -1,0 +1,62 @@
+<form [formGroup]="form" class="flex flex-col gap-4">
+    <label hlmLabel>
+        Nombre
+        <input
+            hlmInput
+            type="text"
+            formControlName="name"
+            placeholder="Nombre del dispositivo"
+            class="!mt-2 w-full" />
+    </label>
+    <label hlmLabel>
+        Ip
+        <input
+            hlmInput
+            type="text"
+            formControlName="ip"
+            placeholder="Ip del dispositivo"
+            class="!mt-2 w-full" />
+    </label>
+    <label hlmLabel>
+        Tipo
+        <brn-select
+            formControlName="type"
+            [placeholder]="form.get('type')!.value | titlecase"
+            class="!mt-2 inline-block w-full">
+            <hlm-select-trigger class="w-full">
+                <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+                @for (type of types; track $index) {
+                    <hlm-option [value]="type">{{
+                        type | titlecase
+                    }}</hlm-option>
+                }
+            </hlm-select-content>
+        </brn-select>
+    </label>
+    @if (form.get("type")!.disabled) {
+        <div class="flex flex-col gap-2">
+            <label hlmLabel class="flex items-center justify-between">
+                Deteción de ataques
+                <hlm-switch formControlName="detection" />
+            </label>
+            <brn-select
+                formControlName="detection_model"
+                [placeholder]="form.get('detection_model')!.value | titlecase"
+                [disabled]="!form.get('detection')!.value"
+                class="inline-block w-full">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (detection_model of detection_models; track $index) {
+                        <hlm-option [value]="detection_model">{{
+                            detection_model | titlecase
+                        }}</hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </div>
+    }
+</form>

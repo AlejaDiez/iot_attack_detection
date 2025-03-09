@@ -13,6 +13,6 @@ import type { ClassValue } from "clsx";
 export class HlmSkeletonComponent {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm("block animate-pulse rounded-md bg-muted", this.userClass())
+        hlm("block animate-pulse rounded-md bg-muted", this.userClass()),
     );
 }

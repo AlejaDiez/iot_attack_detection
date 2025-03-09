@@ -20,6 +20,6 @@ import type { ClassValue } from "clsx";
 export class HlmRadioGroupComponent {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm("grid gap-2", this.userClass())
+        hlm("grid gap-2", this.userClass()),
     );
 }

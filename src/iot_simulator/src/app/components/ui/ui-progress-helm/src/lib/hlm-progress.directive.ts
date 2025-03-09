@@ -14,7 +14,7 @@ export class HlmProgressDirective {
     protected readonly _computedClass = computed(() =>
         hlm(
             "inline-flex relative h-4 w-full overflow-hidden rounded-full bg-secondary",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

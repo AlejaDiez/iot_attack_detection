@@ -8,7 +8,7 @@ export const cardVariants = cva(
     {
         variants: {},
         defaultVariants: {},
-    }
+    },
 );
 export type CardVariants = VariantProps<typeof cardVariants>;
 
@@ -22,6 +22,6 @@ export type CardVariants = VariantProps<typeof cardVariants>;
 export class HlmCardDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected _computedClass = computed(() =>
-        hlm(cardVariants(), this.userClass())
+        hlm(cardVariants(), this.userClass()),
     );
 }

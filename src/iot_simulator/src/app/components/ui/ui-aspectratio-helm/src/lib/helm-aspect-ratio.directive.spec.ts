@@ -41,7 +41,7 @@ describe("HelmAspectRatioDirective", () => {
         fixture.detectChanges();
         const div = fixture.nativeElement.querySelector("div");
         expect(div.style.paddingBottom).toEqual(
-            `${100 / (component.ratio || 1)}%`
+            `${100 / (component.ratio || 1)}%`,
         );
     });
 
@@ -70,10 +70,10 @@ describe("HelmAspectRatioDirective", () => {
         fixture.detectChanges();
 
         const img = fixture.nativeElement.querySelector(
-            "img"
+            "img",
         ) as HTMLImageElement;
         expect(img.classList.toString()).toBe(
-            "absolute w-full h-full object-cover"
+            "absolute w-full h-full object-cover",
         );
     });
 });

@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
-import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
+import { Component, HostListener } from "@angular/core";
+import { NodeType } from "@models/node";
+import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
     HlmMenuBarComponent,
@@ -9,39 +10,69 @@ import {
     HlmMenuItemCheckboxDirective,
     HlmMenuItemCheckComponent,
     HlmMenuItemDirective,
-    HlmMenuItemIconDirective,
-    HlmMenuItemRadioComponent,
-    HlmMenuItemRadioDirective,
-    HlmMenuItemSubIndicatorComponent,
-    HlmMenuLabelComponent,
     HlmMenuSeparatorComponent,
     HlmMenuShortcutComponent,
-    HlmSubMenuComponent,
 } from "@spartan-ng/ui-menu-helm";
 
 @Component({
     selector: "app-menu-bar",
     imports: [
         BrnMenuTriggerDirective,
-
         HlmMenuComponent,
         HlmMenuBarComponent,
-        HlmSubMenuComponent,
         HlmMenuItemDirective,
-        HlmMenuItemSubIndicatorComponent,
-        HlmMenuLabelComponent,
         HlmMenuShortcutComponent,
         HlmMenuSeparatorComponent,
-        HlmMenuItemIconDirective,
         HlmMenuBarItemDirective,
         HlmMenuItemCheckComponent,
-        HlmMenuItemRadioComponent,
         HlmMenuGroupComponent,
-
-        HlmButtonDirective,
         HlmMenuItemCheckboxDirective,
-        HlmMenuItemRadioDirective,
     ],
-    templateUrl: "./menu-bar.component.html",
+    templateUrl: "menu-bar.component.html",
 })
-export class MenuBarComponent {}
+export class MenuBarComponent {
+    protected get canInsertRouter() {
+        return !this._networkManager.router;
+    }
+
+    constructor(private _networkManager: NetworkManagerService) {}
+
+    @HostListener("document:keydown.meta.n", ["$event"])
+    protected onNew(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.newNetwork();
+    }
+
+    @HostListener("document:keydown.meta.o", ["$event"])
+    protected onOpen(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.importNetwork();
+    }
+
+    @HostListener("document:keydown.meta.w", ["$event"])
+    protected onClose(event: Event) {
+        event.preventDefault();
+
+        window.close();
+    }
+
+    @HostListener("document:keydown.meta.s", ["$event"])
+    protected onSave(event: Event) {
+        event.preventDefault();
+
+        this._networkManager.exportNetwork();
+    }
+
+    @HostListener("document:keydown.meta.shift.d", ["$event"])
+    @HostListener("document:keydown.meta.shift.r", ["$event"])
+    protected onInsertNode(event: Event, type?: string) {
+        event.preventDefault();
+        if (event instanceof KeyboardEvent) {
+            type = (event as KeyboardEvent).key === "r" ? "router" : undefined;
+        }
+
+        this._networkManager.addNode(type as NodeType);
+    }
+}

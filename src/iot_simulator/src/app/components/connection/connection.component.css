@@ -3,17 +3,17 @@
 }
 
 .connection {
-    @apply stroke-1 stroke-border;
+    @apply stroke-border stroke-1;
     stroke-linecap: round;
 }
 
-.connection.active {
-    @apply stroke-2 stroke-primary;
+.connection.transmitting {
+    @apply stroke-primary stroke-2;
     stroke-dasharray: 10;
     animation: dash 5s linear 0ms infinite normal forwards;
 }
 
-.connection.active.reverse {
+.connection.transmitting.reverse {
     animation-direction: reverse;
 }
 

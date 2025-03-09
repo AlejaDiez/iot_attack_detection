@@ -23,6 +23,6 @@ export class HlmPaginationItemDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
 
     protected readonly _computedClass = computed(() =>
-        hlm(paginationItemVariants(), this.userClass())
+        hlm(paginationItemVariants(), this.userClass()),
     );
 }

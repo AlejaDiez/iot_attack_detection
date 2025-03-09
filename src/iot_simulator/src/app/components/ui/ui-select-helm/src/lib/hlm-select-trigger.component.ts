@@ -34,7 +34,7 @@ export const selectTriggerVariants = cva(
             size: "default",
             error: "auto",
         },
-    }
+    },
 );
 type SelectTriggerVariants = VariantProps<typeof selectTriggerVariants>;
 
@@ -53,13 +53,13 @@ type SelectTriggerVariants = VariantProps<typeof selectTriggerVariants>;
             type="button">
             <ng-content />
             @if (icon()) {
-            <ng-content select="ng-icon" />
+                <ng-content select="ng-icon" />
             } @else {
-            <ng-icon
-                hlm
-                size="sm"
-                class="ml-2 flex-none"
-                name="lucideChevronDown" />
+                <ng-icon
+                    hlm
+                    size="sm"
+                    class="ml-2 flex-none"
+                    name="lucideChevronDown" />
             }
         </button>
     `,
@@ -80,7 +80,7 @@ export class HlmSelectTriggerComponent {
                 size: this._size(),
                 error: this.brnSelect?.errorState(),
             }),
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

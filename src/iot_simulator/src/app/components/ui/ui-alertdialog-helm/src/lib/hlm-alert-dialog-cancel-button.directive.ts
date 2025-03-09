@@ -18,6 +18,6 @@ import type { ClassValue } from "clsx";
 export class HlmAlertDialogCancelButtonDirective {
     public readonly userClass = input<ClassValue>("", { alias: "class" });
     protected readonly _computedClass = computed(() =>
-        hlm("mt-2 sm:mt-0", this.userClass())
+        hlm("mt-2 sm:mt-0", this.userClass()),
     );
 }

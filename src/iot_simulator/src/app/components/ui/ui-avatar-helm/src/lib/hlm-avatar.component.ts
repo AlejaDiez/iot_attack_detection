@@ -23,7 +23,7 @@ export const avatarVariants = cva(
         defaultVariants: {
             variant: "medium",
         },
-    }
+    },
 );
 
 export type AvatarVariants = VariantProps<typeof avatarVariants>;
@@ -38,9 +38,9 @@ export type AvatarVariants = VariantProps<typeof avatarVariants>;
     },
     template: `
         @if (image()?.canShow()) {
-        <ng-content select="[hlmAvatarImage],[brnAvatarImage]" />
+            <ng-content select="[hlmAvatarImage],[brnAvatarImage]" />
         } @else {
-        <ng-content select="[hlmAvatarFallback],[brnAvatarFallback]" />
+            <ng-content select="[hlmAvatarFallback],[brnAvatarFallback]" />
         }
     `,
 })
@@ -49,6 +49,6 @@ export class HlmAvatarComponent extends BrnAvatarComponent {
     public readonly variant = input<AvatarVariants["variant"]>("medium");
 
     protected readonly _computedClass = computed(() =>
-        hlm(avatarVariants({ variant: this.variant() }), this.userClass())
+        hlm(avatarVariants({ variant: this.variant() }), this.userClass()),
     );
 }

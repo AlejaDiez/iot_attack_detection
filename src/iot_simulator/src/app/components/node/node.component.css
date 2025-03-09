@@ -3,59 +3,80 @@
 }
 
 .node {
-    position: absolute;
-    z-index: 20;
     display: flex;
+    position: absolute;
     justify-content: center;
     align-items: center;
+    z-index: 20;
     width: 60px;
     height: 60px;
     @apply rounded-xl;
     transform: translate(-50%, -50%);
     transform-origin: center;
-    transition: top 100ms, left 100ms, border 100ms, color 100ms,
-        background-color 100ms, transform 100ms;
+    transition:
+        top 100ms,
+        left 100ms,
+        border 100ms,
+        color 100ms,
+        background-color 100ms,
+        transform 100ms;
     cursor: pointer;
 }
 
-.node.moving {
-    z-index: 30;
-    cursor: grabbing;
-    transform: translate(-50%, -50%) scale(1.2);
-    transition: transform 100ms;
+.node .cyber-shield {
+    position: absolute;
+    transform: translate(8px, 8px);
 }
 
-.node.selected {
+::ng-deep .node .cyber-shield svg {
+    stroke-width: 2.5px !important;
+    @apply fill-card-foreground text-card;
+}
+
+.node:focus {
+    @apply ring-0 ring-offset-0;
+}
+
+.node.dragging {
+    transform: translate(-50%, -50%) scale(1.2);
+    z-index: 30;
+    transition: transform 100ms;
+    cursor: grabbing;
+}
+
+.node.focused {
     z-index: 30;
     @apply border-0 border-primary;
     @apply text-primary-foreground;
     @apply bg-primary;
 }
 
-.node.active {
+.node.communicating {
     z-index: 30;
     @apply border-2 border-primary;
 }
 
 .node-info {
-    position: absolute;
-    z-index: 10;
     display: flex;
+    position: absolute;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
-    width: auto;
-    height: 60px;
-    margin-left: calc(30px + 12px);
+    align-items: flex-start;
     transform: translate(0, -50%);
     transform-origin: center;
-    transition: top 100ms, left 100ms, opacity 100ms;
+    z-index: 10;
+    transition:
+        top 100ms,
+        left 100ms,
+        opacity 100ms;
+    margin-left: calc(30px + 12px);
+    width: auto;
+    height: 60px;
     pointer-events: none;
     @apply select-none;
 }
 
-.node-info.moving,
-.node-info.selected {
+.node-info.dragging {
     opacity: 0;
     transition: opacity 100ms;
 }

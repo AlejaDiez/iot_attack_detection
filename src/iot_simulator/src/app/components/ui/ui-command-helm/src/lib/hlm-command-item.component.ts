@@ -16,7 +16,7 @@ import { hlm } from "@spartan-ng/brain/core";
     hostDirectives: [
         {
             directive: BrnCommandItemDirective,
-            inputs: ["value", "disabled"],
+            inputs: ["value", "disabled", "id"],
             outputs: ["selected"],
         },
     ],
@@ -43,7 +43,7 @@ export class HlmCommandItemComponent {
     protected readonly _computedClass = computed(() =>
         hlm(
             "text-start aria-selected:bg-accent aria-selected:text-accent-foreground cursor-default disabled:opacity-50 disabled:pointer-events-none hover:bg-accent/50 items-center outline-none px-2 py-1.5 relative flex rounded-sm select-none text-sm data-[hidden]:hidden",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

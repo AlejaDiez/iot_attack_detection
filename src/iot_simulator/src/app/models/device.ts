@@ -1,137 +1,109 @@
-import { Connection, Connections } from "./connection";
-import { Position } from "./position";
+import { Connection, TransmittingStatus } from "@models/connection";
+import { Node, NodeType } from "@models/node";
+import { Packet } from "@models/packet";
+import { Position } from "@models/position";
+import { Router } from "@models/router";
 
 /**
- * Enum que representa los diferentes tipos de dispositivos en el simulador IoT.
+ * Clase que representa un dispositivo en la red.
  */
-export enum DeviceType {
-    ROUTER = "router",
-    COMPUTER = "computer",
-    IOT = "iot",
-}
-
-/**
- * Representa un dispositivo en la red.
- */
-export class Device {
-    /** Dirección IP del nodo */
-    private _ip: string;
-    /** Tipo del nodo */
-    private _type: DeviceType;
-    /** Conexiones asociadas con el nodo */
-    private _connections: Connections;
-    /** Posición del nodo en la red */
-    private _position: Position;
-    /** Nombre del nodo */
-    public name: string;
+export class Device extends Node {
+    /* Conexión del dispositivo */
+    private _connection?: Connection;
+    /* Obtener si el dispositivo está comunicando */
+    public override get communicating(): boolean {
+        return (
+            (this._connection?.transmitting ?? TransmittingStatus.NONE) !==
+            TransmittingStatus.NONE
+        );
+    }
 
     /**
-     * Getter de la propiedad ip.
+     * Constructor de la clase.
      *
-     * @returns Dirección IP del dispositivo
+     * @param name Nombre del dispositivo.
+     * @param type Tipo del dispositivo.
      */
-    public get ip(): string {
-        return this._ip;
+    constructor(name: string, type: NodeType, position?: Position) {
+        if (type === NodeType.ROUTER)
+            throw new Error("Device type cannot be a router");
+
+        super(name, type, position);
     }
 
     /**
-     * Getter de la propiedad type.
+     * Conectar el dispositivo a un router.
      *
-     * @returns Tipo del dispositivo
+     * @param router Router al que se conectará el dispositivo.
+     * @param latency Latencia de la conexión.
      */
-    public get type(): DeviceType {
-        return this._type;
+    public connect(router: Router, latency: number = 0): void {
+        [this._ip, this._connection] = router.acceptConnection(this, latency);
     }
 
     /**
-     * Getter de la propiedad connections.
+     * Enviar un paquete al router al que está conectado el dispositivo.
+     */
+    public override sendPacket(packet: Packet): void {
+        if (this.ip === undefined || this._connection === undefined)
+            throw new Error("Device is not connected to a router");
+
+        this._traffic.push(packet);
+        this._connection.spreadPacket(packet);
+    }
+
+    /**
+     * Recibir un paquete del router al que está conectado el dispositivo.
+     */
+    public override receivePacket(packet: Packet): void {
+        if (packet.dstIP !== this.ip)
+            console.error("Packet is not addressed to this device");
+
+        this._traffic.push(packet);
+        console.log("Packet received: ", packet);
+    }
+
+    /**
+     * Convierte un objeto plano a un router.
      *
-     * @returns Conexiones asociadas con el dispositivo
+     * @param obj Objeto plano que representa un router.
+     * @returns Router creado a partir del objeto plano.
      */
-    public get connections(): Readonly<Connections> {
-        return this._connections;
+    public static override fromObject(obj: any): Device {
+        const device = new Device(
+            obj.name,
+            obj.type as NodeType,
+            obj.position as Position,
+        );
+
+        if (obj.mac && typeof obj.mac === "string") device._mac = obj.mac;
+        else throw new Error("MAC address is not valid");
+        if (obj.ip && typeof obj.ip === "string") device._ip = obj.ip;
+        else throw new Error("IP address is not valid");
+        if (obj.traffic) {
+            if (!Array.isArray(obj.traffic))
+                throw new Error("Traffic is not valid");
+            device._traffic = obj.traffic!.map((e: any) => e as Packet);
+        }
+        return device;
     }
 
     /**
-     * Getter de la propiedad position.
+     * Convertir el dispositivo a un objeto plano.
      *
-     * @returns Posición del dispositivo en la red
+     * @returns Objeto plano que representa el dispositivo.
      */
-    public get position(): Readonly<Position> {
-        return this._position;
-    }
+    public override toObject(): any {
+        const traffic = this.traffic.map((e) => ({ ...e }));
 
-    /**
-     * Constructor de la clase dispositivo.
-     *
-     * @param ip - Dirección IP del dispositivo
-     * @param name - Nombre del dispositivo
-     * @param type - Tipo del dispositivo
-     * @param connections - Conexiones asociadas con el dispositivo
-     * @param position - Posición del dispositivo en la red
-     */
-    public constructor(
-        ip: string,
-        name: string,
-        type: DeviceType = DeviceType.COMPUTER,
-        connections: Connections = [],
-        position: Position = { x: 0, y: 0 }
-    ) {
-        this._ip = ip;
-        this.name = name;
-        this._type = type;
-        this._connections = connections;
-        this._position = position;
-    }
-
-    /**
-     * Envía datos a otro dispositivo.
-     */
-    public send(): void {
-        // TODO
-    }
-
-    /**
-     * Recibe datos de otro dispositivo.
-     */
-    public receive(): void {
-        // TODO
-    }
-
-    /**
-     * Conecta el dispositivo actual con otro dispositivo.
-     *
-     * @param device - Dispositivo con el que se desea conectar
-     * @param latency - Latencia de la conexión
-     * @returns Conexión entre los dos dispositivos
-     */
-    public connect(device: Device, latency: number): Connection {
-        const connection: Connection = {
-            origin: this,
-            destination: device,
-            latency,
+        return {
+            name: this.name,
+            mac: this.mac,
+            ip: this.ip,
+            type: this.type,
+            position: this.position,
+            connection: this._connection?.toObject(),
+            traffic: traffic.length ? traffic : undefined,
         };
-
-        this._connections.push(connection);
-        device.acceptConnection(connection);
-        return connection;
-    }
-
-    /**
-     * Acepta una conexión con otro dispositivo.
-     *
-     * @param connection - Conexión a aceptar
-     */
-    public acceptConnection(connection: Connection): void {
-        this._connections.push(connection);
-    }
-
-    /**
-     * Movimiento del dispositivo en la red.
-     *
-     * @param position - Nueva posición del dispositivo
-     */
-    public move(position: Position): void {
-        this._position = position;
     }
 }

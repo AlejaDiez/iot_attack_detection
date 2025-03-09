@@ -19,7 +19,7 @@ export class HlmSeparatorDirective {
             this.orientation() === "horizontal"
                 ? "h-[1px] w-full"
                 : "h-full w-[1px]",
-            this.userClass()
-        )
+            this.userClass(),
+        ),
     );
 }

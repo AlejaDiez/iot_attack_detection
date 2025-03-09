@@ -28,7 +28,7 @@ describe("HlmAvatarImageDirective", () => {
     it("should add the default classes if no inputs are provided", () => {
         fixture.detectChanges();
         expect(fixture.nativeElement.querySelector("img").className).toBe(
-            "aspect-square h-full object-cover w-full"
+            "aspect-square h-full object-cover w-full",
         );
     });
 
@@ -39,7 +39,7 @@ describe("HlmAvatarImageDirective", () => {
         // fallback uses Promise.resolve().then() so we need to wait for the next tick
         setTimeout(() => {
             expect(
-                fixture.nativeElement.querySelector("img").className
+                fixture.nativeElement.querySelector("img").className,
             ).toContain("test-class");
         });
     });
