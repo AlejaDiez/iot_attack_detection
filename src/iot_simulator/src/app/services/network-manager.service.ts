@@ -1,33 +1,37 @@
 import { Injectable } from "@angular/core";
-import {
-    AddNodeDialogComponent,
-    AddNodeDialogContext,
-} from "@components/dialog/add-node-dialog.component";
-import {
-    DeleteNodeDialogComponent,
-    DeleteNodeDialogContext,
-} from "@components/dialog/delete-node-dialog.component";
-import { Connection } from "@models/connection";
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
+import {
+    AddNodeDialogComponent,
+    AddNodeDialogContext,
+} from "@routes/dialogs/add-node-dialog.component";
+import {
+    DeleteNodeDialogComponent,
+    DeleteNodeDialogContext,
+} from "@routes/dialogs/delete-node-dialog.component";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
-import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
+import { ConfigService } from "./config.service";
 
 @Injectable({ providedIn: "root" })
 export class NetworkManagerService {
-    private _nodes: Map<string, Node> = new Map();
+    /** Nodos de la red */
+    private readonly _nodes: Map<string, Node> = new Map<string, Node>();
+    /** Dirección MAC del router de la red */
     private _routerMac?: string;
+    /** Obtiene los nodos de la red */
     public get nodes(): Node[] {
         return [...this._nodes.values()];
     }
+    /** Obtiene el router de la red */
     public get router(): Router | undefined {
         return this._routerMac
             ? (this._nodes.get(this._routerMac) as Router)
             : undefined;
     }
+    /** Obtiene los dispositivos de la red */
     public get devices(): Device[] | undefined {
         const devices = this.nodes.filter(
             (node) => node.type !== NodeType.ROUTER,
@@ -35,18 +39,30 @@ export class NetworkManagerService {
 
         return devices.length > 0 ? devices : undefined;
     }
-    public get connections(): Connection[] | undefined {
-        return this.router?.connections;
-    }
 
-    constructor(private _dialog: HlmDialogService) {}
+    /**
+     * Constructor del servicio de gestión de la red de dispositivos.
+     *
+     * @param _dialog Servicio de diálogos de la aplicación
+     */
+    public constructor(
+        private readonly _dialog: HlmDialogService,
+        private readonly _config: ConfigService,
+    ) {}
 
+    /**
+     * Añade un nodo a la red de dispositivos.
+     *
+     * @param name Nombre del nodo
+     * @param type Tipo de nodo
+     * @param position Posición del nodo
+     * @returns Nodo añadido
+     */
     private _addNode(name: string, type: NodeType, position?: Position): Node {
-        if (this._routerMac && type === NodeType.ROUTER)
-            throw new Error("Cannot add more than one router to the network");
-
         let node;
 
+        if (this._routerMac && type === NodeType.ROUTER)
+            throw new Error("Cannot add more than one router to the network");
         if (type === NodeType.ROUTER) {
             node = new Router(name, position);
             this._routerMac = node.mac;
@@ -57,210 +73,198 @@ export class NetworkManagerService {
         return node;
     }
 
+    /**
+     * Elimina un nodo de la red de dispositivos.
+     *
+     * @param mac Dirección MAC del nodo
+     * @returns Indica si el nodo ha sido eliminado
+     */
     private _deleteNode(mac: string): boolean {
         if (!this.exists(mac))
             throw new Error(
                 "Does not exist a node with the specified MAC address",
             );
-
         if (mac === this._routerMac) this._routerMac = undefined;
-        return this._nodes.delete(mac);
+        this._nodes.delete(mac);
+        return true;
     }
 
-    public newNetwork(): void {
+    /**
+     * Crea una nueva red de dispositivos.
+     */
+    public new() {
         this._nodes.clear();
         this._routerMac = undefined;
-        console.log("New network created");
-        toast.success("Se ha creado una nueva red correctamente.");
+        console.log("Project has been created successfully");
+        toast.success("Proyecto creado correctamente.");
     }
 
-    public exportNetwork(): void {
-        toast.promise(
-            new Promise<void>(async (resolve) => {
-                const date: Date = new Date();
-                const data: object = {
-                    exportedAt: date.toISOString(),
-                    router: this.router?.toObject(),
-                    devices: this.devices?.map((e) => e.toObject()),
-                };
-                const fileContent: string = dump(data, {
-                    noCompatMode: true,
-                    forceQuotes: true,
-                });
-                const fileName: string = `iot_simulator_${date.getDate().toString().padStart(2, "0")}${(date.getMonth() + 1).toString().padStart(2, "0")}${date.getFullYear()}${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}.yaml`;
-                const blob: Blob = new Blob([fileContent], {
-                    type: "application/x-yaml",
-                });
-
-                // Set a short delay to show the loading toast
-                await new Promise((_) => setTimeout(_, 1000));
-
-                // Create a invisible link to download the file
-                const link: HTMLAnchorElement = document.createElement("a");
-
-                link.style.display = "none";
-                link.href = URL.createObjectURL(blob);
-                link.download = fileName;
-                link.click();
-                URL.revokeObjectURL(link.href);
-                link.remove();
-
-                // Finish the promise
-                resolve();
-            }),
-            {
-                loading: "Exportando configuración de la red...",
-                success: () => {
-                    console.log("Network configuration exported successfully.");
-                    return "Configuración de la red exportada correctamente.";
-                },
-                error: () => {
-                    console.error("Failed to export network configuration.");
-                    return "No se ha podido exportar la configuración de la red.";
-                },
+    /**
+     * Carga una red de dispositivos desde un archivo.
+     */
+    public loadFromFile() {
+        toast.promise(this._config.openFile(), {
+            loading: "Importando proyecto...",
+            success: (data: any) => {
+                this.fromObject(data);
+                console.log("Project has been imported successfully");
+                return "Proyecto importado correctamente.";
             },
-        );
+            error: () => {
+                console.error(
+                    "Failed to import project, the file is not valid",
+                );
+                return "No se ha podido importar el proyecto.";
+            },
+        });
     }
 
-    public importNetwork(): void {
-        const readFile = (file: File) => {
-            toast.promise(
-                new Promise<void>(async (resolve, reject) => {
-                    const reader = new FileReader();
-
-                    reader.onload = async () => {
-                        const data: any = load(reader.result as string);
-
-                        // Delete the current network
-                        this._nodes.clear();
-                        this._routerMac = undefined;
-
-                        // Set a short delay to show the loading toast
-                        await new Promise((_) => setTimeout(_, 1000));
-
-                        try {
-                            // Add the router
-                            if (data.router) {
-                                const router = Router.fromObject(data.router);
-
-                                this._nodes.set(router.mac, router);
-                                this._routerMac = router.mac;
-                            }
-
-                            // Add the devices
-                            if (data.devices) {
-                                data.devices.forEach((obj: any) => {
-                                    const device = Device.fromObject(obj);
-
-                                    if (obj.connection)
-                                        device.connect(
-                                            this.router!,
-                                            obj.connection,
-                                        );
-                                    this._nodes.set(device.mac, device);
-                                });
-                            }
-                        } catch (e) {
-                            this._nodes.clear();
-                            this._routerMac = undefined;
-                            reject();
-                        }
-                        // Finish the promise
-                        resolve();
-                    };
-                    // Read the file as text
-                    reader.readAsText(file);
-                }),
-                {
-                    loading: "Importando archivo configuración de la red...",
-                    success: () => {
-                        console.log(
-                            "Network configuration imported successfully.",
-                        );
-                        return "Configuración de la red importada correctamente.";
-                    },
-                    error: () => {
-                        console.error(
-                            "Failed to import network configuration.",
-                        );
-                        return "No se ha podido importar la configuración de la red.";
-                    },
-                },
-            );
-        };
-
-        // Create a invisible input to select the file
-        const input: HTMLInputElement = document.createElement("input");
-
-        input.style.display = "none";
-        input.type = "file";
-        input.accept = ".yaml";
-        input.click();
-        input.onchange = (event: any) => {
-            const file: File = event.target.files[0];
-
-            if (file) readFile(file);
-            input.value = "";
-            input.remove();
-        };
+    /**
+     * Guarda la red de dispositivos en un archivo.
+     */
+    public saveToFile() {
+        toast.promise(this._config.saveFile(this.toObject()), {
+            loading: "Exportando proyecto...",
+            success: () => {
+                console.log("Project has been exported successfully");
+                return "Proyecto exportado correctamente.";
+            },
+            error: () => {
+                console.error("Failed to export project");
+                return "No se ha podido exportar el proyecto.";
+            },
+        });
     }
 
-    public addNode(type?: NodeType, position?: Position) {
+    /**
+     * Añade un nodo a la red de dispositivos.
+     *
+     * @param type Tipo de nodo
+     * @param position Posición del nodo
+     */
+    public addNode(type?: NodeType, position?: Position): void {
         if (this._routerMac && type === NodeType.ROUTER) {
             console.error("Cannot add more than one router to the network");
             toast.error("No se puede agregar más de un router a la red.");
             return;
         }
-
         this._dialog
             .open(AddNodeDialogComponent, { context: { type } })
             .closed$.subscribe((context: AddNodeDialogContext) => {
                 if (!context) return;
-
                 const node = this._addNode(
                     context.name,
                     context.type,
                     position,
                 );
-
-                console.log("Added new node to the network", node);
+                console.log(
+                    `Node added to the network ${JSON.stringify(node.toObject(), null, 2)}`,
+                );
                 toast.success(`Se ha añadido ${context.name} correctamente.`);
             });
     }
 
-    public deleteNode(mac: string) {
+    /**
+     * Elimina un nodo de la red de dispositivos.
+     *
+     * @param mac Dirección MAC del nodo
+     */
+    public deleteNode(mac: string): void {
         if (!this.exists(mac)) {
             console.error(
-                "Does not exist a node with the specified MAC address",
+                "Does not exist a node with the specified MAC address to delete",
             );
             toast.error("No existe un nodo con la dirección MAC especificada.");
             return;
         }
-
         this._dialog
             .open(DeleteNodeDialogComponent, {
                 context: { node: this.findByMac(mac) },
             })
             .closed$.subscribe((context: DeleteNodeDialogContext) => {
                 if (!context) return;
-
                 this._deleteNode(context.node.mac);
-                console.log("Node deleted from the network", context.node);
+                console.log(
+                    `Node deleted from the network ${JSON.stringify(context.node.toObject(), null, 2)}`,
+                );
                 toast.success(
                     `Se ha eliminado ${context.node.name} correctamente.`,
                 );
             });
     }
 
+    /**
+     * Verifica si existe un nodo en la red de dispositivos.
+     *
+     * @param mac Dirección MAC del nodo
+     * @returns Indica si el nodo existe
+     */
     public exists(mac: string): boolean {
         return this._nodes.has(mac);
     }
 
+    /**
+     * Obtiene un nodo de la red de dispositivos.
+     *
+     * @param mac Dirección MAC del nodo
+     * @returns Nodo obtenido
+     */
     public findByMac(mac: string): Node {
         if (!this.exists(mac))
             throw new Error(
                 "Does not exist a node with the specified MAC address",
             );
         return this._nodes.get(mac)!;
+    }
+
+    /**
+     * Obtiene los nodos conectados a un nodo de la red de dispositivos.
+     *
+     * @param mac Dirección MAC del nodo
+     * @returns Nodos conectados
+     */
+    public getConnectedNodes(): Node[] {
+        return this.nodes.filter((node) => node.ip);
+    }
+
+    /**
+     * Transforma la red de dispositivos en un objeto.
+     *
+     * @returns Objeto de la red de dispositivos
+     */
+    public toObject(): any {
+        return {
+            exportedAt: new Date().toISOString(),
+            router: this.router?.toObject(),
+            devices: this.devices?.map((e) => e.toObject()),
+        };
+    }
+
+    /**
+     * Carga una red de dispositivos desde un objeto.
+     *
+     * @param object Objeto de la red de dispositivos
+     */
+    public fromObject(object: any): void {
+        // Reset the network
+        this._nodes.clear();
+        this._routerMac = undefined;
+        // Add the router
+        if (object.router) {
+            const router = Router.fromObject(object.router);
+
+            this._nodes.set(router.mac, router);
+            this._routerMac = router.mac;
+        }
+        // Add the devices
+        if (object.devices) {
+            object.devices.forEach((obj: any) => {
+                const device = Device.fromObject(obj);
+
+                if (obj.connection)
+                    device.connect(this.router!, obj.connection);
+                this._nodes.set(device.mac, device);
+            });
+        }
     }
 }

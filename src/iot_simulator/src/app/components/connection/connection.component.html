@@ -1,16 +1,16 @@
 <svg
     class="absolute z-0 origin-center -translate-x-1/2 -translate-y-1/2"
     [style]="{
-        left: 'calc(50% + ' + (router.x + device.x) / 2 + 'px)',
-        top: 'calc(50% - ' + (router.y + device.y) / 2 + 'px)',
+        left: 'calc(50% + ' + (router.x + node.x) / 2 + 'px)',
+        top: 'calc(50% - ' + (router.y + node.y) / 2 + 'px)',
         width: w + 'px',
         height: h + 'px',
     }">
     <line
         [attr.x1]="router.x - t.x"
         [attr.y1]="t.y - router.y"
-        [attr.x2]="device.x - t.x"
-        [attr.y2]="t.y - device.y"
+        [attr.x2]="node.x - t.x"
+        [attr.y2]="t.y - node.y"
         class="connection"
         [ngClass]="{ transmitting, reverse }" />
 </svg>

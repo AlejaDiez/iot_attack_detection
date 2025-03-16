@@ -4,13 +4,18 @@ import { Packet } from "@models/packet";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
 
+/** Tipo de dispositivo */
+export type DeviceType = NodeType.COMPUTER | NodeType.IOT;
+
 /**
  * Clase que representa un dispositivo en la red.
  */
 export class Device extends Node {
     /* Conexión del dispositivo */
     private _connection?: Connection;
-    /* Obtener si el dispositivo está comunicando */
+    public override get connected(): boolean {
+        return this._connection !== undefined;
+    }
     public override get communicating(): boolean {
         return (
             (this._connection?.transmitting ?? TransmittingStatus.NONE) !==
@@ -19,15 +24,13 @@ export class Device extends Node {
     }
 
     /**
-     * Constructor de la clase.
+     * Constructor de la clase Device.
      *
      * @param name Nombre del dispositivo.
      * @param type Tipo del dispositivo.
+     * @param position Posición inicial del dispositivo.
      */
-    constructor(name: string, type: NodeType, position?: Position) {
-        if (type === NodeType.ROUTER)
-            throw new Error("Device type cannot be a router");
-
+    public constructor(name: string, type: DeviceType, position?: Position) {
         super(name, type, position);
     }
 
@@ -38,63 +41,46 @@ export class Device extends Node {
      * @param latency Latencia de la conexión.
      */
     public connect(router: Router, latency: number = 0): void {
-        [this._ip, this._connection] = router.acceptConnection(this, latency);
+        [this.ip, this._connection] = router.acceptConnection(
+            this,
+            latency,
+        ) ?? [undefined, undefined];
+
+        if (this._connection === undefined)
+            throw new Error(`${this.mac} could not connect to router`);
     }
 
-    /**
-     * Enviar un paquete al router al que está conectado el dispositivo.
-     */
     public override sendPacket(packet: Packet): void {
-        if (this.ip === undefined || this._connection === undefined)
-            throw new Error("Device is not connected to a router");
+        if (this._connection === undefined)
+            throw new Error(`${this.mac} is not connected to a router`);
 
-        this._traffic.push(packet);
+        this.logTraffic(packet);
         this._connection.spreadPacket(packet);
     }
 
-    /**
-     * Recibir un paquete del router al que está conectado el dispositivo.
-     */
     public override receivePacket(packet: Packet): void {
-        if (packet.dstIP !== this.ip)
-            console.error("Packet is not addressed to this device");
+        if (this.ip !== packet.dstIP) {
+            console.error(`Packet is not addressed to ${this.mac}`);
+            return;
+        }
 
-        this._traffic.push(packet);
-        console.log("Packet received: ", packet);
+        this.logTraffic(packet);
+        console.log(
+            `Packet received by ${this.mac}: ${JSON.stringify(packet, null, 2)}`,
+        );
     }
 
-    /**
-     * Convierte un objeto plano a un router.
-     *
-     * @param obj Objeto plano que representa un router.
-     * @returns Router creado a partir del objeto plano.
-     */
-    public static override fromObject(obj: any): Device {
-        const device = new Device(
-            obj.name,
-            obj.type as NodeType,
-            obj.position as Position,
-        );
+    public static override fromObject(object: any): Device {
+        const device = new Device(object.name, object.type, object.position);
 
-        if (obj.mac && typeof obj.mac === "string") device._mac = obj.mac;
-        else throw new Error("MAC address is not valid");
-        if (obj.ip && typeof obj.ip === "string") device._ip = obj.ip;
-        else throw new Error("IP address is not valid");
-        if (obj.traffic) {
-            if (!Array.isArray(obj.traffic))
-                throw new Error("Traffic is not valid");
-            device._traffic = obj.traffic!.map((e: any) => e as Packet);
-        }
+        device.mac = object.mac;
+        device.ip = object.ip;
+        device.traffic = object.traffic;
         return device;
     }
 
-    /**
-     * Convertir el dispositivo a un objeto plano.
-     *
-     * @returns Objeto plano que representa el dispositivo.
-     */
-    public override toObject(): any {
-        const traffic = this.traffic.map((e) => ({ ...e }));
+    public override toObject() {
+        const traffic = this.traffic;
 
         return {
             name: this.name,
@@ -103,7 +89,7 @@ export class Device extends Node {
             type: this.type,
             position: this.position,
             connection: this._connection?.toObject(),
-            traffic: traffic.length ? traffic : undefined,
+            traffic: traffic.length > 0 ? traffic : undefined,
         };
     }
 }

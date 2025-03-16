@@ -32,7 +32,7 @@ export interface DeleteNodeDialogContext {
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>¿Estás seguro de eliminar {{ title }}?</h3>
+            <h3 hlmDialogTitle>¿Estás seguro de eliminar {{ name }}?</h3>
         </hlm-dialog-header>
         <p hlmDialogDescription>
             Si elimina este nodo, se eliminará de forma permanente y no podrá
@@ -49,14 +49,15 @@ export interface DeleteNodeDialogContext {
     `,
     host: { class: "flex flex-col gap-4" },
 })
-//
 export class DeleteNodeDialogComponent {
     private readonly _context!: DeleteNodeDialogContext;
-    protected get title(): string {
+    protected get name(): string {
         return this._context.node.name;
     }
 
-    constructor(private _ref: BrnDialogRef<DeleteNodeDialogContext>) {
+    public constructor(
+        private readonly _ref: BrnDialogRef<DeleteNodeDialogContext>,
+    ) {
         this._context = injectBrnDialogContext<DeleteNodeDialogContext>();
     }
 

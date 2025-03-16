@@ -1,38 +1,173 @@
 import { Connection } from "@models/connection";
-import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { Position } from "@models/position";
 
-/* Tipo de la tabla ARP */
-type ARP = [string, Connection];
-/* Tabla ARP que contiene la dirección IP como clave, y la dirección MAC y conexión (interfaz) como valor */
-type ARPTable = Map<string, ARP>;
-
-/**
- * Clase que representa un router en la red.
- */
-export class Router extends Node {
-    /* Tabla ARP del router */
-    private _arpTable: ARPTable = new Map<string, ARP>();
-    /* Conexiones del router */
+/** Clase que representa una tabla ARP de un router. */
+class ARPTable {
+    /** Tabla de direcciones ARP */
+    private _table: Map<string, Connection>;
+    /** Obtiene las conexiones de la tabla ARP */
     public get connections(): Connection[] {
-        return Array.from(this._arpTable.values()).map((value) => value[1]);
+        return [...this._table.values()];
     }
-    /* Indica si el nodo está comunicando */
-    public override get communicating(): boolean {
-        return this.connections.some((connection) => connection.transmitting);
+
+    /** Constructor de la tabla ARP */
+    public constructor() {
+        this._table = new Map<string, Connection>();
     }
 
     /**
-     * Crea una instancia de la clase Router.
+     * Obtiene un elemento de la tabla ARP.
      *
-     * @param name Nombre del router.
+     * @param ip Dirección IP a buscar.
      */
-    constructor(name: string, position?: Position) {
+    public get(ip: string): Connection | undefined {
+        return this._table.get(ip);
+    }
+
+    /**
+     * Añade una dirección IP a la tabla ARP.
+     *
+     * @param ip IP a añadir
+     * @param connection Conexión asociada a la IP
+     */
+    public add(ip: string, connection: Connection): void {
+        this._table.set(ip, connection);
+    }
+
+    /**
+     * Elimina una dirección IP de la tabla ARP.
+     *
+     * @param ip IP a eliminar
+     * @returns Si la dirección IP fue eliminada.
+     */
+    public remove(ip: string): boolean {
+        return this._table.delete(ip);
+    }
+
+    /**
+     * Comprueba si una dirección IP está en la tabla ARP.
+     *
+     * @param ip IP a comprobar
+     * @returns Si la dirección IP está en la tabla ARP.
+     */
+    public has(ip: string): boolean {
+        return this._table.has(ip);
+    }
+
+    /**
+     * Limpia la tabla ARP.
+     */
+    public clear(): void {
+        this._table.clear();
+    }
+}
+
+/** Clase que representa un servidor DHCP. */
+class DHCPServer {
+    /** Conjunto de IPs disponibles */
+    private _availableIPs: Set<string>;
+    /** Mapa de IPs asignadas, MAC -> IP */
+    private _assignedIPs: Map<string, string>;
+    /** Obtiene las IPs asignadas */
+    public get leasedIPs(): Map<string, string> {
+        return { ...this._assignedIPs };
+    }
+
+    /**
+     * Constructor de la clase DHCPServer.
+     *
+     * @param subnet Subred de donde se obtendrán las IPs
+     * @param start IP inicial del rango
+     * @param end IP final del rango
+     */
+    public constructor(subnet: string, start: number, end: number) {
+        this._availableIPs = new Set();
+        this._assignedIPs = new Map();
+
+        for (let i = start; i <= end; i++) {
+            this._availableIPs.add(`${subnet}.${i}`);
+        }
+    }
+
+    /**
+     * Asigna una IP a un dispositivo.
+     *
+     * @param mac Dirección MAC del dispositivo
+     * @returns Dirección IP asignada
+     */
+    public requestIP(mac: string): string | null {
+        if (this._assignedIPs.has(mac)) {
+            return this._assignedIPs.get(mac)!;
+        }
+
+        const ip = this._availableIPs.values().next().value;
+
+        if (!ip) return null;
+
+        this._availableIPs.delete(ip);
+        this._assignedIPs.set(mac, ip);
+        return ip;
+    }
+
+    /**
+     * Libera una IP asignada.
+     *
+     * @param mac Dirección MAC del dispositivo
+     */
+    public releaseIP(mac: string): void {
+        const ip = this._assignedIPs.get(mac);
+
+        if (ip) {
+            this._assignedIPs.delete(mac);
+            this._availableIPs.add(ip);
+        }
+    }
+
+    /**
+     * Registra una IP estática para un dispositivo.
+     *
+     * @param mac Dirección MAC del dispositivo
+     * @param ip Dirección IP estática
+     */
+    public registerFixedIP(mac: string, ip: string): void {
+        // TODO: Check if the IP exists in the available IPs
+        this._availableIPs.delete(ip);
+        this._assignedIPs.set(mac, ip);
+    }
+}
+
+export type RouterType = NodeType.ROUTER;
+
+/** Clase que representa un router dentro de la red. */
+export class Router extends Node {
+    /** Tabla de direcciones ARP */
+    private _arpTable: ARPTable;
+    /** Servidor DHCP */
+    private _dhcpServer: DHCPServer;
+    /** Obtiene las conexiones del router */
+    public get connections(): Connection[] {
+        return this._arpTable.connections;
+    }
+    public override get connected(): boolean {
+        return this.connections.length > 0;
+    }
+    public override get communicating(): boolean {
+        return false;
+    }
+
+    /**
+     * Constructor de la clase Router.
+     *
+     * @param name Nombre del router
+     * @param position Posición inicial del router
+     */
+    public constructor(name: string, position?: Position) {
         super(name, NodeType.ROUTER, position);
-        this._ip = "192.168.0.1";
-        this._arpTable = new Map<string, [string, Connection]>();
+        this.ip = "192.168.0.1";
+        this._arpTable = new ARPTable();
+        this._dhcpServer = new DHCPServer("192.168.0", 2, 254);
     }
 
     /**
@@ -41,91 +176,74 @@ export class Router extends Node {
      * @param packet Paquete a reenviar.
      */
     private _forwardPacket(packet: Packet): void {
-        const [mac, connection] = this._arpTable.get(packet.dstIP) || [];
+        const connection = this._arpTable.get(packet.dstIP);
 
-        this._traffic.push(packet);
-        if (mac) connection!.spreadPacket(packet);
-        else console.error("No se encontró la ip", packet.dstIP);
+        if (connection) connection.spreadPacket(packet);
+        else
+            throw new Error(
+                `Impossible to forward the packet ${JSON.stringify(packet, null, 2)}, destination IP not found`,
+            );
     }
 
     /**
-     * Conectarse con un dispositivo.
+     * Acepta una conexión entrante.
      *
-     * @param device Dispositivo que se conecta al router.
-     * @returns Ip asignada al dispositivo y conexión establecida.
+     * @param node Nodo que intenta conectarse.
+     * @param latency Latencia de la conexión.
+     * @returns Tupla con la dirección MAC y la conexión.
      */
     public acceptConnection(
-        device: Device,
-        latency: number,
-    ): [string, Connection] {
-        // Si el dispositivo no tiene ip, se le asigna una ip dinámica
-        const ip = device.ip ?? `192.168.0.${this._arpTable.size + 2}`;
+        node: Node,
+        latency?: number,
+    ): [string, Connection] | null {
+        // Si el dispositivo tiene una IP fija, registrarla en el servidor DHCP, si no, asignar una IP dinámica
+        if (node.ip) this._dhcpServer.registerFixedIP(node.mac, node.ip);
+
+        const ip: string | null =
+            node.ip ?? this._dhcpServer.requestIP(node.mac);
+
+        // Si no hay IPs disponibles, no se puede establecer la conexión
+        if (!ip) return null;
+
         // Se crea una conexión entre el router y el dispositivo
-        const connection = new Connection(this, device, latency);
+        const connection = new Connection(this, node, latency);
 
         // Añadir la ip y la conexión a la tabla ARP
-        this._arpTable.set(ip, [device.mac, connection]);
-
-        // Asignar la ip al dispositivo
+        this._arpTable.add(ip, connection);
         return [ip, connection];
     }
 
-    /**
-     * Envía un paquete a través de la red.
-     *
-     * @param packet Paquete a enviar.
-     */
     public override sendPacket(packet: Packet): void {
         this._forwardPacket(packet);
     }
 
-    /**
-     * Recibe un paquete de la red.
-     *
-     * @param packet Paquete recibido.
-     */
     public override receivePacket(packet: Packet): void {
         if (packet.dstIP === this.ip) {
-            this._traffic.push(packet);
-            console.log("Paquete recibido por el router", packet);
+            this.logTraffic(packet);
+            console.log(
+                `Packet received by ${this.mac}: ${JSON.stringify(packet, null, 2)}`,
+            );
         } else this._forwardPacket(packet);
     }
 
-    /**
-     * Convierte un objeto plano a un router.
-     *
-     * @param obj Objeto plano que representa un router.
-     * @returns Router creado a partir del objeto plano.
-     */
-    public static override fromObject(obj: any): Router {
-        const router = new Router(obj.name, obj.position as Position);
+    public static override fromObject(object: any): Router {
+        const router = new Router(object.name, object.position);
 
-        if (obj.mac && typeof obj.mac === "string") router._mac = obj.mac;
-        else throw new Error("MAC address is not valid");
-        if (obj.ip && typeof obj.ip === "string") router._ip = obj.ip;
-        else throw new Error("IP address is not valid");
-        if (obj.traffic) {
-            if (!Array.isArray(obj.traffic))
-                throw new Error("Traffic is not valid");
-            router._traffic = obj.traffic!.map((e: any) => e as Packet);
-        }
+        router.mac = object.mac;
+        router.ip = object.ip;
+        router.traffic = object.traffic;
         return router;
     }
 
-    /**
-     * Convierte el router a un objeto plano.
-     *
-     * @returns Objeto plano que representa el router.
-     */
     public override toObject(): any {
-        const traffic = this.traffic.map((e) => ({ ...e }));
+        const traffic = this.traffic;
 
         return {
             name: this.name,
-            mac: this.mac.toString(),
+            mac: this.mac,
             ip: this.ip,
-            position: this.position,
-            traffic: traffic.length ? traffic : undefined,
+            position: { ...this.position },
+            traffic: traffic.length > 0 ? traffic : undefined,
         };
     }
 }

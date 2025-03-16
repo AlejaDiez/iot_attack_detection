@@ -1,12 +1,14 @@
 <app-menu-bar class="fixed left-5 top-5 z-inf" />
-<div class="relative z-inf"><router-outlet /></div>
+<div [@floatAnimation]="getAnimationData(outlet)" class="relative z-inf">
+    <router-outlet #outlet="outlet" />
+</div>
 <hlm-toaster richColors theme="system" />
 <app-canvas [brnCtxMenuTriggerFor]="canvasContextMenu">
-    @for (node of nodes; track node) {
+    @for (node of nodes; track node.mac) {
         <app-node
             [node]="node"
             [brnCtxMenuTriggerFor]="nodeContextMenu"
-            [brnCtxMenuTriggerData]="{ $implicit: node.mac }" />
+            [brnCtxMenuTriggerData]="{ $implicit: node }" />
     }
     @for (connection of connections; track connection) {
         <app-connection [connection]="connection" />
@@ -28,19 +30,31 @@
     </hlm-menu>
 </ng-template>
 
-<ng-template #nodeContextMenu let-mac>
+<ng-template #nodeContextMenu let-node>
     <hlm-menu class="w-64">
         <hlm-menu-group>
-            <button hlmMenuItem (click)="onNodeTraffic($event, mac)">
+            <button hlmMenuItem (click)="onNodeTraffic($event, node.mac)">
+                <ng-icon hlmMenuIcon name="lucideChevronsLeftRightEllipsis" />
                 Tráfico de red
             </button>
-            <button hlmMenuItem (click)="onNodeConfig($event, mac)">
+            @if (node.type === "computer") {
+                <button hlmMenuItem (click)="onNodeAttack($event, node.mac)">
+                    <ng-icon hlmMenuIcon name="lucideGhost" />
+                    Phantom Attacker
+                </button>
+            }
+            <button hlmMenuItem (click)="onNodeConfig($event, node.mac)">
+                <ng-icon hlmMenuIcon name="lucideSettings" />
                 Configurar
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem (click)="onDeleteNode($event, mac)">
+            <button
+                hlmMenuItem
+                (click)="onDeleteNode($event, node.mac)"
+                class="text-red-500 hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-950 dark:hover:text-red-300">
+                <ng-icon hlmMenuIcon name="lucideTrash" />
                 Eliminar
             </button>
         </hlm-menu-group>

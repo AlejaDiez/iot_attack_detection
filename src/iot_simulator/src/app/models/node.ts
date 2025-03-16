@@ -1,5 +1,12 @@
+import { DeviceType } from "@models/device";
 import { Packet } from "@models/packet";
 import { Position } from "@models/position";
+import { RouterType } from "@models/router";
+
+/* Expresión regular para validar una dirección MAC */
+const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
+/* Expresión regular para validar una dirección IP */
+const IP_REGEX: RegExp = /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/;
 
 /**
  * Enum que representa los diferentes tipos de nodos en el simulador IoT.
@@ -10,50 +17,132 @@ export enum NodeType {
     IOT = "iot",
 }
 
+export namespace NodeType {
+    /**
+     * Lista de tipos de nodos.
+     */
+    export const Types: ReadonlyArray<NodeType> = [
+        NodeType.ROUTER,
+        NodeType.COMPUTER,
+        NodeType.IOT,
+    ];
+
+    /**
+     * Lista de tipos de nodos que pueden ser routers.
+     */
+    export const RouterTypes: ReadonlyArray<RouterType> = [NodeType.ROUTER];
+
+    /**
+     * Lista de tipos de nodos que pueden ser dispositivos.
+     */
+    export const DeviceTypes: ReadonlyArray<DeviceType> = [
+        NodeType.COMPUTER,
+        NodeType.IOT,
+    ];
+
+    /**
+     * Convierte un string a un tipo de nodo.
+     *
+     * @param type String que representa un tipo de nodo.
+     * @returns Tipo de nodo.
+     */
+    export const toString = (type: NodeType): string => {
+        switch (type) {
+            case NodeType.ROUTER:
+                return "Router";
+            case NodeType.COMPUTER:
+                return "Ordenador";
+            case NodeType.IOT:
+                return "Dispositivo IoT";
+        }
+    };
+}
+
 /**
- * Representa un nodo dentro del esquema de red.
+ * Clase abstracta que representa un nodo en el simulador IoT.
  */
 export abstract class Node {
-    /* Identificador único del nodo */
-    protected _mac: string;
+    /** Dirección MAC del nodo */
+    private _mac: string;
+    /** Dirección MAC del nodo */
     public get mac(): string {
         return this._mac;
     }
-    /* Indentificador del nodo en la red */
-    protected _ip?: string;
+    /** Dirección MAC del nodo */
+    protected set mac(value: any) {
+        if (typeof value !== "string" || !MAC_REGEX.test(value))
+            throw new Error("Invalid MAC address");
+        this._mac = value;
+    }
+    /** Dirección IP del nodo */
+    private _ip?: string;
+    /** Dirección IP del nodo */
     public get ip(): string | undefined {
         return this._ip;
     }
-    /* Nombre del nodo */
+    /** Dirección IP del nodo */
+    protected set ip(value: any) {
+        if (value === undefined) {
+            this._ip = undefined;
+            return;
+        }
+        if (typeof value !== "string" || !IP_REGEX.test(value))
+            throw new Error("Invalid IP address");
+        this._ip = value;
+    }
+    /** Nombre del nodo */
     public name: string;
-    /* Tipo de nodo */
-    public type: NodeType;
-    /* Indica si el nodo está comunicando */
-    public abstract get communicating(): boolean;
-    /* Tráfico del nodo */
-    protected _traffic: Packet[];
-    public get traffic(): Packet[] {
-        return [...this._traffic];
+    /** Tipo de nodo */
+    private _type: NodeType;
+    /** Tipo de nodo */
+    public get type(): NodeType {
+        return this._type;
     }
-    /* Posición del nodo en el esquema de red */
+    /** Tipo de nodo */
+    public set type(value: any) {
+        if (!NodeType.Types.includes(value))
+            throw new Error("Invalid node type");
+        if (this._type === NodeType.ROUTER && value !== NodeType.ROUTER)
+            throw new Error("Cannot change the type of a router");
+        if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
+            throw new Error("Cannot change the type of a device to a router");
+        this._type = value;
+    }
+    /** Historial de tráfico del nodo */
+    private _traffic: Packet[];
+    /** Historial de tráfico del nodo */
+    public get traffic(): ReadonlyArray<Packet> {
+        return this._traffic.map((e) => ({ ...e }));
+    }
+    /** Historial de tráfico del nodo */
+    protected set traffic(value: any) {
+        if (value === undefined) {
+            this._traffic = [];
+            return;
+        }
+        if (!Array.isArray(value)) throw new Error("Invalid traffic history");
+        this._traffic = value.map((e) => ({ ...(e as Packet) }));
+    }
+    /** Posición del nodo */
     private _position: Position;
+    /** Posición del nodo */
     public get position(): Position {
-        return this._position;
+        return { ...this._position };
     }
+    /** Indica si el nodo está conectado */
+    public abstract get connected(): boolean;
+    /** Indica si el nodo está comunicando */
+    public abstract get communicating(): boolean;
 
     /**
      * Crea una instancia de la clase Node.
-     *
-     * @param name Nombre del nodo.
-     * @param type Tipo de nodo.
-     * @param position Posición inicial del nodo.
      */
     public constructor(name: string, type: NodeType, position?: Position) {
-        this._mac = this._generateMacAddress();
+        this._mac = this._generateMac();
         this.name = name;
-        this.type = type;
+        this._type = type;
         this._traffic = [];
-        this._position = position ?? { x: 0, y: 0 };
+        this._position = { ...(position ?? { x: 0, y: 0 }) };
     }
 
     /**
@@ -61,7 +150,7 @@ export abstract class Node {
      *
      * @returns Dirección MAC aleatoria.
      */
-    private _generateMacAddress(): string {
+    private _generateMac(): string {
         return "XX:XX:XX:XX:XX:XX".replace(/X/g, () =>
             Math.floor(Math.random() * 16).toString(16),
         );
@@ -82,25 +171,33 @@ export abstract class Node {
     public abstract receivePacket(packet: Packet): void;
 
     /**
-     * Mueve el nodo en el esquema de red.
+     * Registra un paquete en el historial de tráfico del nodo.
      *
-     * @param x Desplazamiento horizontal.
-     * @param y Desplazamiento vertical.
+     * @param packet Paquete a registrar en el historial de tráfico.
      */
-    public move(x: number, y: number): void {
-        this._position.x += x;
-        this._position.y += y;
+    protected logTraffic(packet: Packet): void {
+        this._traffic.push(packet);
     }
 
     /**
-     * Mueve el nodo a una posición concreta.
-     *
-     * @param x Coordenada x.
-     * @param y Coordenada y.
+     * Limpia el historial de tráfico del nodo.
      */
-    public moveTo(x: number, y: number): void {
-        this._position.x = x;
-        this._position.y = y;
+    protected clearTraffic(): void {
+        this._traffic = [];
+    }
+
+    /**
+     * Mueve el nodo a una nueva posición.
+     *
+     * @param x Coordenada X de la nueva posición.
+     * @param y Coordenada Y de la nueva posición.
+     * @param relative Indica si el movimiento es relativo a la posición actual, por defecto es falso.
+     */
+    public move(x: number, y: number, relative: boolean = false): void {
+        if (relative) {
+            this._position.x += x;
+            this._position.y += y;
+        } else this._position = { x, y };
     }
 
     /**
@@ -109,7 +206,7 @@ export abstract class Node {
      * @param object Objeto plano a convertir.
      * @returns Nodo convertido.
      */
-    public static fromObject(obj: any): Node {
+    public static fromObject(object: any): Node {
         throw new Error("Method not implemented.");
     }
 
