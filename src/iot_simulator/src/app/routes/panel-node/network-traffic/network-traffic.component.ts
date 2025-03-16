@@ -1,8 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Node } from "@models/node";
+import { Node, NodeType } from "@models/node";
+import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideForward, lucideRepeat, lucideReply } from "@ng-icons/lucide";
+import {
+    lucideForward,
+    lucideHourglass,
+    lucideRepeat,
+    lucideReply,
+    lucideUnplug,
+} from "@ng-icons/lucide";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { BrnTableModule } from "@spartan-ng/brain/table";
@@ -24,34 +31,40 @@ import { map } from "rxjs";
         HlmTabsModule,
         NgIcon,
     ],
-    providers: [provideIcons({ lucideForward, lucideRepeat, lucideReply })],
+    providers: [
+        provideIcons({
+            lucideForward,
+            lucideHourglass,
+            lucideUnplug,
+            lucideRepeat,
+            lucideReply,
+        }),
+    ],
     templateUrl: "network-traffic.component.html",
 })
 export class NetworkTrafficComponent implements OnInit {
-    protected node!: Node;
-    protected get traffic(): {
-        id: number;
-        srcIP: string;
-        dstIP: string;
-        payloadSize: number;
-        payload?: string;
-    }[] {
-        return (
-            this.node?.traffic.map(
-                ({ srcIP, dstIP, payloadSize, payload }, id) => ({
-                    id,
-                    srcIP,
-                    dstIP,
-                    payloadSize,
-                    payload,
-                }),
-            ) ?? []
-        );
+    private _node!: Node;
+    protected get ip(): string | undefined {
+        return this._node.ip;
+    }
+    protected get type(): NodeType {
+        return this._node.type;
+    }
+    protected get traffic(): Packet[] {
+        return [...this._node.traffic];
+    }
+    protected get isConnected(): boolean {
+        return this._node.connected;
+    }
+    protected get connectedNodes(): Node[] {
+        return this._networkManager
+            .getConnectedNodes()
+            .filter((node) => node.mac !== this._node.mac);
     }
 
     public constructor(
-        private _route: ActivatedRoute,
-        private _networkManager: NetworkManagerService,
+        private readonly _route: ActivatedRoute,
+        private readonly _networkManager: NetworkManagerService,
     ) {}
 
     public ngOnInit(): void {
@@ -59,6 +72,6 @@ export class NetworkTrafficComponent implements OnInit {
             .parent!.params.pipe(
                 map(({ mac }) => this._networkManager.findByMac(mac)),
             )
-            .subscribe((node) => (this.node = node));
+            .subscribe((node) => (this._node = node));
     }
 }

@@ -1,11 +1,19 @@
 import { Routes } from "@angular/router";
+import { BlankComponent } from "./app.component";
 
 export const routes: Routes = [
+    {
+        title: "IoT Simulator",
+        path: "",
+        component: BlankComponent,
+    },
     {
         title: "Configuración",
         path: ":mac",
         loadChildren: () =>
-            import("./routes/node/node.routes").then((m) => m.routes),
+            import("./routes/panel-node/panel-node.routes").then(
+                (m) => m.routes,
+            ),
     },
     { path: "**", redirectTo: "" },
 ];

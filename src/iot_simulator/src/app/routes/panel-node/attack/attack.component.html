@@ -1,0 +1,35 @@
+<form [formGroup]="form" class="flex flex-col gap-4">
+    <label hlmLabel>
+        Objetivo
+        <brn-select
+            class="!mt-2 inline-block w-full"
+            placeholder="IP objetivo"
+            formControlName="target">
+            <hlm-select-trigger class="w-full">
+                <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+                <hlm-option value="192.168.0.31">192.168.0.31</hlm-option>
+                <hlm-option value="192.168.0.24">192.168.0.24</hlm-option>
+            </hlm-select-content>
+        </brn-select>
+    </label>
+    <div class="grid grid-cols-3 gap-4">
+        @for (item of phantomAttackerAttacks; track $index) {
+            <label
+                hlmLabel
+                class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent">
+                <input
+                    type="radio"
+                    formControlName="type"
+                    [value]="item"
+                    class="peer hidden" />
+                <ng-icon
+                    [name]="phantomAttackerAttackToIcon(item)"
+                    size="1.5rem" />
+                {{ phantomAttackerAttackToString(item) }}
+            </label>
+        }
+    </div>
+    <button hlmBtn>Enviar ataque</button>
+</form>

@@ -23,12 +23,14 @@
     cursor: pointer;
 }
 
-.node .cyber-shield {
+.node .cyber-shield,
+.node .phantom-attacker {
     position: absolute;
     transform: translate(8px, 8px);
 }
 
-::ng-deep .node .cyber-shield svg {
+.node ::ng-deep .cyber-shield svg,
+.node ::ng-deep .phantom-attacker svg {
     stroke-width: 2.5px !important;
     @apply fill-card-foreground text-card;
 }
@@ -49,6 +51,11 @@
     @apply border-0 border-primary;
     @apply text-primary-foreground;
     @apply bg-primary;
+}
+
+.node.focused ::ng-deep .cyber-shield svg,
+.node.focused ::ng-deep .phantom-attacker svg {
+    @apply fill-primary-foreground text-primary;
 }
 
 .node.communicating {

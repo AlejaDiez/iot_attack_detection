@@ -38,7 +38,10 @@ export interface AddNodeDialogContext {
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>Añadir un nuevo {{ title }}</h3>
+            <h3 hlmDialogTitle>
+                Añadir un nuevo
+                {{ type === "router" ? "router" : "dispositivo" }}
+            </h3>
         </hlm-dialog-header>
         <form [formGroup]="form" (submit)="submit()">
             <div class="grid gap-4 py-4">
@@ -49,16 +52,16 @@ export interface AddNodeDialogContext {
                 <div class="grid grid-cols-4 items-center gap-4">
                     <label hlmLabel class="text-right">Tipo</label>
                     <brn-select
-                        [placeholder]="type"
+                        placeholder="Selecciona un tipo"
                         formControlName="type"
                         class="col-span-3 inline-block">
                         <hlm-select-trigger class="w-full">
                             <hlm-select-value />
                         </hlm-select-trigger>
                         <hlm-select-content>
-                            @for (item of types; track $index) {
-                                <hlm-option [value]="item.value">{{
-                                    item.label
+                            @for (item of nodeTypes; track $index) {
+                                <hlm-option [value]="item">{{
+                                    typeToString(item)
                                 }}</hlm-option>
                             }
                         </hlm-select-content>
@@ -72,50 +75,25 @@ export interface AddNodeDialogContext {
     `,
     host: { class: "flex flex-col gap-4" },
 })
-//
 export class AddNodeDialogComponent implements OnInit {
     private readonly _context!: AddNodeDialogContext;
     protected form: FormGroup = new FormGroup({
         name: new FormControl("", [Validators.required]),
         type: new FormControl(null, [Validators.required]),
     });
-    protected get title(): string {
-        if (this._context.type === NodeType.ROUTER) return "router";
-        return "dispositivo";
+    protected get type(): NodeType {
+        return this._context.type;
     }
-    protected get type(): string {
-        switch (this.form.get("type")?.value) {
-            case NodeType.ROUTER:
-                return "Router";
-            case NodeType.COMPUTER:
-                return "Ordenador";
-            case NodeType.IOT:
-                return "Dispositivo IoT";
-            default:
-                return "Seleccione un tipo";
-        }
-    }
-    protected get types(): { value: string; label: string }[] {
-        if (this._context.type === NodeType.ROUTER)
-            return [
-                {
-                    value: NodeType.ROUTER,
-                    label: "Router",
-                },
-            ];
-        return [
-            {
-                value: NodeType.COMPUTER,
-                label: "Ordenador",
-            },
-            {
-                value: NodeType.IOT,
-                label: "Dispositivo IoT",
-            },
-        ];
+    protected typeToString = NodeType.toString;
+    protected get nodeTypes() {
+        return this.type === NodeType.ROUTER
+            ? NodeType.RouterTypes
+            : NodeType.DeviceTypes;
     }
 
-    constructor(private _ref: BrnDialogRef<AddNodeDialogContext>) {
+    public constructor(
+        private readonly _ref: BrnDialogRef<AddNodeDialogContext>,
+    ) {
         this._context = injectBrnDialogContext<AddNodeDialogContext>();
     }
 

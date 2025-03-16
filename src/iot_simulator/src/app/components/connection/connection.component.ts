@@ -17,25 +17,25 @@ export class ConnectionComponent {
     }
     protected get reverse(): boolean {
         return (
-            this.connection.transmitting === TransmittingStatus.DEVICE_TO_ROUTER
+            this.connection.transmitting === TransmittingStatus.NODE_TO_ROUTER
         );
     }
     protected get router(): Position {
         return this.connection.router.position;
     }
-    protected get device(): Position {
-        return this.connection.device.position;
+    protected get node(): Position {
+        return this.connection.node.position;
     }
     protected get w(): number {
-        return Math.abs(this.device.x - this.router.x) + 60;
+        return Math.abs(this.node.x - this.router.x) + 60;
     }
     protected get h(): number {
-        return Math.abs(this.device.y - this.router.y) + 60;
+        return Math.abs(this.node.y - this.router.y) + 60;
     }
     protected get t(): Position {
         return {
-            x: (this.router.x + this.device.x) / 2 - this.w / 2,
-            y: (this.router.y + this.device.y) / 2 + this.h / 2,
+            x: (this.router.x + this.node.x) / 2 - this.w / 2,
+            y: (this.router.y + this.node.y) / 2 + this.h / 2,
         };
     }
 }
