@@ -2,7 +2,7 @@ from os import getcwd, path as ospath
 from pathlib import Path
 
 
-def get_path(path: str) -> str:
+def get_path(*path: str) -> str | tuple[str]:
     """
     Devuelve la ruta absoluta basada en el archivo main del proyecto.
 
@@ -12,11 +12,13 @@ def get_path(path: str) -> str:
     Returns:
         str: Ruta absoluta.
     """
-    return Path(__file__).resolve().parents[1].joinpath(path).resolve().as_posix()
+    if len(path) == 1:
+        return Path(__file__).resolve().parents[1].joinpath(path[0]).resolve().as_posix()
+    return tuple([Path(__file__).resolve().parents[1].joinpath(p).resolve().as_posix() for p in path])
 
 
-def get_rel_path(path: str) -> str:
-    """"
+def get_rel_path(*path: str) -> str | tuple[str]:
+    """
     Devuelve la ruta relativa basada en la ejecución del proyecto.
 
     Args:
@@ -25,4 +27,6 @@ def get_rel_path(path: str) -> str:
     Returns:
         str: Ruta relativa a la ejecución del proyecto.
     """
-    return ospath.relpath(path, getcwd())
+    if len(path) == 1:
+        return ospath.relpath(path[0], getcwd())
+    return tuple([ospath.relpath(p, getcwd()) for p in path])
