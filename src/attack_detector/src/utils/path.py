@@ -30,3 +30,18 @@ def get_rel_path(*path: str) -> str | tuple[str]:
     if len(path) == 1:
         return ospath.relpath(path[0], getcwd())
     return tuple([ospath.relpath(p, getcwd()) for p in path])
+
+def get_abs_path(*path: str) -> str | tuple[str]:
+    """
+    Devuelve la ruta absoluta basada en la ejecución del proyecto.
+
+    Args:
+        path: Ruta relativa.
+
+    Returns:
+        str: Ruta absoluta a la ejecución del proyecto.
+    """
+    if len(path) == 1:
+        return ospath.abspath(path[0])
+    return tuple([ospath.abspath(p) for p in path])
+
