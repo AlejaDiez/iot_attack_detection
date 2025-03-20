@@ -1,4 +1,5 @@
 import { Connection } from "@models/connection";
+import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { Position } from "@models/position";
@@ -61,6 +62,13 @@ class ARPTable {
      */
     public clear(): void {
         this._table.clear();
+    }
+
+    /**
+     * Obtiene el tamaño de la tabla ARP.
+     */
+    public size(): number {
+        return this._table.size;
     }
 }
 
@@ -211,6 +219,34 @@ export class Router extends Node {
         // Añadir la ip y la conexión a la tabla ARP
         this._arpTable.add(ip, connection);
         return [ip, connection];
+    }
+
+    /**
+     * Elimina una conexión de la tabla ARP.
+     *
+     * @param node Nodo a desconectar.
+     * @returns Si la conexión fue eliminada.
+     */
+    public removeConnection(node: Node): boolean {
+        const connection = this._arpTable.get(node.ip ?? "");
+
+        if (!connection) return false;
+        this._arpTable.remove(node.ip ?? "");
+        this._dhcpServer.releaseIP(node.mac);
+        return true;
+    }
+
+    /**
+     * Elimina todas las conexiones de la tabla ARP.
+     *
+     * @returns Si las conexiones fueron eliminadas.
+     */
+    public removeAllConnections(): boolean {
+        for (const connection of this._arpTable.connections) {
+            if (connection.node instanceof Device)
+                connection.node.disconnect(this);
+        }
+        return this._arpTable.size() === 0;
     }
 
     public override sendPacket(packet: Packet): void {

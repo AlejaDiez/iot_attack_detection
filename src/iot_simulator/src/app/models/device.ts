@@ -40,7 +40,7 @@ export class Device extends Node {
      * @param router Router al que se conectará el dispositivo.
      * @param latency Latencia de la conexión.
      */
-    public connect(router: Router, latency: number = 0): void {
+    public connect(router: Router, latency?: number): void {
         [this.ip, this._connection] = router.acceptConnection(
             this,
             latency,
@@ -48,6 +48,20 @@ export class Device extends Node {
 
         if (this._connection === undefined)
             throw new Error(`${this.mac} could not connect to router`);
+    }
+
+    /**
+     * Desconectar el dispositivo de un router.
+     *
+     * @param router Router al que se desconectará el dispositivo.
+     */
+    public disconnect(router: Router): void {
+        const disconnected = router.removeConnection(this);
+
+        if (disconnected) {
+            this._connection = undefined;
+            this.ip = undefined;
+        }
     }
 
     public override sendPacket(packet: Packet): void {

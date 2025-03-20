@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -56,6 +57,9 @@ export class NetworkTrafficComponent implements OnInit {
     protected get isConnected(): boolean {
         return this._node.connected;
     }
+    protected get canConnect(): boolean {
+        return this._networkManager.router !== undefined;
+    }
     protected get connectedNodes(): Node[] {
         return this._networkManager
             .getConnectedNodes()
@@ -73,5 +77,11 @@ export class NetworkTrafficComponent implements OnInit {
                 map(({ mac }) => this._networkManager.findByMac(mac)),
             )
             .subscribe((node) => (this._node = node));
+    }
+
+    protected connect() {
+        if (this.canConnect && this._node instanceof Device) {
+            this._node.connect(this._networkManager.router!);
+        }
     }
 }

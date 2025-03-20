@@ -98,7 +98,9 @@
                 No estas conectado a ningún router. Para poder enviar y recibir
                 datos, debes estar conectado a un router.
             </p>
-            <button hlmBtn>Conectar</button>
+            <button hlmBtn (click)="connect()" [disabled]="!canConnect">
+                Conectar
+            </button>
         }
     }
 </div>

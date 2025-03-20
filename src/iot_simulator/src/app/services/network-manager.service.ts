@@ -80,12 +80,18 @@ export class NetworkManagerService {
      * @returns Indica si el nodo ha sido eliminado
      */
     private _deleteNode(mac: string): boolean {
-        if (!this.exists(mac))
+        const node = this._nodes.get(mac);
+
+        if (!node)
             throw new Error(
                 "Does not exist a node with the specified MAC address",
             );
-        if (mac === this._routerMac) this._routerMac = undefined;
-        this._nodes.delete(mac);
+        if (node.mac === this._routerMac) this._routerMac = undefined;
+        if (node.type === NodeType.ROUTER)
+            (node as Router).removeAllConnections();
+        else if (node.connected && this.router)
+            (node as Device).disconnect(this.router);
+        this._nodes.delete(node.mac);
         return true;
     }
 
@@ -142,26 +148,31 @@ export class NetworkManagerService {
      * @param type Tipo de nodo
      * @param position Posición del nodo
      */
-    public addNode(type?: NodeType, position?: Position): void {
-        if (this._routerMac && type === NodeType.ROUTER) {
-            console.error("Cannot add more than one router to the network");
-            toast.error("No se puede agregar más de un router a la red.");
-            return;
-        }
-        this._dialog
-            .open(AddNodeDialogComponent, { context: { type } })
-            .closed$.subscribe((context: AddNodeDialogContext) => {
-                if (!context) return;
-                const node = this._addNode(
-                    context.name,
-                    context.type,
-                    position,
-                );
-                console.log(
-                    `Node added to the network ${JSON.stringify(node.toObject(), null, 2)}`,
-                );
-                toast.success(`Se ha añadido ${context.name} correctamente.`);
-            });
+    public addNode(type?: NodeType, position?: Position): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            if (this._routerMac && type === NodeType.ROUTER) {
+                console.error("Cannot add more than one router to the network");
+                toast.error("No se puede agregar más de un router a la red.");
+                return reject();
+            }
+            this._dialog
+                .open(AddNodeDialogComponent, { context: { type } })
+                .closed$.subscribe((context: AddNodeDialogContext) => {
+                    if (!context) return resolve(false);
+                    const node = this._addNode(
+                        context.name,
+                        context.type,
+                        position,
+                    );
+                    console.log(
+                        `Node added to the network ${JSON.stringify(node.toObject(), null, 2)}`,
+                    );
+                    toast.success(
+                        `Se ha añadido ${context.name} correctamente.`,
+                    );
+                    return resolve(true);
+                });
+        });
     }
 
     /**
@@ -169,28 +180,33 @@ export class NetworkManagerService {
      *
      * @param mac Dirección MAC del nodo
      */
-    public deleteNode(mac: string): void {
-        if (!this.exists(mac)) {
-            console.error(
-                "Does not exist a node with the specified MAC address to delete",
-            );
-            toast.error("No existe un nodo con la dirección MAC especificada.");
-            return;
-        }
-        this._dialog
-            .open(DeleteNodeDialogComponent, {
-                context: { node: this.findByMac(mac) },
-            })
-            .closed$.subscribe((context: DeleteNodeDialogContext) => {
-                if (!context) return;
-                this._deleteNode(context.node.mac);
-                console.log(
-                    `Node deleted from the network ${JSON.stringify(context.node.toObject(), null, 2)}`,
+    public deleteNode(mac: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            if (!this.exists(mac)) {
+                console.error(
+                    "Does not exist a node with the specified MAC address to delete",
                 );
-                toast.success(
-                    `Se ha eliminado ${context.node.name} correctamente.`,
+                toast.error(
+                    "No existe un nodo con la dirección MAC especificada.",
                 );
-            });
+                return reject();
+            }
+            this._dialog
+                .open(DeleteNodeDialogComponent, {
+                    context: { node: this.findByMac(mac) },
+                })
+                .closed$.subscribe((context: DeleteNodeDialogContext) => {
+                    if (!context) return resolve(false);
+                    this._deleteNode(context.node.mac);
+                    console.log(
+                        `Node deleted from the network ${JSON.stringify(context.node.toObject(), null, 2)}`,
+                    );
+                    toast.success(
+                        `Se ha eliminado ${context.node.name} correctamente.`,
+                    );
+                    return resolve(true);
+                });
+        });
     }
 
     /**
