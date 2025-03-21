@@ -25,12 +25,25 @@ def parse_args():
     # Opciones de inicialización del programa
     config = parser.add_mutually_exclusive_group(required=True)
 
+    # Argumento para inicializar el servidor central
+    config.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        const="localhost:8080",
+        nargs="?",
+        help="Ejecutar el servidor de entrenamiento con la opción HOST:PORT (default: localhost:8080)",
+        metavar="HOST:PORT",
+    )
+
     # Argumento para dividir el conjunto de entrenamiento
     config.add_argument(
         "-d",
         "--divide",
         type=int,
-        help="Dividir el conjunto de entrenamiento en NUM_FILES partes",
+        const=5,
+        nargs="?",
+        help="Dividir el conjunto de entrenamiento en NUM_FILES partes (default: 5)",
         metavar="NUM_FILES",
     )
 
@@ -72,6 +85,24 @@ def parse_args():
         type=str,
         help=f"Ruta al directorio de salida (default: {default_output_path})",
         metavar="OUTPUT",
+    )
+
+    # Argumento para el número de rondas
+    parser.add_argument(
+        "--rounds",
+        default=10,
+        type=int,
+        help="Número de rondas de entrenamiento (default: 10)",
+        metavar="ROUNDS",
+    )
+
+    # Argumento para el tamaño del lote
+    parser.add_argument(
+        "--batch-size",
+        default=32,
+        type=int,
+        help="Tamaño del lote de entrenamiento (default: 32)",
+        metavar="BATCH_SIZE",
     )
 
     return parser.parse_args()

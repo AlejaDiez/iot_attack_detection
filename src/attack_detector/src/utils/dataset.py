@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 import numpy as np
-from utils.path import get_path
+from utils.path import get_abs_path
 
 
 def load_dataset(*path: str) -> list | tuple[list]:
@@ -15,7 +15,7 @@ def load_dataset(*path: str) -> list | tuple[list]:
         list: Dataset cargado, si es un solo archivo se retorna una lista, si son varios archivos se retorna una tupla de listas
     """
     datasets = []
-    dataset_path = get_path(*path) if len(path) > 1 else tuple(get_path(path))
+    dataset_path = get_abs_path(*path) if len(path) > 1 else tuple(get_abs_path(path))
 
     # Leer los archivos
     for p in dataset_path:
@@ -50,7 +50,7 @@ def split_dataset(*paths: str, output: str, num_clients: int):
         raise ValueError("El número de argumentos de la función debe ser 2 o inferior")
 
     # Crear directorio de salida si no existe
-    output_dir = get_path(output)
+    output_dir = get_abs_path(output)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     datasets, headers = [], []

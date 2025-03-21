@@ -1,5 +1,5 @@
 from keras import Model, models
-from utils.path import get_path
+from utils.path import get_abs_path
 
 
 def load_model(path: str) -> Model:
@@ -12,7 +12,7 @@ def load_model(path: str) -> Model:
     Returns:
         Model: Modelo keras cargado.
     """
-    model_path = get_path(path)
+    model_path = get_abs_path(path)
     with open(model_path, "r") as file:
         json_model = file.read()
     return models.model_from_json(json_model)
