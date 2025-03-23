@@ -30,9 +30,20 @@ def parse_args():
         "-s",
         "--server",
         type=str,
-        const="localhost:8080",
+        const="127.0.0.1:8080",
         nargs="?",
-        help="Ejecutar el servidor de entrenamiento con la opción HOST:PORT (default: localhost:8080)",
+        help="Ejecutar el servidor de entrenamiento con la opción HOST:PORT (default: 127.0.0.1:8080)",
+        metavar="HOST:PORT",
+    )
+
+    # Argumento para inicializar el cliente
+    config.add_argument(
+        "-c",
+        "--client",
+        type=str,
+        const="127.0.0.1:8080",
+        nargs="?",
+        help="Ejecutar el cliente de entrenamiento con la opción HOST:PORT (default: 127.0.0.1:8080)",
         metavar="HOST:PORT",
     )
 
@@ -87,15 +98,6 @@ def parse_args():
         metavar="OUTPUT",
     )
 
-    # Argumento para el número de rondas
-    parser.add_argument(
-        "--rounds",
-        default=10,
-        type=int,
-        help="Número de rondas de entrenamiento (default: 10)",
-        metavar="ROUNDS",
-    )
-
     # Argumento para el tamaño del lote
     parser.add_argument(
         "--batch-size",
@@ -103,6 +105,24 @@ def parse_args():
         type=int,
         help="Tamaño del lote de entrenamiento (default: 32)",
         metavar="BATCH_SIZE",
+    )
+
+    # Argumento para el número de rondas
+    parser.add_argument(
+        "--rounds",
+        default=1,
+        type=int,
+        help="Número de rondas de entrenamiento (default: 1)",
+        metavar="ROUNDS",
+    )
+
+    # Argumento para el número de épocas
+    parser.add_argument(
+        "--epochs",
+        default=1,
+        type=int,
+        help="Número de épocas de entrenamiento (default: 1)",
+        metavar="EPOCHS",
     )
 
     return parser.parse_args()

@@ -8,6 +8,8 @@ from flwr.common import (
     Metrics,
     parameters_to_ndarrays,
     ndarrays_to_parameters,
+    NDArrays,
+    Scalar,
 )
 from flwr.server import start_server, ServerConfig
 from flwr.server.client_proxy import ClientProxy
@@ -19,6 +21,18 @@ from utils.path import get_abs_path
 class TensorFlowServer(FedAvg):
     """
     Servidor personalizado para el uso de modelos de TensorFlow. Este servidor extiende la clase FedAvg de Flower.
+
+    Args:
+        model (Model): Modelo de TensorFlow.
+        test_data (tuple[list, list]): Tupla con los datos de prueba (x_test, y_test).
+        output (str): Directorio de salida.
+        batch_size (int, optional): Tamaño del lote. Por defecto es 32.
+        num_rounds (int, optional): Número de rondas de entrenamiento. Por defecto es 1.
+        fraction_fit (float, optional): Fracción de clientes utilizados para el ajuste. Por defecto es 1.
+        fraction_evaluate (float, optional): Fracción de clientes utilizados para la evaluación. Por defecto es 1.
+        min_fit_clients (int, optional): Número mínimo de clientes para el ajuste. Por defecto es 2.
+        min_evaluate_clients (int, optional): Número mínimo de clientes para la evaluación. Por defecto es 2.
+        min_available_clients (int, optional): Número mínimo de clientes disponibles. Por defecto es 2.
     """
 
     def __init__(
@@ -26,29 +40,14 @@ class TensorFlowServer(FedAvg):
         model: Model,
         test_data: tuple[list, list],
         output: str,
-        num_rounds: int = 1,
         batch_size: int = 32,
+        num_rounds: int = 1,
         fraction_fit: float = 1,
         fraction_evaluate: float = 1,
         min_fit_clients: int = 2,
         min_evaluate_clients: int = 2,
         min_available_clients: int = 2,
     ):
-        """
-        Inicializa un nuevo servidor personalizado para el uso de modelos de TensorFlow.
-
-        Args:
-            model (Model): Modelo de TensorFlow.
-            test_data (tuple[list, list]): Tupla con los datos de prueba (x_test, y_test).
-            num_rounds (int, optional): Número de rondas de entrenamiento. Defaults to 1.
-            batch_size (int, optional): Tamaño del lote. Defaults to 32.
-            fraction_fit (float, optional): Fracción de clientes utilizados para el ajuste. Defaults to 1.
-            fraction_evaluate (float, optional): Fracción de clientes utilizados para la evaluación. Defaults to 1.
-            min_fit_clients (int, optional): Número mínimo de clientes para el ajuste. Defaults to 2.
-            min_evaluate_clients (int, optional): Número mínimo de clientes para la evaluación. Defaults to 2.
-            min_available_clients (int, optional): Número mínimo de clientes disponibles. Defaults to 2.
-        """
-
         super().__init__(
             fraction_fit=fraction_fit,
             fraction_evaluate=fraction_evaluate,
@@ -57,14 +56,14 @@ class TensorFlowServer(FedAvg):
             min_available_clients=min_available_clients,
             initial_parameters=ndarrays_to_parameters(model.get_weights()),
             evaluate_metrics_aggregation_fn=self.weighted_average,
-            evaluate_fn=self.evaluate_fn(),
+            evaluate_fn=self.evaluate_fn,
         )
         self.model = deepcopy(model)
         self.test_data = test_data
-        self.num_rounds = num_rounds
-        self.batch_size = batch_size
-        self.results = {}
         self.output_dir = get_abs_path(output)
+        self.batch_size = batch_size
+        self.num_rounds = num_rounds
+        self.results = {}
 
         # Crear directorio de salida si no existe
         Path(self.output_dir).mkdir(parents=True, exist_ok=True)
@@ -125,7 +124,7 @@ class TensorFlowServer(FedAvg):
         return loss, metrics
 
     def weighted_average(self, metrics: list[tuple[int, Metrics]]) -> Metrics:
-        """ "
+        """
         Calcula la precisión promedio ponderada.
 
         Args:
@@ -162,35 +161,28 @@ class TensorFlowServer(FedAvg):
         # Retornar resultados para que sean agregados
         return loss, metrics
 
-    def evaluate_fn(self):
+    def evaluate_fn(
+        self, server_round: int, parameters: NDArrays, config: dict[str, Scalar]
+    ) -> tuple[float, dict[str, Scalar]]:
         """
-        Devuelve una función de evaluación que evalúa el modelo en los datos de prueba.
+        Evalúa el modelo en los datos de prueba.
+
+        Args:
+            server_round (int): Ronda del servidor.
+            parameters (NDArrays): Parámetros del modelo.
+
+            config (Config): Configuración del servidor.
 
         Returns:
-            function: Función de evaluación.
+            tuple[float, dict[str, Scalar]]: Pérdida y métricas
         """
+        model = self.get_model()
+        model.set_weights(parameters)
+        loss, accuracy = model.evaluate(
+            self.test_data[0], self.test_data[1], batch_size=self.batch_size
+        )
 
-        def evaluate(server_round, parameters_ndarrays, config):
-            """
-            Evalúa el modelo en los datos de prueba.
-
-            Args:
-                server_round (int): Ronda del servidor.
-                parameters_ndarrays (list): Parámetros del modelo.
-                config (Config): Configuración del servidor.
-
-            Returns:
-                tuple: Pérdida y métricas.
-            """
-            model = self.get_model()
-            model.set_weights(parameters_ndarrays)
-            loss, accuracy = model.evaluate(
-                self.test_data[0], self.test_data[1], batch_size=self.batch_size
-            )
-
-            return loss, {"accuracy": accuracy}
-
-        return evaluate
+        return loss, {"accuracy": accuracy}
 
     def start(
         self, server_address: str, certificates: tuple[bytes, bytes, bytes] = None

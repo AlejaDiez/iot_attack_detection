@@ -27,7 +27,12 @@ def load_dataset(*path: str) -> list | tuple[list]:
             # Lee el resto de filas
             for row in reader:
                 dataset.append(
-                    np.array([np.float64(value) for value in row])
+                    np.array(
+                        [
+                            np.float64(value) if "." in value else np.int8(value)
+                            for value in row
+                        ]
+                    )
                 )  # Convierte cada fila a un array de numpy de tipo float64
             datasets.append(np.array(dataset))
     return tuple(datasets) if len(datasets) > 1 else datasets[0]

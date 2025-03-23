@@ -12,3 +12,4 @@ build/
 *.out
 *.bak
 *.swp
+data/output/
