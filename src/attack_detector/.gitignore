@@ -1,0 +1,15 @@
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.log
+.ipynb_checkpoints/
+*.egg
+*.whl
+*.spec
+*.out
+*.bak
+*.swp
+data/output/
