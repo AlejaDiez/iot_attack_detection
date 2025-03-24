@@ -19,6 +19,65 @@ export enum ApplicationProtocol {
 }
 
 /**
+ * Modelo que representa un paquete de red.
+ */
+export interface Packet {
+    // Direcciones y puertos
+    /* Dirección IP de origen */
+    srcIP: string;
+    /* Puerto de origen */
+    srcPort?: number;
+    /* Dirección IP de destino */
+    dstIP: string;
+    /* Puerto de destino */
+    dstPort?: number;
+
+    // Protocolos
+    /* Protocolo de capa de transporte */
+    transportProtocol: TransportProtocol;
+    /* Protocolo de capa de aplicación */
+    applicationProtocol?: ApplicationProtocol;
+
+    // Datos y tamaño
+    /* Datos del paquete */
+    payload?: string;
+    /* Tamaño del paquete en bytes */
+    totalBytes: number;
+    /* Tamaño de las cabeceras */
+    headerSize: number;
+    /* Tamaño de la carga útil (sin cabeceras) */
+    payloadSize: number;
+
+    // Información temporal
+    /* Momento en que se generó el paquete */
+    timestamp: Date;
+    /* Tiempo de vida del paquete */
+    ttl: number;
+}
+
+/**
+ * Tipo de paquete ICMP.
+ */
+export enum ICMPType {
+    ECHO_REPLY = 0,
+    ECHO_REQUEST = 8,
+}
+
+/**
+ * Modelo que representa un paquete ICMP.
+ */
+export interface ICMPPacket extends Packet {
+    /* Tipo de mensaje ICMP */
+    type: number;
+    /* Código de mensaje ICMP */
+    code: number;
+    /** Identificador de la solicitud */
+    identifier: number;
+    /** Número de secuencia */
+    sequence: number;
+}
+
+/**
  * Enum que representa las banderas de control de TCP.
  */
 export enum TCPFlags {
@@ -31,42 +90,14 @@ export enum TCPFlags {
 }
 
 /**
- * Modelo que representa un paquete de red.
+ * Modelo que representa un paquete TCP.
  */
-export interface Packet {
-    // Direcciones y puertos
-    /* Dirección IP de origen */
-    srcIP: string;
-    /* Puerto de origen */
-    srcPort: number;
-    /* Dirección IP de destino */
-    dstIP: string;
-    /* Puerto de destino */
-    dstPort: number;
-
-    // Protocolos
-    /* Protocolo de capa de transporte */
-    transportProtocol: TransportProtocol;
-    /* Protocolo de capa de aplicación */
-    applicationProtocol: ApplicationProtocol;
-
-    // Datos y tamaño
-    /* Datos del paquete */
-    payload?: string;
-    /* Tamaño del paquete en bytes */
-    totalBytes: number;
-    /* Tamaño de las cabeceras */
-    headerSize: number;
-    /* Tamaño de la carga útil (sin cabeceras) */
-    payloadSize: number;
-
-    // TCP Flags
+export interface TCPPacket extends Packet {
     /* Bandera TCP */
-    tcpFlags: TCPFlags;
-
-    // Información temporal
-    /* Momento en que se generó el paquete */
-    timestamp: Date;
-    /* Tiempo de vida del paquete */
-    ttl: number;
+    tcpFlags: number;
 }
+
+/**
+ * Modelo que representa un paquete UDP.
+ */
+export interface UDPPacket extends Packet {}
