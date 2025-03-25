@@ -186,8 +186,12 @@ export class Router extends Node {
     private _forwardPacket(packet: Packet): void {
         const connection = this._arpTable.get(packet.dstIP);
 
-        if (connection) connection.spreadPacket(packet);
-        else
+        if (connection) {
+            // Log de tráfico
+            this.logTraffic(packet);
+            // Reenviar el paquete
+            connection.spreadPacket(packet);
+        } else
             throw new Error(
                 `Impossible to forward the packet ${JSON.stringify(packet, null, 2)}, destination IP not found`,
             );
@@ -243,22 +247,25 @@ export class Router extends Node {
      */
     public removeAllConnections(): boolean {
         for (const connection of this._arpTable.connections) {
-            if (connection.node instanceof Device)
-                connection.node.disconnect(this);
+            if (connection.node1 instanceof Device)
+                connection.node1.disconnect(this);
+            else if (connection.node2 instanceof Device)
+                connection.node2.disconnect(this);
         }
         return this._arpTable.size() === 0;
     }
 
     public override sendPacket(packet: Packet): void {
+        // Enviar el paquete al dispositivo correspondiente
         this._forwardPacket(packet);
     }
 
     public override receivePacket(packet: Packet): void {
         if (packet.dstIP === this.ip) {
+            // Log de tráfico
             this.logTraffic(packet);
-            console.log(
-                `Packet received by ${this.mac}: ${JSON.stringify(packet, null, 2)}`,
-            );
+            // Interceptar el paquete
+            this.interceptor.intercept(packet);
         } else this._forwardPacket(packet);
     }
 

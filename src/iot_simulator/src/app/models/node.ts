@@ -2,6 +2,9 @@ import { DeviceType } from "@models/device";
 import { Packet } from "@models/packet";
 import { Position } from "@models/position";
 import { RouterType } from "@models/router";
+import { FlowGenerator } from "./flow-generator";
+import { Interceptor } from "./interceptor";
+import { PhantomAttacker } from "./phantom-attacker";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -106,7 +109,25 @@ export abstract class Node {
             throw new Error("Cannot change the type of a router");
         if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
             throw new Error("Cannot change the type of a device to a router");
+
+        if (this._type === NodeType.COMPUTER && value !== NodeType.COMPUTER)
+            this._interceptor = new Interceptor(this, FlowGenerator);
+        else if (
+            this._type !== NodeType.COMPUTER &&
+            value === NodeType.COMPUTER
+        )
+            this._interceptor = new Interceptor(this, PhantomAttacker);
         this._type = value;
+    }
+    /** Interceptor de paquetes de red */
+    private _interceptor: Interceptor<any>;
+    /** Interceptor de paquetes de red */
+    protected get interceptor(): Interceptor<any> {
+        return this._interceptor;
+    }
+    /** Generador de flujos de red */
+    public get generator(): FlowGenerator {
+        return this._interceptor.generator;
     }
     /** Historial de tráfico del nodo */
     private _traffic: Packet[];
@@ -141,6 +162,10 @@ export abstract class Node {
         this._mac = this._generateMac();
         this.name = name;
         this._type = type;
+        this._interceptor =
+            type === NodeType.COMPUTER
+                ? new Interceptor(this, PhantomAttacker)
+                : new Interceptor(this, FlowGenerator);
         this._traffic = [];
         this._position = { ...(position ?? { x: 0, y: 0 }) };
     }

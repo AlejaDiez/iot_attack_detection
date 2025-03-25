@@ -1,4 +1,10 @@
 import { Component, OnInit } from "@angular/core";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
@@ -23,6 +29,7 @@ import { map } from "rxjs";
 
 @Component({
     imports: [
+        ReactiveFormsModule,
         BrnSelectModule,
         BrnTableModule,
         HlmButtonModule,
@@ -65,6 +72,9 @@ export class NetworkTrafficComponent implements OnInit {
             .getConnectedNodes()
             .filter((node) => node.mac !== this._node.mac);
     }
+    protected readonly form: FormGroup = new FormGroup({
+        ip: new FormControl(null, [Validators.required]),
+    });
 
     public constructor(
         private readonly _route: ActivatedRoute,
@@ -82,6 +92,12 @@ export class NetworkTrafficComponent implements OnInit {
     protected connect() {
         if (this.canConnect && this._node instanceof Device) {
             this._node.connect(this._networkManager.router!);
+        }
+    }
+
+    protected submit() {
+        if (this.form.valid) {
+            this._node.generator.ping(this.form.value.ip);
         }
     }
 }

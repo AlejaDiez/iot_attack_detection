@@ -101,7 +101,6 @@ export class NetworkManagerService {
     public new() {
         this._nodes.clear();
         this._routerMac = undefined;
-        console.log("Project has been created successfully");
         toast.success("Proyecto creado correctamente.");
     }
 
@@ -113,7 +112,6 @@ export class NetworkManagerService {
             loading: "Importando proyecto...",
             success: (data: any) => {
                 this.fromObject(data);
-                console.log("Project has been imported successfully");
                 return "Proyecto importado correctamente.";
             },
             error: () => {
@@ -132,7 +130,6 @@ export class NetworkManagerService {
         toast.promise(this._config.saveFile(this.toObject()), {
             loading: "Exportando proyecto...",
             success: () => {
-                console.log("Project has been exported successfully");
                 return "Proyecto exportado correctamente.";
             },
             error: () => {
@@ -159,14 +156,13 @@ export class NetworkManagerService {
                 .open(AddNodeDialogComponent, { context: { type } })
                 .closed$.subscribe((context: AddNodeDialogContext) => {
                     if (!context) return resolve(false);
+
                     const node = this._addNode(
                         context.name,
                         context.type,
                         position,
                     );
-                    console.log(
-                        `Node added to the network ${JSON.stringify(node.toObject(), null, 2)}`,
-                    );
+
                     toast.success(
                         `Se ha añadido ${context.name} correctamente.`,
                     );
@@ -197,10 +193,8 @@ export class NetworkManagerService {
                 })
                 .closed$.subscribe((context: DeleteNodeDialogContext) => {
                     if (!context) return resolve(false);
+
                     this._deleteNode(context.node.mac);
-                    console.log(
-                        `Node deleted from the network ${JSON.stringify(context.node.toObject(), null, 2)}`,
-                    );
                     toast.success(
                         `Se ha eliminado ${context.node.name} correctamente.`,
                     );

@@ -1,16 +1,16 @@
 <svg
     class="absolute z-0 origin-center -translate-x-1/2 -translate-y-1/2"
     [style]="{
-        left: 'calc(50% + ' + (router.x + node.x) / 2 + 'px)',
-        top: 'calc(50% - ' + (router.y + node.y) / 2 + 'px)',
+        left: 'calc(50% + ' + (node1.x + node2.x) / 2 + 'px)',
+        top: 'calc(50% - ' + (node1.y + node2.y) / 2 + 'px)',
         width: w + 'px',
         height: h + 'px',
     }">
     <line
-        [attr.x1]="router.x - t.x"
-        [attr.y1]="t.y - router.y"
-        [attr.x2]="node.x - t.x"
-        [attr.y2]="t.y - node.y"
+        [attr.x1]="node1.x - t.x"
+        [attr.y1]="t.y - node1.y"
+        [attr.x2]="node2.x - t.x"
+        [attr.y2]="t.y - node2.y"
         class="connection"
-        [ngClass]="{ transmitting, reverse }" />
+        [ngClass]="{ animate, reverse }" />
 </svg>

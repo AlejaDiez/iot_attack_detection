@@ -85,7 +85,6 @@ export class ConfigurationComponent implements OnInit {
             });
         this.form.valueChanges.subscribe(
             ({ name, type, cyberShield, cyberShieldModel }) => {
-                console.log(cyberShieldModel);
                 // Set values
                 this._node.name = name;
                 if (type) this._node.type = type;
