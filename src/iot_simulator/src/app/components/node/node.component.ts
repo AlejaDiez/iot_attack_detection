@@ -11,6 +11,7 @@ import {
     lucideRouter,
     lucideShield,
 } from "@ng-icons/lucide";
+import { NetworkManagerService } from "@services/network-manager.service";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 import { filter } from "rxjs";
 
@@ -57,7 +58,10 @@ export class NodeComponent {
         return this.node.type === NodeType.COMPUTER;
     }
 
-    public constructor(private readonly _router: Router) {
+    public constructor(
+        private readonly _router: Router,
+        private readonly _networkManager: NetworkManagerService,
+    ) {
         this._router.events
             .pipe(filter((event) => event instanceof NavigationEnd))
             .subscribe(
@@ -67,11 +71,13 @@ export class NodeComponent {
 
     @HostListener("mousedown", ["$event"])
     private _mouseDown(event: MouseEvent): void {
+        event.preventDefault();
         if (event.button === 0) this.clicked = true;
     }
 
     @HostListener("document:mousemove", ["$event"])
     private _mouseMove(event: MouseEvent): void {
+        event.preventDefault();
         if (
             this.clicked &&
             Math.sqrt(event.movementX ** 2 + event.movementY ** 2) > 1
@@ -87,6 +93,7 @@ export class NodeComponent {
 
     @HostListener("document:mouseup", ["$event"])
     private _mouseUp(event: MouseEvent): void {
+        event.preventDefault();
         if (this.clicked) {
             if (this.focused) this._router.navigate([""]);
             else this._router.navigate([this.node.mac, "network-traffic"]);
@@ -99,5 +106,16 @@ export class NodeComponent {
         }
         this.clicked = false;
         this.dragging = false;
+    }
+
+    @HostListener("document:keydown.delete", ["$event"])
+    @HostListener("document:keydown.meta.backspace", ["$event"])
+    private _supr(event: KeyboardEvent): void {
+        event.preventDefault();
+        if (this.focused) {
+            this._networkManager.deleteNode(this.node.mac).then((value) => {
+                if (value) this._router.navigate([""]);
+            });
+        }
     }
 }

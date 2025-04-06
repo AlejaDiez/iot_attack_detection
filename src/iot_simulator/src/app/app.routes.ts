@@ -8,7 +8,7 @@ export const routes: Routes = [
         component: BlankComponent,
     },
     {
-        title: "Configuración",
+        title: "Dispositivo",
         path: ":mac",
         loadChildren: () =>
             import("./routes/panel-node/panel-node.routes").then(

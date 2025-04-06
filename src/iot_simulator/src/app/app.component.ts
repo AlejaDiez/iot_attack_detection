@@ -1,11 +1,12 @@
-import { Component } from "@angular/core";
-import { Router, RouterOutlet } from "@angular/router";
+import { Component, HostListener, ViewChild } from "@angular/core";
+import { Router as NavigationRouter, RouterOutlet } from "@angular/router";
 import { CanvasComponent } from "@components/canvas/canvas.component";
 import { ConnectionComponent } from "@components/connection/connection.component";
 import { MenuBarComponent } from "@components/menu-bar/menu-bar.component";
 import { NodeComponent } from "@components/node/node.component";
 import { Connection } from "@models/connection";
 import { Node, NodeType } from "@models/node";
+import { Router } from "@models/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
     lucideChevronsLeftRightEllipsis,
@@ -59,15 +60,20 @@ export class BlankComponent {}
     animations: [floatAnimation],
 })
 export class AppComponent {
+    @ViewChild(CanvasComponent)
+    protected readonly canvas!: CanvasComponent;
     protected get nodes(): Node[] {
         return this._networkManager.nodes;
     }
     protected get connections(): Connection[] {
         return this._networkManager.router?.connections ?? [];
     }
+    protected get router(): Router | undefined {
+        return this._networkManager.router;
+    }
 
     public constructor(
-        private readonly _router: Router,
+        private readonly _router: NavigationRouter,
         private readonly _networkManager: NetworkManagerService,
     ) {}
 
@@ -80,36 +86,77 @@ export class AppComponent {
         );
     }
 
-    protected onInsertNode(event: Event, type?: string) {
-        event.preventDefault();
+    @HostListener("document:keydown.meta.n", ["$event"])
+    protected onNewFile(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.new();
+    }
+
+    @HostListener("document:keydown.meta.o", ["$event"])
+    protected onOpenFile(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.loadFromFile();
+    }
+
+    @HostListener("document:keydown.meta.w", ["$event"])
+    protected onCloseFile(event?: Event) {
+        event?.preventDefault();
+        window.close();
+    }
+
+    @HostListener("document:keydown.meta.shift.s", ["$event"])
+    protected onSaveFile(event?: Event) {
+        event?.preventDefault();
+        this._networkManager.saveToFile();
+    }
+
+    @HostListener("document:keydown.meta.shift.r", ["'router'", "$event"])
+    @HostListener("document:keydown.meta.shift.d", ["undefined", "$event"])
+    protected onInsertNode(type?: string, event?: Event) {
+        const { scrollWidth, scrollHeight, scrollLeft, scrollTop } =
+            this.canvas.scrollable.nativeElement;
+        const { left, top, width, height } =
+            this.canvas.scrollable.nativeElement.getBoundingClientRect();
+        const centerX = scrollWidth / 2;
+        const centerY = scrollHeight / 2;
+
+        event?.preventDefault();
         if (event instanceof MouseEvent) {
-            const { clientX, clientY } = event as MouseEvent;
+            const { clientX, clientY } = event;
+
+            this._networkManager.addNode(type as NodeType, {
+                x: clientX - left + scrollLeft - centerX,
+                y: centerY - (clientY - top + scrollTop),
+            });
+        } else {
+            this._networkManager.addNode(type as NodeType, {
+                x: width / 2 - left + scrollLeft - centerX,
+                y: centerY - (height / 2 - top + scrollTop),
+            });
         }
-
-        this._networkManager.addNode(type as NodeType);
     }
 
-    protected onDeleteNode(event: Event, mac: string) {
-        event.preventDefault();
+    protected onDeleteNode(mac: string, event?: Event) {
+        event?.preventDefault();
+        this._networkManager.deleteNode(mac).then((value) => {
+            const { url } = this._router;
 
-        this._networkManager.deleteNode(mac);
+            if (value && url.includes(mac)) this._router.navigate([""]);
+        });
     }
 
-    protected onNodeTraffic(event: Event, mac: string) {
-        event.preventDefault();
-
+    protected onNodeTraffic(mac: string, event?: Event) {
+        event?.preventDefault();
         this._router.navigate([mac, "network-traffic"]);
     }
 
-    protected onNodeAttack(event: Event, mac: string) {
-        event.preventDefault();
-
+    protected onNodeAttack(mac: string, event?: Event) {
+        event?.preventDefault();
         this._router.navigate([mac, "attack"]);
     }
 
-    protected onNodeConfig(event: Event, mac: string) {
-        event.preventDefault();
-
+    protected onNodeConfig(mac: string, event?: Event) {
+        event?.preventDefault();
         this._router.navigate([mac, "configuration"]);
     }
 }

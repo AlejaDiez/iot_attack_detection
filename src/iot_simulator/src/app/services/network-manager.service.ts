@@ -114,12 +114,7 @@ export class NetworkManagerService {
                 this.fromObject(data);
                 return "Proyecto importado correctamente.";
             },
-            error: () => {
-                console.error(
-                    "Failed to import project, the file is not valid",
-                );
-                return "No se ha podido importar el proyecto.";
-            },
+            error: () => "No se ha podido importar el proyecto.",
         });
     }
 
@@ -132,10 +127,7 @@ export class NetworkManagerService {
             success: () => {
                 return "Proyecto exportado correctamente.";
             },
-            error: () => {
-                console.error("Failed to export project");
-                return "No se ha podido exportar el proyecto.";
-            },
+            error: () => "No se ha podido exportar el proyecto.",
         });
     }
 
@@ -148,10 +140,10 @@ export class NetworkManagerService {
     public addNode(type?: NodeType, position?: Position): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (this._routerMac && type === NodeType.ROUTER) {
-                console.error("Cannot add more than one router to the network");
                 toast.error("No se puede agregar más de un router a la red.");
                 return reject();
             }
+
             this._dialog
                 .open(AddNodeDialogComponent, { context: { type } })
                 .closed$.subscribe((context: AddNodeDialogContext) => {
@@ -179,14 +171,12 @@ export class NetworkManagerService {
     public deleteNode(mac: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (!this.exists(mac)) {
-                console.error(
-                    "Does not exist a node with the specified MAC address to delete",
-                );
                 toast.error(
                     "No existe un nodo con la dirección MAC especificada.",
                 );
                 return reject();
             }
+
             this._dialog
                 .open(DeleteNodeDialogComponent, {
                     context: { node: this.findByMac(mac) },

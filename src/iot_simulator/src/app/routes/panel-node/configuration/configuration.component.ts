@@ -106,7 +106,7 @@ export class ConfigurationComponent implements OnInit {
         this._networkManager
             .deleteNode(this._node.mac)
             .then((deleted: boolean) => {
-                if (deleted) this._router.navigate(["/"]);
+                if (deleted) this._router.navigate([""]);
             });
     }
 }
