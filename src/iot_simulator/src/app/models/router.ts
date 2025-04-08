@@ -1,4 +1,5 @@
 import { Connection } from "@models/connection";
+import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { Position } from "@models/position";
@@ -61,6 +62,13 @@ class ARPTable {
      */
     public clear(): void {
         this._table.clear();
+    }
+
+    /**
+     * Obtiene el tamaño de la tabla ARP.
+     */
+    public size(): number {
+        return this._table.size;
     }
 }
 
@@ -165,7 +173,7 @@ export class Router extends Node {
      */
     public constructor(name: string, position?: Position) {
         super(name, NodeType.ROUTER, position);
-        this.ip = "192.168.0.1";
+        this.init(undefined, "192.168.0.1");
         this._arpTable = new ARPTable();
         this._dhcpServer = new DHCPServer("192.168.0", 2, 254);
     }
@@ -178,8 +186,12 @@ export class Router extends Node {
     private _forwardPacket(packet: Packet): void {
         const connection = this._arpTable.get(packet.dstIP);
 
-        if (connection) connection.spreadPacket(packet);
-        else
+        if (connection) {
+            // Log de tráfico
+            this.logTraffic(packet);
+            // Reenviar el paquete
+            connection.spreadPacket(packet);
+        } else
             throw new Error(
                 `Impossible to forward the packet ${JSON.stringify(packet, null, 2)}, destination IP not found`,
             );
@@ -213,26 +225,56 @@ export class Router extends Node {
         return [ip, connection];
     }
 
+    /**
+     * Elimina una conexión de la tabla ARP.
+     *
+     * @param node Nodo a desconectar.
+     * @returns Si la conexión fue eliminada.
+     */
+    public removeConnection(node: Node): boolean {
+        const connection = this._arpTable.get(node.ip ?? "");
+
+        if (!connection) return false;
+        this._arpTable.remove(node.ip ?? "");
+        this._dhcpServer.releaseIP(node.mac);
+        return true;
+    }
+
+    /**
+     * Elimina todas las conexiones de la tabla ARP.
+     *
+     * @returns Si las conexiones fueron eliminadas.
+     */
+    public removeAllConnections(): boolean {
+        for (const connection of this._arpTable.connections) {
+            if (connection.node1 instanceof Device)
+                connection.node1.disconnect(this);
+            else if (connection.node2 instanceof Device)
+                connection.node2.disconnect(this);
+        }
+        return this._arpTable.size() === 0;
+    }
+
     public override sendPacket(packet: Packet): void {
+        // Enviar el paquete al dispositivo correspondiente
         this._forwardPacket(packet);
     }
 
     public override receivePacket(packet: Packet): void {
         if (packet.dstIP === this.ip) {
+            // Log de tráfico
             this.logTraffic(packet);
-            console.log(
-                `Packet received by ${this.mac}: ${JSON.stringify(packet, null, 2)}`,
-            );
+            // Interceptar el paquete
+            this.interceptor.intercept(packet);
         } else this._forwardPacket(packet);
     }
 
     public static override fromObject(object: any): Router {
-        const router = new Router(object.name, object.position);
-
-        router.mac = object.mac;
-        router.ip = object.ip;
-        router.traffic = object.traffic;
-        return router;
+        return new Router(object.name, object.position).init(
+            object.mac,
+            object.ip,
+            object.traffic,
+        ) as Router;
     }
 
     public override toObject(): any {

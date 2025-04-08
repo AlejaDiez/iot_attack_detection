@@ -8,7 +8,7 @@
                 'icon',
                 'source',
                 'destination',
-                'length',
+                'size',
                 'data',
             ]"
             class="block max-h-[280px] overflow-auto rounded-md border border-border">
@@ -45,10 +45,10 @@
                     {{ item.dstIP }}
                 </hlm-td>
             </brn-column-def>
-            <brn-column-def name="length" class="w-[86px]">
-                <hlm-th *brnHeaderDef>Longitud</hlm-th>
-                <hlm-td *brnCellDef="let item" class="justify-end">
-                    {{ item.payloadSize }}
+            <brn-column-def name="size" class="w-[86px]">
+                <hlm-th *brnHeaderDef>Bytes</hlm-th>
+                <hlm-td *brnCellDef="let item" class="justify-center">
+                    {{ item.totalBytes }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="data" class="w-56">
@@ -58,13 +58,13 @@
                 </hlm-td>
             </brn-column-def>
         </brn-table>
-        <div class="flex flex-col gap-2">
+        <!-- <div class="flex flex-col gap-2">
             <textarea
                 hlmInput
                 placeholder="Contenido a enviar"
                 class="h-[100px] w-full resize-none"></textarea>
             <div class="flex flex-row items-center justify-end gap-2">
-                <brn-select class="inline-block w-56" placeholder="Ip destino">
+                <brn-select class="inline-block w-56" placeholder="IP destino">
                     <hlm-select-trigger class="w-56">
                         <hlm-select-value />
                     </hlm-select-trigger>
@@ -78,7 +78,26 @@
                 </brn-select>
                 <button hlmBtn>Enviar</button>
             </div>
-        </div>
+        </div> -->
+        <form
+            [formGroup]="form"
+            (submit)="submit()"
+            class="flex flex-row items-center justify-end gap-2">
+            <brn-select
+                class="inline-block w-full"
+                placeholder="IP destino"
+                formControlName="ip">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (item of connectedNodes; track $index) {
+                        <hlm-option [value]="item.ip">{{ item.ip }}</hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+            <button hlmBtn>Ping</button>
+        </form>
     } @else {
         @if (type === "router") {
             <ng-icon
@@ -98,7 +117,9 @@
                 No estas conectado a ningún router. Para poder enviar y recibir
                 datos, debes estar conectado a un router.
             </p>
-            <button hlmBtn>Conectar</button>
+            <button hlmBtn (click)="connect()" [disabled]="!canConnect">
+                Conectar
+            </button>
         }
     }
 </div>

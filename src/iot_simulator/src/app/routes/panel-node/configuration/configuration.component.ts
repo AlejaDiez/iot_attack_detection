@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { HlmButtonModule } from "@components/ui/ui-button-helm/src";
 import { CyberShieldModel } from "@models/cyber-shield";
 import { Node, NodeType } from "@models/node";
@@ -52,6 +52,7 @@ export class ConfigurationComponent implements OnInit {
     protected cyberShieldModels = CyberShieldModel.Types;
 
     public constructor(
+        private readonly _router: Router,
         private readonly _route: ActivatedRoute,
         private readonly _networkManager: NetworkManagerService,
     ) {}
@@ -84,7 +85,6 @@ export class ConfigurationComponent implements OnInit {
             });
         this.form.valueChanges.subscribe(
             ({ name, type, cyberShield, cyberShieldModel }) => {
-                console.log(cyberShieldModel);
                 // Set values
                 this._node.name = name;
                 if (type) this._node.type = type;
@@ -103,6 +103,10 @@ export class ConfigurationComponent implements OnInit {
     }
 
     protected delete(): void {
-        this._networkManager.deleteNode(this._node.mac);
+        this._networkManager
+            .deleteNode(this._node.mac)
+            .then((deleted: boolean) => {
+                if (deleted) this._router.navigate([""]);
+            });
     }
 }

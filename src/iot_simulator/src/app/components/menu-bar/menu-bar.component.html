@@ -8,22 +8,18 @@
 <ng-template #file>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
-            <button hlmMenuItem (click)="onNew($event)">
+            <button hlmMenuItem (click)="handleOnNewFile()">
                 Nuevo archivo
                 <hlm-menu-shortcut>⌘N</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem (click)="onOpen($event)">
+            <button hlmMenuItem (click)="handleOnOpenFile()">
                 Abrir archivo
                 <hlm-menu-shortcut>⌘O</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem (click)="onClose($event)">
-                Cerrar
-                <hlm-menu-shortcut>⌘W</hlm-menu-shortcut>
-            </button>
-            <button hlmMenuItem (click)="onSave($event)">
+            <button hlmMenuItem (click)="handleOnSaveFile()">
                 Guardar
                 <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>
             </button>
@@ -34,28 +30,13 @@
 <ng-template #edit>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
-            <button hlmMenuItem>
+            <button hlmMenuItem [disabled]="!canUndo" (click)="handleOnUndo()">
                 Deshacer
                 <hlm-menu-shortcut>⌘Z</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem>
+            <button hlmMenuItem [disabled]="!canRedo" (click)="handleOnRedo()">
                 Rehacer
                 <hlm-menu-shortcut>⇧⌘Z</hlm-menu-shortcut>
-            </button>
-        </hlm-menu-group>
-        <hlm-menu-separator />
-        <hlm-menu-group>
-            <button hlmMenuItem>
-                Cortar
-                <hlm-menu-shortcut>⌘X</hlm-menu-shortcut>
-            </button>
-            <button hlmMenuItem>
-                Copiar
-                <hlm-menu-shortcut>⌘C</hlm-menu-shortcut>
-            </button>
-            <button hlmMenuItem>
-                Pegar
-                <hlm-menu-shortcut>⌘V</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
@@ -66,12 +47,12 @@
         <hlm-menu-group>
             <button
                 hlmMenuItem
-                (click)="onInsertNode($event, 'router')"
+                (click)="handleOnInsertRouter()"
                 [disabled]="!canInsertRouter">
                 Router
                 <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem (click)="onInsertNode($event)">
+            <button hlmMenuItem (click)="handleOnInsertDevice()">
                 Dispositivo
                 <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
             </button>

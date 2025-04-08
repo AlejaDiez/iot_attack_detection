@@ -7,13 +7,13 @@
     stroke-linecap: round;
 }
 
-.connection.transmitting {
+.connection.animate {
     @apply stroke-primary stroke-2;
     stroke-dasharray: 10;
     animation: dash 5s linear 0ms infinite normal forwards;
 }
 
-.connection.transmitting.reverse {
+.connection.animate.reverse {
     animation-direction: reverse;
 }
 

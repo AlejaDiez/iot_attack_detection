@@ -16,11 +16,13 @@ export const routes: Routes = [
         component: PanelNodeComponent,
         children: [
             {
+                title: "Tráfico de red",
                 path: "network-traffic",
                 component: NetworkTrafficComponent,
                 canActivate: [validNodeGuard],
             },
             {
+                title: "Phantom Attacker",
                 path: "attack",
                 component: AttackComponent,
                 canActivate: [
@@ -31,6 +33,7 @@ export const routes: Routes = [
                 ],
             },
             {
+                title: "Configuración",
                 path: "configuration",
                 component: ConfigurationComponent,
                 canActivate: [validNodeGuard],

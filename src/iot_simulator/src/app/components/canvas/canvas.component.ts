@@ -7,10 +7,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
 })
 export class CanvasComponent implements AfterViewInit {
     @ViewChild("scrollable")
-    private _scrollableRef!: ElementRef<HTMLDivElement>;
+    public scrollable!: ElementRef<HTMLDivElement>;
 
     public ngAfterViewInit(): void {
-        const { nativeElement } = this._scrollableRef;
+        const { nativeElement } = this.scrollable;
         const { scrollHeight, clientHeight, scrollWidth, clientWidth } =
             nativeElement;
 
