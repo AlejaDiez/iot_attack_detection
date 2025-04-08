@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from "@angular/core";
+import { ConfigService } from "@services/config.service";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
@@ -35,9 +36,17 @@ export class MenuBarComponent {
     @Output()
     public onOpenFile: EventEmitter<void> = new EventEmitter<void>();
     @Output()
-    public onCloseFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
     public onSaveFile: EventEmitter<void> = new EventEmitter<void>();
+    @Output()
+    public onUndo: EventEmitter<void> = new EventEmitter<void>();
+    protected get canUndo(): boolean {
+        return this._config.stateManager.canUndo;
+    }
+    @Output()
+    public onRedo: EventEmitter<void> = new EventEmitter<void>();
+    protected get canRedo(): boolean {
+        return this._config.stateManager.canRedo;
+    }
     @Output()
     public onInsertRouter: EventEmitter<void> = new EventEmitter<void>();
     @Output()
@@ -47,6 +56,7 @@ export class MenuBarComponent {
     }
 
     public constructor(
+        private readonly _config: ConfigService,
         private readonly _networkManager: NetworkManagerService,
     ) {}
 
@@ -58,12 +68,16 @@ export class MenuBarComponent {
         this.onOpenFile.emit();
     }
 
-    protected handleOnCloseFile() {
-        this.onCloseFile.emit();
-    }
-
     protected handleOnSaveFile() {
         this.onSaveFile.emit();
+    }
+
+    protected handleOnUndo() {
+        this.onUndo.emit();
+    }
+
+    protected handleOnRedo() {
+        this.onRedo.emit();
     }
 
     protected handleOnInsertRouter() {

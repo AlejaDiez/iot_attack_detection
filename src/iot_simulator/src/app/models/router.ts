@@ -173,7 +173,7 @@ export class Router extends Node {
      */
     public constructor(name: string, position?: Position) {
         super(name, NodeType.ROUTER, position);
-        this.ip = "192.168.0.1";
+        this.init(undefined, "192.168.0.1");
         this._arpTable = new ARPTable();
         this._dhcpServer = new DHCPServer("192.168.0", 2, 254);
     }
@@ -270,12 +270,11 @@ export class Router extends Node {
     }
 
     public static override fromObject(object: any): Router {
-        const router = new Router(object.name, object.position);
-
-        router.mac = object.mac;
-        router.ip = object.ip;
-        router.traffic = object.traffic;
-        return router;
+        return new Router(object.name, object.position).init(
+            object.mac,
+            object.ip,
+            object.traffic,
+        ) as Router;
     }
 
     public override toObject(): any {

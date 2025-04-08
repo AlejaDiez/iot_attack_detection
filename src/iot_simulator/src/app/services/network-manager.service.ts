@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Device } from "@models/device";
+import { Device, DeviceType } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
@@ -13,6 +13,7 @@ import {
 } from "@routes/dialogs/delete-node-dialog.component";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
 import { toast } from "ngx-sonner";
+import { debounceTime } from "rxjs";
 import { ConfigService } from "./config.service";
 
 @Injectable({ providedIn: "root" })
@@ -43,33 +44,44 @@ export class NetworkManagerService {
     /**
      * Constructor del servicio de gestión de la red de dispositivos.
      *
+     * @param _config Servicio de configuración de la aplicación
      * @param _dialog Servicio de diálogos de la aplicación
      */
     public constructor(
-        private readonly _dialog: HlmDialogService,
         private readonly _config: ConfigService,
-    ) {}
+        private readonly _dialog: HlmDialogService,
+    ) {
+        this._config.stateManager.state$.subscribe((state) =>
+            this.fromObject(state),
+        );
+    }
+
+    /**
+     * Restablece la red de dispositivos.
+     */
+    private _reset(state: boolean = true) {
+        this._nodes.clear();
+        this._routerMac = undefined;
+        if (state) this._config.stateManager.reset(false);
+    }
 
     /**
      * Añade un nodo a la red de dispositivos.
      *
-     * @param name Nombre del nodo
-     * @param type Tipo de nodo
-     * @param position Posición del nodo
-     * @returns Nodo añadido
+     * @param node Nodo a añadir
      */
-    private _addNode(name: string, type: NodeType, position?: Position): Node {
-        let node;
-
-        if (this._routerMac && type === NodeType.ROUTER)
+    private _addNode(node: Node, state: boolean = true): Node {
+        if (this._routerMac && node.type === NodeType.ROUTER)
             throw new Error("Cannot add more than one router to the network");
-        if (type === NodeType.ROUTER) {
-            node = new Router(name, position);
-            this._routerMac = node.mac;
-        } else {
-            node = new Device(name, type, position);
-        }
+
+        if (node.type === NodeType.ROUTER) this._routerMac = node.mac;
         this._nodes.set(node.mac, node);
+        node.state$
+            .pipe(debounceTime(500))
+            .subscribe(() =>
+                this._config.stateManager.setState(this.toObject(), false),
+            );
+        if (state) this._config.stateManager.setState(this.toObject(), false);
         return node;
     }
 
@@ -79,7 +91,7 @@ export class NetworkManagerService {
      * @param mac Dirección MAC del nodo
      * @returns Indica si el nodo ha sido eliminado
      */
-    private _deleteNode(mac: string): boolean {
+    private _deleteNode(mac: string, state: boolean = true): boolean {
         const node = this._nodes.get(mac);
 
         if (!node)
@@ -92,6 +104,7 @@ export class NetworkManagerService {
         else if (node.connected && this.router)
             (node as Device).disconnect(this.router);
         this._nodes.delete(node.mac);
+        if (state) this._config.stateManager.setState(this.toObject(), false);
         return true;
     }
 
@@ -99,8 +112,7 @@ export class NetworkManagerService {
      * Crea una nueva red de dispositivos.
      */
     public new() {
-        this._nodes.clear();
-        this._routerMac = undefined;
+        this._reset();
         toast.success("Proyecto creado correctamente.");
     }
 
@@ -112,6 +124,8 @@ export class NetworkManagerService {
             loading: "Importando proyecto...",
             success: (data: any) => {
                 this.fromObject(data);
+                this._config.stateManager.reset(false);
+                this._config.stateManager.replaceState(this.toObject(), false);
                 return "Proyecto importado correctamente.";
             },
             error: () => "No se ha podido importar el proyecto.",
@@ -125,6 +139,7 @@ export class NetworkManagerService {
         toast.promise(this._config.saveFile(this.toObject()), {
             loading: "Exportando proyecto...",
             success: () => {
+                this._config.stateManager.replaceState(this.toObject(), false);
                 return "Proyecto exportado correctamente.";
             },
             error: () => "No se ha podido exportar el proyecto.",
@@ -149,12 +164,15 @@ export class NetworkManagerService {
                 .closed$.subscribe((context: AddNodeDialogContext) => {
                     if (!context) return resolve(false);
 
-                    const node = this._addNode(
-                        context.name,
-                        context.type,
-                        position,
+                    this._addNode(
+                        type === NodeType.ROUTER
+                            ? new Router(context.name, position)
+                            : new Device(
+                                  context.name,
+                                  context.type as DeviceType,
+                                  position,
+                              ),
                     );
-
                     toast.success(
                         `Se ha añadido ${context.name} correctamente.`,
                     );
@@ -246,24 +264,21 @@ export class NetworkManagerService {
      * @param object Objeto de la red de dispositivos
      */
     public fromObject(object: any): void {
-        // Reset the network
-        this._nodes.clear();
-        this._routerMac = undefined;
+        this._reset(false);
         // Add the router
         if (object.router) {
-            const router = Router.fromObject(object.router);
-
-            this._nodes.set(router.mac, router);
-            this._routerMac = router.mac;
+            this._addNode(Router.fromObject(object.router), false);
         }
         // Add the devices
         if (object.devices) {
             object.devices.forEach((obj: any) => {
-                const device = Device.fromObject(obj);
+                const device = this._addNode(
+                    Device.fromObject(obj),
+                    false,
+                ) as Device;
 
                 if (obj.connection)
                     device.connect(this.router!, obj.connection);
-                this._nodes.set(device.mac, device);
             });
         }
     }

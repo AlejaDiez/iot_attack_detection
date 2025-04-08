@@ -1,10 +1,11 @@
 import { DeviceType } from "@models/device";
+import { FlowGenerator } from "@models/flow-generator";
+import { Interceptor } from "@models/interceptor";
 import { Packet } from "@models/packet";
+import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
 import { RouterType } from "@models/router";
-import { FlowGenerator } from "./flow-generator";
-import { Interceptor } from "./interceptor";
-import { PhantomAttacker } from "./phantom-attacker";
+import { Observable, ReplaySubject } from "rxjs";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -71,30 +72,37 @@ export abstract class Node {
     public get mac(): string {
         return this._mac;
     }
-    /** Dirección MAC del nodo */
-    protected set mac(value: any) {
-        if (typeof value !== "string" || !MAC_REGEX.test(value))
-            throw new Error("Invalid MAC address");
-        this._mac = value;
-    }
     /** Dirección IP del nodo */
     private _ip?: string;
+    /** Dirección IP del nodo */
+    protected set ip(value: any) {
+        if (this._ip === value) return;
+        if (
+            value !== undefined &&
+            (typeof value !== "string" || !IP_REGEX.test(value))
+        )
+            throw new Error("Invalid IP address");
+
+        this._ip = value;
+        this.state.next();
+    }
     /** Dirección IP del nodo */
     public get ip(): string | undefined {
         return this._ip;
     }
-    /** Dirección IP del nodo */
-    protected set ip(value: any) {
-        if (value === undefined) {
-            this._ip = undefined;
-            return;
-        }
-        if (typeof value !== "string" || !IP_REGEX.test(value))
-            throw new Error("Invalid IP address");
-        this._ip = value;
+    /** Nombre del nodo */
+    private _name: string;
+    /** Nombre del nodo */
+    public get name(): string {
+        return this._name;
     }
     /** Nombre del nodo */
-    public name: string;
+    public set name(value: string) {
+        if (this._name === value) return;
+
+        this._name = value;
+        this.state.next();
+    }
     /** Tipo de nodo */
     private _type: NodeType;
     /** Tipo de nodo */
@@ -103,6 +111,7 @@ export abstract class Node {
     }
     /** Tipo de nodo */
     public set type(value: any) {
+        if (this._type === value) return;
         if (!NodeType.Types.includes(value))
             throw new Error("Invalid node type");
         if (this._type === NodeType.ROUTER && value !== NodeType.ROUTER)
@@ -118,6 +127,7 @@ export abstract class Node {
         )
             this._interceptor = new Interceptor(this, PhantomAttacker);
         this._type = value;
+        this.state.next();
     }
     /** Interceptor de paquetes de red */
     private _interceptor: Interceptor<any>;
@@ -135,15 +145,6 @@ export abstract class Node {
     public get traffic(): ReadonlyArray<Packet> {
         return this._traffic.map((e) => ({ ...e }));
     }
-    /** Historial de tráfico del nodo */
-    protected set traffic(value: any) {
-        if (value === undefined) {
-            this._traffic = [];
-            return;
-        }
-        if (!Array.isArray(value)) throw new Error("Invalid traffic history");
-        this._traffic = value.map((e) => ({ ...(e as Packet) }));
-    }
     /** Posición del nodo */
     private _position: Position;
     /** Posición del nodo */
@@ -154,20 +155,41 @@ export abstract class Node {
     public abstract get connected(): boolean;
     /** Indica si el nodo está comunicando */
     public abstract get communicating(): boolean;
+    /** Event emitter para el cambio de estado del nodo */
+    protected readonly state: ReplaySubject<void>;
+    /** Event emitter para el cambio de estado del nodo */
+    public get state$(): Observable<void> {
+        return this.state;
+    }
 
     /**
      * Crea una instancia de la clase Node.
      */
-    public constructor(name: string, type: NodeType, position?: Position) {
+    protected constructor(
+        name: string,
+        type: NodeType,
+        position: Position = { x: 0, y: 0 },
+    ) {
         this._mac = this._generateMac();
-        this.name = name;
+        this._ip = undefined;
+        this._name = name;
         this._type = type;
         this._interceptor =
             type === NodeType.COMPUTER
                 ? new Interceptor(this, PhantomAttacker)
                 : new Interceptor(this, FlowGenerator);
         this._traffic = [];
-        this._position = { ...(position ?? { x: 0, y: 0 }) };
+        this._position = { ...position };
+        this.state = new ReplaySubject<void>(1);
+    }
+
+    protected init(mac?: string, ip?: string, traffic?: Packet[]): Node {
+        if (mac && !MAC_REGEX.test(mac)) throw new Error("Invalid MAC address");
+        if (mac) this._mac = mac;
+        if (ip && !IP_REGEX.test(ip)) throw new Error("Invalid IP address");
+        if (ip) this._ip = ip;
+        if (traffic) this._traffic = traffic.map((e) => ({ ...(e as Packet) }));
+        return this;
     }
 
     /**
@@ -219,10 +241,14 @@ export abstract class Node {
      * @param relative Indica si el movimiento es relativo a la posición actual, por defecto es falso.
      */
     public move(x: number, y: number, relative: boolean = false): void {
+        if (!relative && this._position.x === x && this._position.y === y)
+            return;
+
         if (relative) {
             this._position.x += x;
             this._position.y += y;
         } else this._position = { x, y };
+        this.state.next();
     }
 
     /**
@@ -232,7 +258,7 @@ export abstract class Node {
      * @returns Nodo convertido.
      */
     public static fromObject(object: any): Node {
-        throw new Error("Method not implemented.");
+        throw new Error("Method not implemented");
     }
 
     /**

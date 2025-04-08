@@ -85,12 +85,11 @@ export class Device extends Node {
     }
 
     public static override fromObject(object: any): Device {
-        const device = new Device(object.name, object.type, object.position);
-
-        device.mac = object.mac;
-        device.ip = object.ip;
-        device.traffic = object.traffic;
-        return device;
+        return new Device(object.name, object.type, object.position).init(
+            object.mac,
+            object.ip,
+            object.traffic,
+        ) as Device;
     }
 
     public override toObject() {

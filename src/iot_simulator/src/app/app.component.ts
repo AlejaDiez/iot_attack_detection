@@ -14,6 +14,7 @@ import {
     lucideSettings,
     lucideTrash,
 } from "@ng-icons/lucide";
+import { ConfigService } from "@services/config.service";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnContextMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
@@ -74,6 +75,7 @@ export class AppComponent {
 
     public constructor(
         private readonly _router: NavigationRouter,
+        private readonly _config: ConfigService,
         private readonly _networkManager: NetworkManagerService,
     ) {}
 
@@ -97,17 +99,23 @@ export class AppComponent {
         event?.preventDefault();
         this._networkManager.loadFromFile();
     }
-
-    @HostListener("document:keydown.meta.w", ["$event"])
-    protected onCloseFile(event?: Event) {
-        event?.preventDefault();
-        window.close();
-    }
-
+    
     @HostListener("document:keydown.meta.shift.s", ["$event"])
     protected onSaveFile(event?: Event) {
         event?.preventDefault();
         this._networkManager.saveToFile();
+    }
+
+    @HostListener("document:keydown.meta.z", ["$event"])
+    protected onUndo(event?: Event) {
+        event?.preventDefault();
+        this._config.stateManager.undo();
+    }
+
+    @HostListener("document:keydown.meta.shift.z", ["$event"])
+    protected onRedo(event?: Event) {
+        event?.preventDefault();
+        this._config.stateManager.redo();
     }
 
     @HostListener("document:keydown.meta.shift.r", ["'router'", "$event"])
