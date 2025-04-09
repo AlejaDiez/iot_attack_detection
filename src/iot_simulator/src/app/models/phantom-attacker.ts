@@ -1,5 +1,3 @@
-import { FlowGenerator } from "./flow-generator";
-
 /**
  * Enum que representa los diferentes tipos de ataques de Phantom Attacker.
  */
@@ -57,7 +55,7 @@ export namespace PhantomAttackerAttack {
 /**
  * Atacante Phantom.
  */
-export class PhantomAttacker extends FlowGenerator {
+export class PhantomAttacker {
     ///////////////////////////
     // SIMULACIÓN DE ATAQUES //
     ///////////////////////////

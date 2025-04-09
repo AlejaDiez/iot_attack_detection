@@ -1,11 +1,10 @@
 import { DeviceType } from "@models/device";
 import { FlowGenerator } from "@models/flow-generator";
-import { Interceptor } from "@models/interceptor";
 import { Packet } from "@models/packet";
-import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
 import { RouterType } from "@models/router";
 import { Observable, ReplaySubject } from "rxjs";
+import { FlowInterceptor } from "./flow-interceptor";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -119,26 +118,13 @@ export abstract class Node {
         if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
             throw new Error("Cannot change the type of a device to a router");
 
-        if (this._type === NodeType.COMPUTER && value !== NodeType.COMPUTER)
-            this._interceptor = new Interceptor(this, FlowGenerator);
-        else if (
-            this._type !== NodeType.COMPUTER &&
-            value === NodeType.COMPUTER
-        )
-            this._interceptor = new Interceptor(this, PhantomAttacker);
         this._type = value;
         this.state.next();
     }
-    /** Interceptor de paquetes de red */
-    private _interceptor: Interceptor<any>;
-    /** Interceptor de paquetes de red */
-    protected get interceptor(): Interceptor<any> {
-        return this._interceptor;
-    }
+    /** Interceptor de flujo de red */
+    protected readonly interceptor: FlowInterceptor;
     /** Generador de flujos de red */
-    public get generator(): FlowGenerator {
-        return this._interceptor.generator;
-    }
+    public readonly generator: FlowGenerator;
     /** Historial de tráfico del nodo */
     private _traffic: Packet[];
     /** Historial de tráfico del nodo */
@@ -174,10 +160,8 @@ export abstract class Node {
         this._ip = undefined;
         this._name = name;
         this._type = type;
-        this._interceptor =
-            type === NodeType.COMPUTER
-                ? new Interceptor(this, PhantomAttacker)
-                : new Interceptor(this, FlowGenerator);
+        this.interceptor = new FlowInterceptor(this);
+        this.generator = new FlowGenerator(this);
         this._traffic = [];
         this._position = { ...position };
         this.state = new ReplaySubject<void>(1);

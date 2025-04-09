@@ -1,4 +1,3 @@
-import { FlowGenerator } from "@models/flow-generator";
 import { Node } from "@models/node";
 import {
     ICMPPacket,
@@ -8,21 +7,15 @@ import {
 } from "@models/packet";
 
 /**
- * Interceptor de paquetes de red.
+ * Interceptor de flujo.
  */
-export class Interceptor<T extends FlowGenerator> {
-    private readonly _node: Node;
-    public readonly generator: T;
-
+export class FlowInterceptor {
     /**
-     * Crea un interceptador de paquetes de red.
+     * Crea un generador de flujos de red.
      *
      * @param node Nodo de red.
      */
-    public constructor(node: Node, generator: new (node: Node) => T) {
-        this._node = node;
-        this.generator = new generator(node);
-    }
+    public constructor(private readonly node: Node) {}
 
     /**
      * Intercepta un paquete de red y realiza una acción en caso de ser necesario.
@@ -49,9 +42,9 @@ export class Interceptor<T extends FlowGenerator> {
     private _interceptICMP(packet: ICMPPacket): void {
         switch (packet.type) {
             case ICMPType.ECHO_REQUEST:
-                this._node.sendPacket(
-                    FlowGenerator.ICMPEchoReply(
-                        this._node.ip ?? "",
+                this.node.sendPacket(
+                    Packet.ICMPEchoReply(
+                        this.node.ip ?? "",
                         packet.srcIP,
                         packet.identifier,
                         packet.sequence,
