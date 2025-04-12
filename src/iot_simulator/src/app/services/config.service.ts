@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { dump, load } from "js-yaml";
 import { BehaviorSubject } from "rxjs";
 
 /**
@@ -7,7 +6,7 @@ import { BehaviorSubject } from "rxjs";
  */
 class StateManager {
     /** Número máximo de estados a almacenar. */
-    private static readonly _MAX_STATES: number = 20;
+    private static readonly MAX_STATES: number = 20;
     /** Lista de estados almacenados. */
     private _states: any[];
     /** Índice del estado actual. */
@@ -67,7 +66,7 @@ class StateManager {
         this._states.push(state);
         this._index++;
         // Eliminamos el más antiguo en caso de que se exceda el límite
-        if (this._states.length > StateManager._MAX_STATES) {
+        if (this._states.length > StateManager.MAX_STATES) {
             this._states.shift();
             this._index--;
         }
@@ -126,18 +125,18 @@ export class ConfigService {
     /**
      * Abre un archivo existente.
      *
+     * @param extensions Extensiones de archivo a abrir.
      * @returns Archivo abierto.
      */
-    public async openFile(): Promise<any> {
+    public async openFile(extensions?: string): Promise<string> {
         const input: HTMLInputElement = document.createElement("input");
 
-        input.style.display = "none";
         input.type = "file";
-        input.accept = ".yaml";
-        input.click();
-        return new Promise<any>((resolve, reject) => {
-            input.onchange = async (event: any) => {
-                const file: File = event.target.files[0];
+        input.value = "";
+        if (extensions) input.accept = extensions;
+        return new Promise<string>((resolve, reject) => {
+            input.onchange = async (event: Event) => {
+                const file = (event.target as HTMLInputElement).files?.[0];
 
                 // Esperamos un segundo para que se pueda cargar el archivo
                 await new Promise((_) => setTimeout(_, 1000));
@@ -145,43 +144,33 @@ export class ConfigService {
                 if (file) {
                     const reader = new FileReader();
 
-                    reader.onload = () =>
-                        resolve(load(reader.result as string));
+                    reader.onload = () => resolve(reader.result as string);
                     reader.readAsText(file);
                 } else reject();
-                input.value = "";
                 input.remove();
             };
+            // Abrir el diálogo de selección de archivos
+            input.click();
         });
     }
 
     /**
      * Guarda un archivo.
      *
-     * @param obj Objeto a guardar.
+     * @param name Nombre del archivo a guardar.
+     * @param value Contenido del archivo a guardar.
+     * @param type Tipo de archivo a guardar.
      */
-    public async saveFile(obj: any): Promise<void> {
-        const fileName: string = [
-            "iot",
-            "simulator",
-            ...new Date().toISOString().split(/T|\./g, 2),
-        ]
-            .join("_")
-            .replace(/-|:/g, "")
-            .concat(".yaml");
-        const fileContent: string = dump(obj, {
-            noCompatMode: true,
-            forceQuotes: true,
-        });
-        const fileBlob: Blob = new Blob([fileContent], {
-            type: "application/x-yaml",
-        });
+    public async saveFile(
+        name: string,
+        value: string,
+        type?: string,
+    ): Promise<void> {
+        const fileBlob: Blob = new Blob([value], { type });
         const link: HTMLAnchorElement = document.createElement("a");
 
-        link.style.display = "none";
         link.href = URL.createObjectURL(fileBlob);
-        link.download = fileName;
-
+        link.download = name;
         // Esperamos un segundo para que se pueda descargar el archivo
         await new Promise((_) => setTimeout(_, 1000));
         // Descargamos el archivo

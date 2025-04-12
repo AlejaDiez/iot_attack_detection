@@ -1,10 +1,11 @@
 import { DeviceType } from "@models/device";
 import { FlowGenerator } from "@models/flow-generator";
+import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
+import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
 import { RouterType } from "@models/router";
 import { Observable, ReplaySubject } from "rxjs";
-import { FlowInterceptor } from "./flow-interceptor";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -44,6 +45,11 @@ export namespace NodeType {
     ];
 
     /**
+     * Lista de tipos de nodos que pueden ser atacantes.
+     */
+    export const AttackerTypes: ReadonlyArray<NodeType> = [NodeType.COMPUTER];
+
+    /**
      * Convierte un string a un tipo de nodo.
      *
      * @param type String que representa un tipo de nodo.
@@ -74,6 +80,10 @@ export abstract class Node {
     /** Dirección IP del nodo */
     private _ip?: string;
     /** Dirección IP del nodo */
+    public get ip(): string | undefined {
+        return this._ip;
+    }
+    /** Dirección IP del nodo */
     protected set ip(value: any) {
         if (this._ip === value) return;
         if (
@@ -84,10 +94,6 @@ export abstract class Node {
 
         this._ip = value;
         this.state.next();
-    }
-    /** Dirección IP del nodo */
-    public get ip(): string | undefined {
-        return this._ip;
     }
     /** Nombre del nodo */
     private _name: string;
@@ -117,6 +123,10 @@ export abstract class Node {
             throw new Error("Cannot change the type of a router");
         if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
             throw new Error("Cannot change the type of a device to a router");
+        if (NodeType.AttackerTypes.includes(value))
+            this._generator = new PhantomAttacker(this);
+        else if (this._generator instanceof PhantomAttacker)
+            this._generator = new FlowGenerator(this);
 
         this._type = value;
         this.state.next();
@@ -124,7 +134,11 @@ export abstract class Node {
     /** Interceptor de flujo de red */
     protected readonly interceptor: FlowInterceptor;
     /** Generador de flujos de red */
-    public readonly generator: FlowGenerator;
+    private _generator: FlowGenerator;
+    /** Generador de flujos de red */
+    public get generator(): FlowGenerator {
+        return this._generator;
+    }
     /** Historial de tráfico del nodo */
     private _traffic: Packet[];
     /** Historial de tráfico del nodo */
@@ -161,12 +175,22 @@ export abstract class Node {
         this._name = name;
         this._type = type;
         this.interceptor = new FlowInterceptor(this);
-        this.generator = new FlowGenerator(this);
+        this._generator = NodeType.AttackerTypes.includes(type)
+            ? new PhantomAttacker(this)
+            : new FlowGenerator(this);
         this._traffic = [];
         this._position = { ...position };
         this.state = new ReplaySubject<void>(1);
     }
 
+    /**
+     * Inicializa el nodo con una dirección MAC, IP y tráfico.
+     *
+     * @param mac Dirección MAC del nodo.
+     * @param ip Dirección IP del nodo.
+     * @param traffic Historial de tráfico del nodo.
+     * @returns Instancia del nodo.
+     */
     protected init(mac?: string, ip?: string, traffic?: Packet[]): Node {
         if (mac && !MAC_REGEX.test(mac)) throw new Error("Invalid MAC address");
         if (mac) this._mac = mac;
@@ -185,6 +209,18 @@ export abstract class Node {
         return "XX:XX:XX:XX:XX:XX".replace(/X/g, () =>
             Math.floor(Math.random() * 16).toString(16),
         );
+    }
+
+    /**
+     * Carga una biblioteca externa.
+     *
+     * @param library Biblioteca a cargar.
+     */
+    public loadLibrary(library: Function): void {
+        const functions: any = library();
+
+        this.interceptor.loadLibrary(functions);
+        this.generator.loadLibrary(functions);
     }
 
     /**

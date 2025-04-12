@@ -1,16 +1,17 @@
-import { Component } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Device } from "@models/device";
 import { Node } from "@models/node";
-import { PhantomAttackerAttack } from "@models/phantom-attacker";
+import { PhantomAttacker } from "@models/phantom-attacker";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import {
-    lucideBomb,
-    lucideCrosshair,
-    lucideRadar,
-    lucideUnplug,
-} from "@ng-icons/lucide";
+import { lucideUnplug } from "@ng-icons/lucide";
+import { NamePipe } from "@pipes/name.pipe";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
@@ -26,27 +27,16 @@ import { map } from "rxjs";
         HlmLabelModule,
         HlmSelectModule,
         NgIcon,
+        NamePipe,
     ],
-    providers: [
-        provideIcons({
-            lucideBomb,
-            lucideCrosshair,
-            lucideRadar,
-            lucideUnplug,
-        }),
-    ],
+    providers: [provideIcons({ lucideUnplug })],
     templateUrl: "attack.component.html",
-    styles: `
-        label:has(:checked) {
-            @apply !border-primary;
-        }
-    `,
 })
-export class AttackComponent {
+export class AttackComponent implements OnInit {
     private _node!: Node;
     protected form: FormGroup = new FormGroup({
-        target: new FormControl(null),
-        type: new FormControl(null),
+        attack: new FormControl(null, [Validators.required]),
+        target: new FormControl(null, [Validators.required]),
     });
     protected get isConnected(): boolean {
         return this._node.connected;
@@ -59,9 +49,9 @@ export class AttackComponent {
             .getConnectedNodes()
             .filter((node) => node.mac !== this._node.mac);
     }
-    protected phantomAttackerAttackToString = PhantomAttackerAttack.toString;
-    protected phantomAttackerAttackToIcon = PhantomAttackerAttack.toIcon;
-    protected phantomAttackerAttacks = PhantomAttackerAttack.Types;
+    protected get phantomAttackerAttacks() {
+        return (this._node.generator as PhantomAttacker).attacks;
+    }
 
     public constructor(
         private readonly _route: ActivatedRoute,
@@ -76,9 +66,15 @@ export class AttackComponent {
             .subscribe((node) => (this._node = node));
     }
 
-    public connect() {
+    protected connect() {
         if (this.canConnect && this._node instanceof Device) {
             this._node.connect(this._networkManager.router!);
         }
+    }
+
+    protected attack() {
+        const { attack, target } = this.form.value;
+
+        (this._node.generator as PhantomAttacker).attack(attack, target);
     }
 }

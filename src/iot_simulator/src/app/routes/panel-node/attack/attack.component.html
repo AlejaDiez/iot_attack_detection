@@ -1,5 +1,27 @@
-<form [formGroup]="form" class="flex flex-col gap-4">
+<form [formGroup]="form" (submit)="attack()" class="flex flex-col gap-4">
     @if (isConnected) {
+        <label hlmLabel>
+            Ataque
+            <brn-select
+                class="!mt-2 inline-block w-full"
+                placeholder="Tipo de ataque"
+                formControlName="attack">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (item of phantomAttackerAttacks; track $index) {
+                        <hlm-option [value]="item">{{
+                            item | name
+                        }}</hlm-option>
+                    } @empty {
+                        <hlm-option disabled class="px-2">
+                            No hay ataques disponibles
+                        </hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </label>
         <label hlmLabel>
             Objetivo
             <brn-select
@@ -16,24 +38,7 @@
                 </hlm-select-content>
             </brn-select>
         </label>
-        <div class="grid grid-cols-3 gap-4">
-            @for (item of phantomAttackerAttacks; track $index) {
-                <label
-                    hlmLabel
-                    class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent">
-                    <input
-                        type="radio"
-                        formControlName="type"
-                        [value]="item"
-                        class="peer hidden" />
-                    <ng-icon
-                        [name]="phantomAttackerAttackToIcon(item)"
-                        size="1.5rem" />
-                    {{ phantomAttackerAttackToString(item) }}
-                </label>
-            }
-        </div>
-        <button hlmBtn>Enviar ataque</button>
+        <button hlmBtn [disabled]="form.invalid">Enviar ataque</button>
     } @else {
         <ng-icon
             name="lucideUnplug"

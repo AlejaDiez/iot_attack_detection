@@ -19,8 +19,10 @@
             "@components/*": ["./src/app/components/*"],
             "@guards/*": ["./src/app/guards/*"],
             "@models/*": ["./src/app/models/*"],
+            "@pipes/*": ["./src/app/pipes/*"],
             "@routes/*": ["./src/app/routes/*"],
             "@services/*": ["./src/app/services/*"],
+            "@utils/*": ["./src/app/utils/*"],
             "@spartan-ng/ui-accordion-helm": [
                 "./src/app/components/ui/ui-accordion-helm/src/index.ts"
             ],

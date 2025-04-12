@@ -55,7 +55,7 @@ export class NodeComponent {
         return this.node.type === NodeType.ROUTER;
     }
     protected get phantomAttackerActive(): boolean {
-        return this.node.type === NodeType.COMPUTER;
+        return NodeType.AttackerTypes.includes(this.node.type);
     }
 
     public constructor(

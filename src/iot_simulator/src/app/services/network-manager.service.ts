@@ -11,10 +11,12 @@ import {
     DeleteNodeDialogComponent,
     DeleteNodeDialogContext,
 } from "@routes/dialogs/delete-node-dialog.component";
+import { ConfigService } from "@services/config.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
+import { parseScript } from "@utils/parse_script";
+import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { debounceTime } from "rxjs";
-import { ConfigService } from "./config.service";
 
 @Injectable({ providedIn: "root" })
 export class NetworkManagerService {
@@ -120,10 +122,10 @@ export class NetworkManagerService {
      * Carga una red de dispositivos desde un archivo.
      */
     public loadFromFile() {
-        toast.promise(this._config.openFile(), {
+        toast.promise(this._config.openFile(".yaml"), {
             loading: "Importando proyecto...",
-            success: (data: any) => {
-                this.fromObject(data);
+            success: (data: string) => {
+                this.fromObject(load(data));
                 this._config.stateManager.reset(false);
                 this._config.stateManager.replaceState(this.toObject(), false);
                 return "Proyecto importado correctamente.";
@@ -136,13 +138,54 @@ export class NetworkManagerService {
      * Guarda la red de dispositivos en un archivo.
      */
     public saveToFile() {
-        toast.promise(this._config.saveFile(this.toObject()), {
-            loading: "Exportando proyecto...",
-            success: () => {
-                this._config.stateManager.replaceState(this.toObject(), false);
-                return "Proyecto exportado correctamente.";
+        toast.promise(
+            new Promise<[string, string, string]>((resolve, reject) => {
+                const name: string = [
+                    "iot",
+                    "simulator",
+                    ...new Date().toISOString().split(/T|\./g, 2),
+                ]
+                    .join("_")
+                    .replace(/-|:/g, "")
+                    .concat(".yaml");
+                const content: string = dump(this.toObject(), {
+                    noCompatMode: true,
+                    forceQuotes: true,
+                });
+                const type: string = "application/x-yaml";
+
+                resolve([name, content, type]);
+            }).then(([name, content, type]) =>
+                this._config.saveFile(name, content, type),
+            ),
+            {
+                loading: "Exportando proyecto...",
+                success: () => {
+                    this._config.stateManager.replaceState(
+                        this.toObject(),
+                        false,
+                    );
+                    return "Proyecto exportado correctamente.";
+                },
+                error: () => "No se ha podido exportar el proyecto.",
             },
-            error: () => "No se ha podido exportar el proyecto.",
+        );
+    }
+
+    /**
+     * Cargar una biblioteca externa de scripts.
+     */
+    public loadExternalLibrary() {
+        toast.promise(this._config.openFile(".js"), {
+            loading: "Importando biblioteca...",
+            success: (data: string) => {
+                const script: Function = parseScript(data);
+
+                // TODO
+                this.nodes.forEach((e) => e.loadLibrary(script));
+                return "Biblioteca importada correctamente.";
+            },
+            error: () => "No se ha podido importar la biblioteca.",
         });
     }
 
