@@ -127,10 +127,12 @@ export abstract class Node {
             this._generator = new PhantomAttacker(this);
         else if (this._generator instanceof PhantomAttacker)
             this._generator = new FlowGenerator(this);
-
+        this._generator.loadLibrary(this._library);
         this._type = value;
         this.state.next();
     }
+    /** Biblioteca externa */
+    private _library?: any;
     /** Interceptor de flujo de red */
     protected readonly interceptor: FlowInterceptor;
     /** Generador de flujos de red */
@@ -216,11 +218,10 @@ export abstract class Node {
      *
      * @param library Biblioteca a cargar.
      */
-    public loadLibrary(library: Function): void {
-        const functions: any = library();
-
-        this.interceptor.loadLibrary(functions);
-        this.generator.loadLibrary(functions);
+    public loadLibrary(library?: Function): void {
+        this._library = library ? library() : undefined;
+        this.interceptor.loadLibrary(this._library);
+        this.generator.loadLibrary(this._library);
     }
 
     /**

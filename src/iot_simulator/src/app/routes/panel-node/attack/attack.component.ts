@@ -8,16 +8,16 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { Device } from "@models/device";
 import { Node } from "@models/node";
-import { PhantomAttacker } from "@models/phantom-attacker";
+import { Attacks, PhantomAttacker } from "@models/phantom-attacker";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideUnplug } from "@ng-icons/lucide";
-import { NamePipe } from "@pipes/name.pipe";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmLabelModule } from "@spartan-ng/ui-label-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { map } from "rxjs";
+import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/src/lib/hlm-menu-separator.component";
 
 @Component({
     imports: [
@@ -25,9 +25,10 @@ import { map } from "rxjs";
         BrnSelectModule,
         HlmButtonModule,
         HlmLabelModule,
+        HlmMenuSeparatorComponent,
         HlmSelectModule,
         NgIcon,
-        NamePipe,
+        HlmMenuSeparatorComponent,
     ],
     providers: [provideIcons({ lucideUnplug })],
     templateUrl: "attack.component.html",
@@ -49,8 +50,11 @@ export class AttackComponent implements OnInit {
             .getConnectedNodes()
             .filter((node) => node.mac !== this._node.mac);
     }
-    protected get phantomAttackerAttacks() {
-        return (this._node.generator as PhantomAttacker).attacks;
+    protected get internalAttacks(): Attacks {
+        return (this._node.generator as PhantomAttacker).internalAttacks;
+    }
+    protected get externalAttacks(): Attacks {
+        return (this._node.generator as PhantomAttacker).externalAttacks;
     }
 
     public constructor(
@@ -73,8 +77,21 @@ export class AttackComponent implements OnInit {
     }
 
     protected attack() {
-        const { attack, target } = this.form.value;
+        const { command, target } = this.form.value;
 
-        (this._node.generator as PhantomAttacker).attack(attack, target);
+        switch (command.id) {
+            default:
+                if (typeof target === "string")
+                    (this._node.generator as PhantomAttacker).attack(
+                        command,
+                        target,
+                    );
+                else
+                    (this._node.generator as PhantomAttacker).attack(
+                        command,
+                        ...target,
+                    );
+                break;
+        }
     }
 }

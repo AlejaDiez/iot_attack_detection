@@ -65,7 +65,12 @@ export class FlowInterceptor {
      *
      * @param library Biblioteca de funciones.
      */
-    public loadLibrary(library: any): void {
+    public loadLibrary(library: any | undefined): void {
+        if (!library) {
+            this._externalInterceptor = undefined;
+            return;
+        }
+
         const interceptor =
             Object.keys(library).find((e) => e === `intcp_${this.node.type}`) ??
             Object.keys(library).find((e) => e === "intcp");

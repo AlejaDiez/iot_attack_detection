@@ -105,7 +105,7 @@ export class AppComponent {
 
     protected onLoadExternalLibrary(event?: Event) {
         event?.preventDefault();
-        this._networkManager.loadExternalLibrary();
+        this._config.libraryManager.loadFromFile();
     }
 
     @HostListener("document:keydown.meta.shift.s", ["$event"])

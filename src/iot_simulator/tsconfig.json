@@ -80,6 +80,9 @@
             "@spartan-ng/ui-input-helm": [
                 "./src/app/components/ui/ui-input-helm/src/index.ts"
             ],
+            "@spartan-ng/ui-inputotp-helm": [
+                "./src/app/components/ui/ui-inputotp-helm/src/index.ts"
+            ],
             "@spartan-ng/ui-label-helm": [
                 "./src/app/components/ui/ui-label-helm/src/index.ts"
             ],
@@ -133,6 +136,9 @@
             ],
             "@spartan-ng/ui-toggle-helm": [
                 "./src/app/components/ui/ui-toggle-helm/src/index.ts"
+            ],
+            "@spartan-ng/ui-togglegroup-helm": [
+                "./src/app/components/ui/ui-togglegroup-helm/src/index.ts"
             ],
             "@spartan-ng/ui-tooltip-helm": [
                 "./src/app/components/ui/ui-tooltip-helm/src/index.ts"

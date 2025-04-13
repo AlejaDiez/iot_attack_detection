@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { parseScript } from "@utils/parse_script";
+import { toast } from "ngx-sonner";
 import { BehaviorSubject } from "rxjs";
 
 /**
@@ -117,8 +119,65 @@ class StateManager {
     }
 }
 
+/**
+ * Clase que permite gestionar las bibliotecas de la aplicación.
+ */
+class LibraryManager {
+    /** Bibliotecas almacenada. */
+    private _library?: Function;
+    /** Observable para emitir el estado actual y que el NetworkManageService pueda suscribirse. */
+    private readonly _librarySubject: BehaviorSubject<Function | undefined>;
+    /** Estado actual. */
+    public get library(): any {
+        return this._library;
+    }
+    /** Mostrar el estado actual como un observable. */
+    public get library$() {
+        return this._librarySubject.asObservable();
+    }
+
+    /**
+     * Constructor del gestor de bibliotecas.
+     */
+    public constructor(private readonly _config: ConfigService) {
+        const script = sessionStorage.getItem("script");
+
+        if (script) this._load(script);
+        this._librarySubject = new BehaviorSubject<Function | undefined>(
+            this._library,
+        );
+    }
+
+    /**
+     * Caraga una librería externa desde un string.
+     *
+     * @param script Contenido de la biblioteca a cargar.
+     */
+    private _load(script: string) {
+        this._library = parseScript(script);
+        sessionStorage.setItem("script", script);
+    }
+
+    /**
+     * Carga una biblioteca externa desde un archivo.
+     */
+    public loadFromFile(): void {
+        toast.promise(this._config.openFile(".js"), {
+            loading: "Importando biblioteca...",
+            success: (script: string) => {
+                this._load(script);
+                this._librarySubject.next(this._library);
+                return "Biblioteca importada correctamente.";
+            },
+            error: () => "No se ha podido importar la biblioteca.",
+        });
+    }
+}
+
 @Injectable({ providedIn: "root" })
 export class ConfigService {
+    /** Gestor de bibliotecas de la aplicación. */
+    public readonly libraryManager: LibraryManager = new LibraryManager(this);
     /** Gestor de estados de la aplicación. */
     public readonly stateManager: StateManager = new StateManager();
 
@@ -149,6 +208,7 @@ export class ConfigService {
                 } else reject();
                 input.remove();
             };
+            input.oncancel = () => reject();
             // Abrir el diálogo de selección de archivos
             input.click();
         });

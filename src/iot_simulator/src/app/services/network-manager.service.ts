@@ -13,7 +13,6 @@ import {
 } from "@routes/dialogs/delete-node-dialog.component";
 import { ConfigService } from "@services/config.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
-import { parseScript } from "@utils/parse_script";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { debounceTime } from "rxjs";
@@ -55,6 +54,9 @@ export class NetworkManagerService {
     ) {
         this._config.stateManager.state$.subscribe((state) =>
             this.fromObject(state),
+        );
+        this._config.libraryManager.library$.subscribe((library) =>
+            this.nodes.forEach((e) => e.loadLibrary(library)),
         );
     }
 
@@ -113,7 +115,7 @@ export class NetworkManagerService {
     /**
      * Crea una nueva red de dispositivos.
      */
-    public new() {
+    public new(): void {
         this._reset();
         toast.success("Proyecto creado correctamente.");
     }
@@ -121,7 +123,7 @@ export class NetworkManagerService {
     /**
      * Carga una red de dispositivos desde un archivo.
      */
-    public loadFromFile() {
+    public loadFromFile(): void {
         toast.promise(this._config.openFile(".yaml"), {
             loading: "Importando proyecto...",
             success: (data: string) => {
@@ -137,7 +139,7 @@ export class NetworkManagerService {
     /**
      * Guarda la red de dispositivos en un archivo.
      */
-    public saveToFile() {
+    public saveToFile(): void {
         toast.promise(
             new Promise<[string, string, string]>((resolve, reject) => {
                 const name: string = [
@@ -173,23 +175,6 @@ export class NetworkManagerService {
     }
 
     /**
-     * Cargar una biblioteca externa de scripts.
-     */
-    public loadExternalLibrary() {
-        toast.promise(this._config.openFile(".js"), {
-            loading: "Importando biblioteca...",
-            success: (data: string) => {
-                const script: Function = parseScript(data);
-
-                // TODO
-                this.nodes.forEach((e) => e.loadLibrary(script));
-                return "Biblioteca importada correctamente.";
-            },
-            error: () => "No se ha podido importar la biblioteca.",
-        });
-    }
-
-    /**
      * Añade un nodo a la red de dispositivos.
      *
      * @param type Tipo de nodo
@@ -215,7 +200,7 @@ export class NetworkManagerService {
                                   context.type as DeviceType,
                                   position,
                               ),
-                    );
+                    ).loadLibrary(this._config.libraryManager.library);
                     toast.success(
                         `Se ha añadido ${context.name} correctamente.`,
                     );

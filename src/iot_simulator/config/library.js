@@ -57,10 +57,10 @@ function intcp(self, packet) {
  * @param {string} self.name - Name of the attacker device
  * @param {string} self.type - Type of the attacker device
  * @param {function(packet) => void} self.send - Function to send a packet
- * @param {...string} target - IP addresses of the target devices
+ * @param {string} target - IP addresses of the target device
  * @returns {void}
  */
-function cmd_ping(self, ...target) {
+function cmd_ping(self, target) {
     // Program your command here...
 }
 
@@ -73,9 +73,9 @@ function cmd_ping(self, ...target) {
  * @param {string} self.name - Name of the attacker device
  * @param {string} self.type - Type of the attacker device
  * @param {function(packet) => void} self.send - Function to send a packet
- * @param {...string} target - IP addresses of the target devices
+ * @param {...string} targets - IP addresses of the target devices
  * @returns {void}
  */
-function atk_DDoS_v1(self, ...target) {
+function atk_DDoS_v1(self, ...targets) {
     // Program your attack here...
 }

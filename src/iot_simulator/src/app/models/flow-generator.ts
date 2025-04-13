@@ -1,5 +1,20 @@
 import { Node } from "@models/node";
+import { paramsCount } from "@utils/parse_script";
 import { Packet } from "./packet";
+
+/**
+ * Comando que se puede realizar.
+ */
+export interface Command {
+    readonly id: string;
+    readonly name: string;
+    readonly multiple: boolean;
+}
+
+/**
+ * Comandos que se pueden realizar.
+ */
+export type Commands = Command[];
 
 /**
  * Generador de flujos de red.
@@ -9,11 +24,19 @@ export class FlowGenerator {
     protected library?: {
         [fn: string]: (...args: any[]) => void;
     };
-    /** Comandos que puede realizar el atacante */
-    public get commands(): string[] {
-        return Object.keys(this.library ?? {})
-            .filter((e) => e.startsWith("cmd_"))
-            .map((e) => e.substring(4));
+    /** Comandos internos que se pueden realizar */
+    public readonly internalCommands: Commands = [
+        {
+            id: "ping",
+            name: "Ping",
+            multiple: false,
+        },
+    ];
+    /** Comandos externos que se pueden realizar */
+    private _externalCommands: Commands = [];
+    /** Comandos que se pueden realizar */
+    public get externalCommands(): Commands {
+        return [...this._externalCommands];
     }
 
     /**
@@ -37,13 +60,19 @@ export class FlowGenerator {
      *
      * @param library Biblioteca de funciones.
      */
-    public loadLibrary(library: any): void {
+    public loadLibrary(library: any | undefined): void {
+        if (!library) {
+            this.library = undefined;
+            return;
+        }
+
         const commands = Object.keys(library).filter((e) =>
             e.startsWith("cmd_"),
         );
 
         this.library = {};
-        for (const cmd of commands)
+        this._externalCommands = [];
+        for (const cmd of commands) {
             this.library[cmd] = (...args) =>
                 library[cmd](
                     {
@@ -55,6 +84,12 @@ export class FlowGenerator {
                     },
                     ...args,
                 );
+            this._externalCommands.push({
+                id: cmd,
+                name: cmd.substring(4),
+                multiple: paramsCount(library[cmd]) === Infinity,
+            });
+        }
     }
 
     /**
@@ -64,7 +99,6 @@ export class FlowGenerator {
      * @param args Argumentos de la función.
      */
     public execute(fn: string, ...args: any[]): void {
-        if (this.library && this.library[`cmd_${fn}`])
-            this.library[`cmd_${fn}`](...args);
+        if (this.library && this.library[fn]) this.library[fn](...args);
     }
 }

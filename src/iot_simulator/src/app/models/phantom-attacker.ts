@@ -1,24 +1,43 @@
-import { FlowGenerator } from "@models/flow-generator";
+import { Command, FlowGenerator } from "@models/flow-generator";
 import { Packet } from "@models/packet";
+import { paramsCount } from "@utils/parse_script";
+
+/**
+ * Ataque que se puede realizar.
+ */
+export interface Attack extends Command {}
+
+/**
+ * Ataques que se pueden realizar.
+ */
+export type Attacks = Attack[];
 
 /**
  * Atacante Phantom.
  */
 export class PhantomAttacker extends FlowGenerator {
-    /** Ataques que puede realizar el atacante */
-    public get attacks(): string[] {
-        return Object.keys(this.library ?? {})
-            .filter((e) => e.startsWith("atk_"))
-            .map((e) => e.substring(4));
+    /** Ataques internos que se pueden realizar */
+    public readonly internalAttacks: Attacks = [];
+    /** Ataques externos que se pueden realizar */
+    private _externalAttacks: Attacks = [];
+    /** Ataques externos que se pueden realizar */
+    public get externalAttacks(): Attacks {
+        return [...this._externalAttacks];
     }
 
-    public override loadLibrary(library: any): void {
+    public override loadLibrary(library: any | undefined): void {
+        if (!library) {
+            this.library = undefined;
+            return;
+        }
+
         const attacks = Object.keys(library).filter((e) =>
             e.startsWith("atk_"),
         );
 
         super.loadLibrary(library);
-        for (const atk of attacks)
+        this._externalAttacks = [];
+        for (const atk of attacks) {
             this.library![atk] = (...args) =>
                 library[atk](
                     {
@@ -30,6 +49,12 @@ export class PhantomAttacker extends FlowGenerator {
                     },
                     ...args,
                 );
+            this._externalAttacks.push({
+                id: atk,
+                name: atk.replace("atk_", ""),
+                multiple: paramsCount(library[atk]) === Infinity,
+            });
+        }
     }
 
     /**
@@ -39,7 +64,6 @@ export class PhantomAttacker extends FlowGenerator {
      * @param args Argumentos de la función.
      */
     public attack(fn: string, ...args: any[]): void {
-        if (this.library && this.library[`atk_${fn}`])
-            this.library[`atk_${fn}`](...args);
+        if (this.library && this.library[fn]) this.library[fn](...args);
     }
 }
