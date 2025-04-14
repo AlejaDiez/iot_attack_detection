@@ -108,9 +108,32 @@ class TensorFlowServer(FedAvg):
         parameters_aggregated, metrics_aggregated = super().aggregate_fit(
             server_round, results, failures
         )
+
+        # Guardar métricas de los clientes en el archivo
+        client_metrics = {}
+        num_clients = len(results)  # Número de clientes que participaron en esta ronda
+        for client, result in results:
+            client_metrics[client.cid] = {
+                "metrics": result.metrics,  # Métricas del cliente
+                "num_examples": result.num_examples,  # Número de ejemplos procesados por el cliente
+                "num_round": server_round,  # Número de ronda en que participaron
+            }
+
+        # Agregar las métricas de los clientes al diccionario de resultados
+        self.results[server_round] = {
+            "num_clients": num_clients,  # Número de clientes en esta ronda
+            "metrics": metrics_aggregated,
+            "client_metrics": client_metrics,
+        }
+
+        # Guardar resultados en un archivo JSON
+        with open(f"{self.output_dir}/results.json", "w") as file:
+            json.dump(self.results, file, indent=4)
+
         # Actualizar los pesos del modelo con los pesos agregados
         ndarrays = parameters_to_ndarrays(parameters_aggregated)
         self.__model.set_weights(ndarrays)
+
         return parameters_aggregated, metrics_aggregated
 
     def aggregate_evaluate(
@@ -131,6 +154,29 @@ class TensorFlowServer(FedAvg):
             tuple[float, dict]: Pérdida y métricas.
         """
         loss, metrics = super().aggregate_evaluate(server_round, results, failures)
+
+        # Guardar métricas de los clientes en el archivo
+        client_metrics = {}
+        num_clients = len(results)  # Número de clientes que participaron en esta ronda
+        for client, result in results:
+            client_metrics[client.cid] = {
+                "metrics": result.metrics,  # Métricas del cliente
+                "num_examples": result.num_examples,  # Número de ejemplos procesados por el cliente
+                "num_round": server_round,  # Número de ronda en que participaron
+            }
+
+        # Agregar las métricas de los clientes al diccionario de resultados
+        self.results[server_round] = {
+            "num_clients": num_clients,  # Número de clientes en esta ronda
+            "loss": loss,
+            "metrics": metrics,
+            "client_metrics": client_metrics,
+        }
+
+        # Guardar resultados en un archivo JSON
+        with open(f"{self.output_dir}/results.json", "w") as file:
+            json.dump(self.results, file, indent=4)
+
         return loss, metrics
 
     def weighted_average(self, metrics: list[tuple[int, Metrics]]) -> Metrics:
@@ -162,12 +208,14 @@ class TensorFlowServer(FedAvg):
         """
         # Llamada al comportamiento predeterminado de FedAvg (function_fn)
         loss, metrics = super().evaluate(server_round, parameters)
+
         # Guardar resultados en un diccionario local
         self.results[server_round] = {"loss": loss, **metrics}
 
         # Guardar resultados en un archivo JSON
         with open(f"{self.output_dir}/results.json", "w") as file:
             json.dump(self.results, file, indent=4)
+
         # Retornar resultados para que sean agregados
         return loss, metrics
 
