@@ -58,7 +58,7 @@ class TensorFlowServer(FedAvg):
             evaluate_metrics_aggregation_fn=self.weighted_average,
             evaluate_fn=self.evaluate_fn,
         )
-        self.model = deepcopy(model)
+        self.__model = deepcopy(model)
         self.test_data = test_data
         self.output_dir = get_abs_path(output)
         self.batch_size = batch_size
@@ -75,7 +75,17 @@ class TensorFlowServer(FedAvg):
         Returns:
             Model: Copia profunda del modelo.
         """
-        return deepcopy(self.model)
+        return deepcopy(self.__model)
+
+    def save_model(self, model_name: str = "model.keras"):
+        """
+        Guarda el modelo en el directorio de salida.
+
+        Args:
+            output (str): Directorio de salida.
+        """
+        model = self.get_model()
+        model.save(f"{self.output_dir}/{model_name}")
 
     def aggregate_fit(
         self,
@@ -100,7 +110,7 @@ class TensorFlowServer(FedAvg):
         )
         # Actualizar los pesos del modelo con los pesos agregados
         ndarrays = parameters_to_ndarrays(parameters_aggregated)
-        self.model.set_weights(ndarrays)
+        self.__model.set_weights(ndarrays)
         return parameters_aggregated, metrics_aggregated
 
     def aggregate_evaluate(
@@ -150,7 +160,7 @@ class TensorFlowServer(FedAvg):
         Returns:
             tuple[float, dict[str, bool | bytes | float | int | str]] | None: Pérdida y métricas.
         """
-        # Llamada al comportamiento predeterminado de FedAvg
+        # Llamada al comportamiento predeterminado de FedAvg (function_fn)
         loss, metrics = super().evaluate(server_round, parameters)
         # Guardar resultados en un diccionario local
         self.results[server_round] = {"loss": loss, **metrics}
@@ -181,7 +191,6 @@ class TensorFlowServer(FedAvg):
         loss, accuracy = model.evaluate(
             self.test_data[0], self.test_data[1], batch_size=self.batch_size
         )
-
         return loss, {"accuracy": accuracy}
 
     def start(

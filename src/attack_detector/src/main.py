@@ -7,6 +7,7 @@ Fecha: 2025-03-01
 Versión: 1.0
 """
 
+import logging
 from utils.args import parse_args
 
 
@@ -48,6 +49,8 @@ def main(args):
             args.rounds,
         )
         server.start(args.server)
+        # Guardar el modelo
+        server.save_model(args.model.split("/")[-1].split(".")[0] + ".h5")
 
     # Crear el cliente
     if args.client:
@@ -60,4 +63,5 @@ def main(args):
 
 
 if __name__ == "__main__":
+    logging.disable()
     main(parse_args())

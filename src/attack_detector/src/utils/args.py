@@ -68,7 +68,7 @@ def parse_args():
         metavar="MODEL",
     )
 
-    # Argumento para la ruta del modelo
+    # Argumento para la ruta del dataset
     parser.add_argument(
         "-t",
         "--train",
