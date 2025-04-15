@@ -23,24 +23,18 @@ def main(args):
 
     # Cargar el modelo
     model = load_model(args.model)
-    # Cargar los datos
-    x_train, y_train = load_dataset(*args.train)
-    x_test, y_test = load_dataset(*args.test)
-
-    # Imprimir la información del modelo y los datos
     model.summary()
-    print()
-    print(
-        "\033[1mDataset\033[0m",
-    )
-    print(" \033[1mTrain:\033[0m", x_train.shape, y_train.shape)
-    print(" \033[1mTest:\033[0m", x_test.shape, y_test.shape)
-    print()
 
     # Crear el servidor
     if args.server:
         from server import TensorFlowServer
 
+        # Cargar los datos
+        x_test, y_test = load_dataset(*args.test)
+        print("\n", "\033[1mDataset\033[0m", sep="")
+        print(" \033[1mTest:\033[0m", x_test.shape, y_test.shape, end="\n\n")
+
+        # Inicializar el servidor
         server = TensorFlowServer(
             model,
             (x_test, y_test),
@@ -49,17 +43,28 @@ def main(args):
             args.rounds,
         )
         server.start(args.server)
+
         # Guardar el modelo
         server.save_model(args.model.split("/")[-1].split(".")[0] + ".h5")
+        # Guardar las métricas
+        server.save_metrics(args.model.split("/")[-1].split(".")[0] + "_metrics.json")
 
     # Crear el cliente
     if args.client:
         from client import TensorFlowClient
 
-        server = TensorFlowClient(
+        # Cargar los datos
+        x_train, y_train = load_dataset(*args.train)
+        x_test, y_test = load_dataset(*args.test)
+        print("\n", "\033[1mDataset\033[0m", sep="")
+        print(" \033[1mTrain:\033[0m", x_train.shape, y_train.shape)
+        print(" \033[1mTest:\033[0m", x_test.shape, y_test.shape, end="\n\n")
+
+        # Inicializar el cliente
+        client = TensorFlowClient(
             model, (x_train, y_train), (x_test, y_test), args.batch_size, args.epochs
         )
-        server.start(args.client)
+        client.start(args.client)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,8 @@
-from copy import deepcopy
+from grpc import RpcError
 from keras import Model
-from keras.api.metrics import Accuracy, Precision, Recall, AUC
 from flwr.client import NumPyClient, start_client
 from flwr.common import NDArrays, Scalar
-import numpy as np
-import tensorflow as tf
+from utils.model import clone_model, evaluate_model
 
 
 class TensorFlowClient(NumPyClient):
@@ -27,7 +25,7 @@ class TensorFlowClient(NumPyClient):
         batch_size: int = 32,
         epochs: int = 1,
     ):
-        self.model = deepcopy(model)
+        self.model = clone_model(model)
         self.x_train, self.y_train = train_data
         self.x_test, self.y_test = test_data
         self.batch_size = batch_size
@@ -58,17 +56,33 @@ class TensorFlowClient(NumPyClient):
         Returns:
             tuple[NDArrays, int, dict[str, Scalar]]: Parámetros actualizados, número de ejemplos y métricas.
         """
+        print(
+            f"\033[1m\033[94mTraining\033[0m the local model in round \033[92m{config.get('server_round', '?')}\033[0m"
+        )
+
         # Actualizar el modelo local con los pesos recibidos del servidor
         self.model.set_weights(parameters)
+
         # Entrenar el modelo local
-        self.model.fit(
+        history = self.model.fit(
             self.x_train,
             self.y_train,
             batch_size=self.batch_size,
             epochs=self.epochs,
             verbose=1,
         )
-        return self.get_parameters(config), len(self.x_train), {}
+
+        # Obtener las metricas del entrenamiento
+        metrics = {
+            "loss": str(history.history["loss"]),
+            "accuracy": str(history.history["accuracy"]),
+        }
+
+        return (
+            self.get_parameters(config),
+            len(self.x_train),
+            metrics,
+        )
 
     def evaluate(
         self, parameters: NDArrays, config: dict[str, Scalar]
@@ -83,61 +97,20 @@ class TensorFlowClient(NumPyClient):
         Returns:
             tuple[float, int, dict[str, Scalar]]: Pérdida, número de ejemplos y métricas.
         """
-        # Actualizar el modelo local con los pesos recibidos del servidor
-        self.model.set_weights(parameters)
+        print(
+            f"\033[1m\033[95mEvaluating\033[0m the local model in round \033[92m{config.get('server_round', '?')}\033[0m"
+        )
 
-        # Evaluar el modelo local y obtener las clases predichas
-        y_pred_probs = self.model.predict(self.x_test, batch_size=self.batch_size)
-        if y_pred_probs.shape[1] == 1:
-            y_pred = (y_pred_probs > 0.5).astype("int32").flatten()
-            y_true = self.y_test.flatten()
-        else:
-            y_pred = np.argmax(y_pred_probs, axis=1)
-            y_true = np.argmax(self.y_test, axis=1)
+        # Generar un nuevo modelo local y cargar los pesos para la evaluación
+        model = clone_model(self.model)
+        model.set_weights(parameters)
 
-        # Calcular las métricas
-        # Accuracy
-        accuracy = Accuracy()
-        accuracy.update_state(y_true, y_pred)
-        accuracy_val = float(accuracy.result())
-        # Precision
-        precision = Precision()
-        precision.update_state(y_true, y_pred)
-        precision_val = float(precision.result())
-        # Recall
-        recall = Recall()
-        recall.update_state(y_true, y_pred)
-        recall_val = float(recall.result())
-        # F1 Score
-        f1_score = (
-            2 * (precision_val * recall_val) / (precision_val + recall_val + 1e-8)
+        # Evaluar el modelo local
+        loss, metrics = evaluate_model(
+            model, self.x_test, self.y_test, batch_size=self.batch_size
         )
-        # AUC
-        auc = AUC()
-        if y_pred_probs.shape[1] == 1:
-            auc.update_state(y_true, y_pred_probs)
-        else:
-            y_true_oh = tf.one_hot(y_true, depth=y_pred_probs.shape[1])
-            auc.update_state(y_true_oh, y_pred_probs)
-        auc_val = float(auc.result())
-        # Confusion Matrix
-        confusion_matrix = tf.math.confusion_matrix(y_true, y_pred).numpy().tolist()
-        # Loss
-        loss, _ = self.model.evaluate(
-            self.x_test, self.y_test, batch_size=self.batch_size, verbose=0
-        )
-        return (
-            loss,
-            len(self.x_test),
-            {
-                "accuracy": accuracy_val,
-                "precision": precision_val,
-                "recall": recall_val,
-                "f1_score": f1_score,
-                "auc": auc_val,
-                "confusion_matrix": str(confusion_matrix),
-            },
-        )
+
+        return (loss, len(self.x_test), metrics)
 
     def start(self, server_address: str):
         """
@@ -146,4 +119,13 @@ class TensorFlowClient(NumPyClient):
         Args:
             server_address (str): Dirección del servidor.
         """
-        start_client(server_address=server_address, client=self.to_client())
+        try:
+            print("\033[1mTensorFlow Client\033[0m")
+            start_client(server_address=server_address, client=self.to_client())
+        except KeyboardInterrupt:
+            exit(0)
+        except RpcError as e:
+            print(
+                f"\n\033[91mError: an unexpected error occurred ({e.code().name})\033[0m"
+            )
+            exit(1)
