@@ -1,7 +1,8 @@
-from copy import deepcopy
+from grpc import RpcError
 from keras import Model
 from flwr.client import NumPyClient, start_client
 from flwr.common import NDArrays, Scalar
+from utils.model import clone_model, evaluate_model
 
 
 class TensorFlowClient(NumPyClient):
@@ -24,7 +25,7 @@ class TensorFlowClient(NumPyClient):
         batch_size: int = 32,
         epochs: int = 1,
     ):
-        self.model = deepcopy(model)
+        self.model = clone_model(model)
         self.x_train, self.y_train = train_data
         self.x_test, self.y_test = test_data
         self.batch_size = batch_size
@@ -55,13 +56,33 @@ class TensorFlowClient(NumPyClient):
         Returns:
             tuple[NDArrays, int, dict[str, Scalar]]: Parámetros actualizados, número de ejemplos y métricas.
         """
+        print(
+            f"\033[1m\033[94mTraining\033[0m the local model in round \033[92m{config.get('server_round', '?')}\033[0m"
+        )
+
         # Actualizar el modelo local con los pesos recibidos del servidor
         self.model.set_weights(parameters)
+
         # Entrenar el modelo local
-        self.model.fit(
-            self.x_train, self.y_train, batch_size=self.batch_size, epochs=self.epochs
+        history = self.model.fit(
+            self.x_train,
+            self.y_train,
+            batch_size=self.batch_size,
+            epochs=self.epochs,
+            verbose=1,
         )
-        return self.get_parameters(config), len(self.x_train), {}
+
+        # Obtener las metricas del entrenamiento
+        metrics = {
+            "loss": str(history.history["loss"]),
+            "accuracy": str(history.history["accuracy"]),
+        }
+
+        return (
+            self.get_parameters(config),
+            len(self.x_train),
+            metrics,
+        )
 
     def evaluate(
         self, parameters: NDArrays, config: dict[str, Scalar]
@@ -76,11 +97,20 @@ class TensorFlowClient(NumPyClient):
         Returns:
             tuple[float, int, dict[str, Scalar]]: Pérdida, número de ejemplos y métricas.
         """
-        # Actualizar el modelo local con los pesos recibidos del servidor
-        self.model.set_weights(parameters)
+        print(
+            f"\033[1m\033[95mEvaluating\033[0m the local model in round \033[92m{config.get('server_round', '?')}\033[0m"
+        )
+
+        # Generar un nuevo modelo local y cargar los pesos para la evaluación
+        model = clone_model(self.model)
+        model.set_weights(parameters)
+
         # Evaluar el modelo local
-        loss, accuracy = self.model.evaluate(self.x_test, self.y_test)
-        return loss, len(self.x_test), {"accuracy": accuracy}
+        loss, metrics = evaluate_model(
+            model, self.x_test, self.y_test, batch_size=self.batch_size
+        )
+
+        return (loss, len(self.x_test), metrics)
 
     def start(self, server_address: str):
         """
@@ -89,4 +119,13 @@ class TensorFlowClient(NumPyClient):
         Args:
             server_address (str): Dirección del servidor.
         """
-        start_client(server_address=server_address, client=self.to_client())
+        try:
+            print("\033[1mTensorFlow Client\033[0m")
+            start_client(server_address=server_address, client=self.to_client())
+        except KeyboardInterrupt:
+            exit(0)
+        except RpcError as e:
+            print(
+                f"\n\033[91mError: an unexpected error occurred ({e.code().name})\033[0m"
+            )
+            exit(1)

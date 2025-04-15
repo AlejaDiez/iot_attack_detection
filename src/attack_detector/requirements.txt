@@ -2,3 +2,4 @@ argparse
 tensorflow
 numpy
 flwr
+sklearn
