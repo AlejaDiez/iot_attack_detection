@@ -1,8 +1,8 @@
 <div
     class="flex cursor-default select-none flex-row items-start justify-between p-6">
     <div class="flex h-[40px] flex-col items-start justify-between">
-        <h3 hlmCardTitle>{{ name }}</h3>
-        <p hlmCardDescription>{{ ip }}</p>
+        <h3 hlmCardTitle>{{ node().name }}</h3>
+        <p hlmCardDescription>{{ node().ip }}</p>
     </div>
     <button hlmBtn routerLink="/" variant="secondary" class="p-3">
         <ng-icon name="lucideX" size="16" />
@@ -16,7 +16,7 @@
         routerLinkActive="bg-background text-foreground shadow-sm">
         Tráfico de red
     </button>
-    @if (attacker) {
+    @if (NodeType.AttackerTypes.includes(this.node().type)) {
         <button
             routerLink="attack"
             class="inline-flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

@@ -1,10 +1,8 @@
-import { DeviceType } from "@models/device";
 import { FlowGenerator } from "@models/flow-generator";
 import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
-import { RouterType } from "@models/router";
 import { Observable, ReplaySubject } from "rxjs";
 
 /* Expresión regular para validar una dirección MAC */
@@ -34,12 +32,12 @@ export namespace NodeType {
     /**
      * Lista de tipos de nodos que pueden ser routers.
      */
-    export const RouterTypes: ReadonlyArray<RouterType> = [NodeType.ROUTER];
+    export const RouterTypes: ReadonlyArray<NodeType> = [NodeType.ROUTER];
 
     /**
      * Lista de tipos de nodos que pueden ser dispositivos.
      */
-    export const DeviceTypes: ReadonlyArray<DeviceType> = [
+    export const DeviceTypes: ReadonlyArray<NodeType> = [
         NodeType.COMPUTER,
         NodeType.IOT,
     ];
@@ -48,6 +46,22 @@ export namespace NodeType {
      * Lista de tipos de nodos que pueden ser atacantes.
      */
     export const AttackerTypes: ReadonlyArray<NodeType> = [NodeType.COMPUTER];
+
+    /**
+     * Devuelve una lista de tipos de nodos según el tipo de nodo proporcionado.
+     *
+     * @param type Tipo de nodo.
+     * @returns Lista de tipos de nodos.
+     */
+    export const getTypes = (type: NodeType): ReadonlyArray<NodeType> => {
+        switch (type) {
+            case NodeType.ROUTER:
+                return RouterTypes;
+            case NodeType.COMPUTER:
+            case NodeType.IOT:
+                return DeviceTypes;
+        }
+    };
 
     /**
      * Convierte un string a un tipo de nodo.

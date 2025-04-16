@@ -1,5 +1,5 @@
-<form [formGroup]="form" (submit)="attack()" class="flex flex-col gap-4">
-    @if (isConnected) {
+@if (node().connected) {
+    <form [formGroup]="form" (submit)="attack()" class="contents">
         <label hlmLabel>
             Ataque
             <brn-select
@@ -10,44 +10,29 @@
                     <hlm-select-value />
                 </hlm-select-trigger>
                 <hlm-select-content>
-                    @if (
-                        internalAttacks.length > 0 || externalAttacks.length > 0
-                    ) {
-                        @for (item of internalAttacks; track $index) {
-                            <hlm-option [value]="item">{{
-                                item.name
-                            }}</hlm-option>
-                        }
-                        @if (
-                            internalAttacks.length > 0 &&
-                            externalAttacks.length > 0
-                        ) {
+                    @for (item of attacks; track $index) {
+                        @if (item === "---") {
                             <hlm-menu-separator />
-                        }
-                        @for (item of externalAttacks; track $index) {
+                        } @else {
                             <hlm-option [value]="item">{{
                                 item.name
                             }}</hlm-option>
                         }
-                    } @else {
+                    } @empty {
                         <hlm-option disabled class="px-2">
-                            No hay comandos disponibles
+                            No hay ataques disponibles
                         </hlm-option>
                     }
                 </hlm-select-content>
             </brn-select>
         </label>
         <label hlmLabel>
-            {{ form.get("attack")!.value?.multiple ? "Objetivos" : "Objetivo" }}
+            {{ multiple() ? "Objetivos" : "Objetivo" }}
             <brn-select
                 class="!mt-2 inline-block w-full"
-                [placeholder]="
-                    form.get('attack')!.value?.multiple
-                        ? 'IPs objetivo'
-                        : 'IP objetivo'
-                "
+                [placeholder]="multiple() ? 'IPs objetivo' : 'IP objetivo'"
                 formControlName="target"
-                [multiple]="form.get('attack')!.value?.multiple">
+                [multiple]="multiple()">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>
@@ -59,14 +44,14 @@
             </brn-select>
         </label>
         <button hlmBtn [disabled]="form.invalid">Atacar</button>
-    } @else {
-        <ng-icon
-            name="lucideUnplug"
-            size="6rem"
-            class="mb-8 mt-4 self-center text-secondary" />
-        <p class="w-96 text-center text-sm text-muted-foreground">
-            No estás conectado a ninguna red, por lo que no puedes enviar
-            ataques. Para poder enviar ataques, debes estar conectado a una red.
-        </p>
-    }
-</form>
+    </form>
+} @else {
+    <ng-icon
+        name="lucideUnplug"
+        size="6rem"
+        class="mb-8 mt-4 self-center text-secondary" />
+    <p class="w-96 text-center text-sm text-muted-foreground">
+        No estás conectado a ninguna red, por lo que no puedes enviar ataques.
+        Para poder enviar ataques, debes estar conectado a una red.
+    </p>
+}

@@ -35,10 +35,10 @@ export class FlowGenerator {
     /** Comandos externos que se pueden realizar */
     private _externalCommands: Commands = [];
     /** Comandos que se pueden realizar */
-    public get externalCommands(): Commands {
+    public get externalCommands(): Readonly<Commands> {
         return [...this._externalCommands];
     }
-
+    
     /**
      * Crea un generador de flujos de red.
      *

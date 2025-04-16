@@ -15,7 +15,7 @@ import { ConfigService } from "@services/config.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
-import { debounceTime } from "rxjs";
+import { debounceTime, skip } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class NetworkManagerService {
@@ -55,9 +55,11 @@ export class NetworkManagerService {
         this._config.stateManager.state$.subscribe((state) =>
             this.fromObject(state),
         );
-        this._config.libraryManager.library$.subscribe((library) =>
-            this.nodes.forEach((e) => e.loadLibrary(library)),
-        );
+        this._config.libraryManager.library$
+            .pipe(skip(1))
+            .subscribe((library) =>
+                this.nodes.forEach((e) => e.loadLibrary(library)),
+            );
     }
 
     /**
@@ -267,11 +269,11 @@ export class NetworkManagerService {
     /**
      * Obtiene los nodos conectados a un nodo de la red de dispositivos.
      *
-     * @param mac Dirección MAC del nodo
+     * @param mac Dirección MAC del nodo para obtener los nodos conectados a este.
      * @returns Nodos conectados
      */
-    public getConnectedNodes(): Node[] {
-        return this.nodes.filter((node) => node.ip);
+    public getConnectedNodes(mac?: string): Node[] {
+        return this.nodes.filter((node) => node.ip && mac !== node.mac);
     }
 
     /**

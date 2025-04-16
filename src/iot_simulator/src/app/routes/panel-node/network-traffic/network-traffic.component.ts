@@ -1,23 +1,29 @@
-import { Component, OnInit } from "@angular/core";
+import {
+    Component,
+    computed,
+    inject,
+    input,
+    InputSignal,
+    Signal,
+} from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import {
     FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
 import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
 import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
 import { Device } from "@models/device";
-import { Commands } from "@models/flow-generator";
 import { Node, NodeType } from "@models/node";
-import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
     lucideForward,
     lucideHourglass,
     lucideRepeat,
     lucideReply,
+    lucideTrafficCone,
     lucideUnplug,
 } from "@ng-icons/lucide";
 import { NetworkManagerService } from "@services/network-manager.service";
@@ -28,7 +34,7 @@ import { HlmInputModule } from "@spartan-ng/ui-input-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { HlmTableModule } from "@spartan-ng/ui-table-helm";
 import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
-import { map } from "rxjs";
+import { map, tap } from "rxjs";
 
 @Component({
     imports: [
@@ -51,60 +57,62 @@ import { map } from "rxjs";
             lucideUnplug,
             lucideRepeat,
             lucideReply,
+            lucideTrafficCone,
         }),
     ],
     templateUrl: "network-traffic.component.html",
+    host: { class: "flex flex-col gap-4" },
 })
-export class NetworkTrafficComponent implements OnInit {
-    private _node!: Node;
-    protected get ip(): string | undefined {
-        return this._node.ip;
-    }
-    protected get type(): NodeType {
-        return this._node.type;
-    }
-    protected get traffic(): Packet[] {
-        return [...this._node.traffic.slice(-50)];
-    }
-    protected get isConnected(): boolean {
-        return this._node.connected;
-    }
-    protected get canConnect(): boolean {
-        return this._networkManager.router !== undefined;
-    }
-    protected get internalCommands(): Commands {
-        return this._node.generator.internalCommands;
-    }
-    protected get externalCommands(): Commands {
-        return this._node.generator.externalCommands;
-    }
-    protected get connectedNodes(): Node[] {
-        return this._networkManager
-            .getConnectedNodes()
-            .filter((node) => node.mac !== this._node.mac);
-    }
+export class NetworkTrafficComponent {
+    public readonly networkManager: NetworkManagerService = inject(
+        NetworkManagerService,
+    );
+    protected readonly node: InputSignal<Node> = input.required<Node>();
+    public readonly NodeType = NodeType;
+    protected readonly displayedColumns: Signal<string[]> = computed(() => [
+        "icon",
+        "source",
+        "destination",
+        "size",
+        "data",
+    ]);
     protected readonly form: FormGroup = new FormGroup({
         command: new FormControl(null, [Validators.required]),
         target: new FormControl(null, [Validators.required]),
     });
+    protected readonly multiple: Signal<boolean> = toSignal(
+        this.form.get("command")!.valueChanges.pipe(
+            tap(({ multiple }) => {
+                const value = this.form.get("target")!.value;
 
-    public constructor(
-        private readonly _route: ActivatedRoute,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
+                if (value) {
+                    if (multiple && !Array.isArray(value))
+                        this.form.get("target")!.setValue([value]);
+                    else if (!multiple && Array.isArray(value))
+                        this.form.get("target")!.setValue(value[0]);
+                }
+            }),
+            map((e) => e.multiple),
+        ),
+        { initialValue: false },
+    );
+    protected get canConnect(): boolean {
+        return this.networkManager.router !== undefined;
+    }
+    protected get commands(): any[] {
+        const internalCommands = this.node().generator.internalCommands;
+        const externalCommands = this.node().generator.externalCommands;
 
-    public ngOnInit(): void {
-        this._route
-            .parent!.params.pipe(
-                map(({ mac }) => this._networkManager.findByMac(mac)),
-            )
-            .subscribe((node) => (this._node = node));
+        if (internalCommands.length > 0 && externalCommands.length > 0)
+            return [...internalCommands, "---", ...externalCommands];
+        return [...internalCommands, ...externalCommands];
+    }
+    protected get connectedNodes(): Node[] {
+        return this.networkManager.getConnectedNodes(this.node().mac);
     }
 
     protected connect() {
-        if (this.canConnect && this._node instanceof Device) {
-            this._node.connect(this._networkManager.router!);
-        }
+        (this.node() as Device).connect(this.networkManager.router!);
     }
 
     protected execute() {
@@ -112,12 +120,13 @@ export class NetworkTrafficComponent implements OnInit {
 
         switch (command.id) {
             case "ping":
-                this._node.generator.ping(target);
+                this.node().generator.ping(target);
                 break;
             default:
-                if (typeof target === "string")
-                    this._node.generator.execute(command, target);
-                else this._node.generator.execute(command, ...target);
+                this.node().generator.execute(
+                    command,
+                    ...(Array.isArray(target) ? target : [target]),
+                );
                 break;
         }
     }
