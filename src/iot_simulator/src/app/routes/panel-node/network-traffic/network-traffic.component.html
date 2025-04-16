@@ -58,14 +58,64 @@
                 </hlm-td>
             </brn-column-def>
         </brn-table>
-        <!-- <div class="flex flex-col gap-2">
-            <textarea
-                hlmInput
-                placeholder="Contenido a enviar"
-                class="h-[100px] w-full resize-none"></textarea>
-            <div class="flex flex-row items-center justify-end gap-2">
-                <brn-select class="inline-block w-56" placeholder="IP destino">
-                    <hlm-select-trigger class="w-56">
+        <form
+            [formGroup]="form"
+            (submit)="execute()"
+            class="flex flex-row items-center justify-end gap-2">
+            <label hlmLabel class="w-40">
+                Comando
+                <brn-select
+                    class="!mt-2 inline-block w-full"
+                    placeholder="Comando a ejecutar"
+                    formControlName="command">
+                    <hlm-select-trigger class="w-full">
+                        <hlm-select-value />
+                    </hlm-select-trigger>
+                    <hlm-select-content>
+                        @if (
+                            internalCommands.length > 0 ||
+                            externalCommands.length > 0
+                        ) {
+                            @for (item of internalCommands; track $index) {
+                                <hlm-option [value]="item">{{
+                                    item.name
+                                }}</hlm-option>
+                            }
+                            @if (
+                                internalCommands.length > 0 &&
+                                externalCommands.length > 0
+                            ) {
+                                <hlm-menu-separator />
+                            }
+                            @for (item of externalCommands; track $index) {
+                                <hlm-option [value]="item">{{
+                                    item.name
+                                }}</hlm-option>
+                            }
+                        } @else {
+                            <hlm-option disabled class="px-2">
+                                No hay comandos disponibles
+                            </hlm-option>
+                        }
+                    </hlm-select-content>
+                </brn-select>
+            </label>
+            <label hlmLabel class="grow">
+                {{
+                    form.get("command")!.value?.multiple
+                        ? "Objetivos"
+                        : "Objetivo"
+                }}
+                <brn-select
+                    class="!mt-2 inline-block w-full"
+                    [placeholder]="
+                        form.get('command')!.value?.multiple
+                            ? 'IPs objetivo'
+                            : 'IP objetivo'
+                    "
+                    formControlName="target"
+                    [multiple]="form.get('command')!.value?.multiple">
+                    <hlm-select-trigger class="w-full">
                         <hlm-select-value />
                     </hlm-select-trigger>
                     <hlm-select-content>
@@ -76,27 +126,10 @@
                         }
                     </hlm-select-content>
                 </brn-select>
-                <button hlmBtn>Enviar</button>
-            </div>
-        </div> -->
-        <form
-            [formGroup]="form"
-            (submit)="submit()"
-            class="flex flex-row items-center justify-end gap-2">
-            <brn-select
-                class="inline-block w-full"
-                placeholder="IP destino"
-                formControlName="ip">
-                <hlm-select-trigger class="w-full">
-                    <hlm-select-value />
-                </hlm-select-trigger>
-                <hlm-select-content>
-                    @for (item of connectedNodes; track $index) {
-                        <hlm-option [value]="item.ip">{{ item.ip }}</hlm-option>
-                    }
-                </hlm-select-content>
-            </brn-select>
-            <button hlmBtn>Ping</button>
+            </label>
+            <button hlmBtn [disabled]="form.invalid" class="self-end">
+                Ejecutar
+            </button>
         </form>
     } @else {
         @if (type === "router") {

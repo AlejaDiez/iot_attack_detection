@@ -13,7 +13,7 @@ import { map } from "rxjs";
     imports: [HlmButtonModule, HlmCardModule, NgIcon, RouterModule],
     providers: [provideIcons({ lucideGhost, lucideX })],
     host: {
-        class: "fixed right-5 top-1/2 max-h-[calc(100%-2.5rem)] min-w-[400px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl",
+        class: "fixed right-5 top-1/2 flex flex-col max-h-[calc(100%-2.5rem)] min-w-[400px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl overflow-hidden",
     },
     hostDirectives: [HlmCardDirective],
     templateUrl: "panel-node.component.html",
@@ -26,8 +26,8 @@ export class PanelNodeComponent implements OnInit {
     protected get name(): string {
         return this._node.name;
     }
-    protected get type(): NodeType {
-        return this._node.type;
+    protected get attacker(): boolean {
+        return NodeType.AttackerTypes.includes(this._node.type);
     }
 
     public constructor(

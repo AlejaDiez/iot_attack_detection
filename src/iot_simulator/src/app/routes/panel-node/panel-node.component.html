@@ -8,30 +8,30 @@
         <ng-icon name="lucideX" size="16" />
     </button>
 </div>
-<div hlmCardContent>
-    <div
-        class="mb-4 inline-flex h-10 w-full items-center justify-center space-x-1 rounded-md bg-muted p-1 text-muted-foreground">
+<div
+    class="mx-6 mb-4 inline-flex h-10 items-center justify-center space-x-1 rounded-md bg-muted p-1 text-muted-foreground">
+    <button
+        routerLink="network-traffic"
+        class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        routerLinkActive="bg-background text-foreground shadow-sm">
+        Tráfico de red
+    </button>
+    @if (attacker) {
         <button
-            routerLink="network-traffic"
-            class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            routerLink="attack"
+            class="inline-flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             routerLinkActive="bg-background text-foreground shadow-sm">
-            Tráfico de red
+            <ng-icon name="lucideGhost" size="1rem" />
+            Phantom Attacker
         </button>
-        @if (type === "computer") {
-            <button
-                routerLink="attack"
-                class="inline-flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                routerLinkActive="bg-background text-foreground shadow-sm">
-                <ng-icon name="lucideGhost" size="1rem" />
-                Phantom Attacker
-            </button>
-        }
-        <button
-            routerLink="configuration"
-            class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            routerLinkActive="bg-background text-foreground shadow-sm">
-            Configuración
-        </button>
-    </div>
+    }
+    <button
+        routerLink="configuration"
+        class="inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        routerLinkActive="bg-background text-foreground shadow-sm">
+        Configuración
+    </button>
+</div>
+<div hlmCardContent class="overflow-scroll">
     <router-outlet />
 </div>

@@ -1,6 +1,7 @@
 <app-menu-bar
     (onNewFile)="onNewFile()"
     (onOpenFile)="onOpenFile()"
+    (onLoadExternalLibrary)="onLoadExternalLibrary()"
     (onSaveFile)="onSaveFile()"
     (onUndo)="onUndo()"
     (onRedo)="onRedo()"
@@ -18,7 +19,7 @@
             [brnCtxMenuTriggerFor]="nodeContextMenu"
             [brnCtxMenuTriggerData]="{ $implicit: node }" />
     }
-    @for (connection of connections; track connection) {
+    @for (connection of connections; track `${connection.node1.mac}-${connection.node2.mac}`) {
         <app-connection [connection]="connection" />
     }
 </app-canvas>

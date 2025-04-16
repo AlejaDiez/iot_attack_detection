@@ -101,3 +101,111 @@ export interface TCPPacket extends Packet {
  * Modelo que representa un paquete UDP.
  */
 export interface UDPPacket extends Packet {}
+
+/**
+ * Conjunto de paquetes de red.
+ */
+export namespace Packet {
+    /**
+     * Crea un paquete ICMP Echo Request.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @returns Paquete ICMP Echo Request.
+     */
+    export const ICMPEchoRequest = (
+        srcIP: string,
+        dstIP: string,
+        payload: string = "Ping request",
+    ): ICMPPacket => {
+        const headerSize = 8;
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        return {
+            srcIP,
+            dstIP,
+            transportProtocol: TransportProtocol.ICMP,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+            type: ICMPType.ECHO_REQUEST,
+            code: 0,
+            identifier: Math.floor(Math.random() * 65535),
+            sequence: Math.floor(Math.random() * 65535),
+        };
+    };
+
+    /**
+     * Crea un paquete ICMP Echo Reply.
+     *
+     * @returns Paquete ICMP Echo Reply.
+     */
+    export const ICMPEchoReply = (
+        srcIP: string,
+        dstIP: string,
+        identifier: number,
+        sequence: number,
+        payload: string = "Pong response",
+    ): ICMPPacket => {
+        const headerSize = 8;
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        return {
+            srcIP,
+            dstIP,
+            transportProtocol: TransportProtocol.ICMP,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+            type: ICMPType.ECHO_REPLY,
+            code: 0,
+            identifier,
+            sequence,
+        };
+    };
+
+    /**
+     * Crea un paquete UDP.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @param payload Datos del paquete.
+     * @returns Paquete UDP.
+     */
+    export const UDP = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        payload: string = "",
+    ): UDPPacket => {
+        const headerSize = 8;
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        return {
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            transportProtocol: TransportProtocol.UDP,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+        };
+    };
+
+    export function UDPPacket(arg0: string, dstIP: string, srcPort: number, dstPort: number, payload: string): UDPPacket {
+        throw new Error("Function not implemented.");
+    }
+}

@@ -189,9 +189,11 @@ export class Router extends Node {
         if (connection) {
             // Log de tráfico
             this.logTraffic(packet);
-            // Reenviar el paquete
-            connection.spreadPacket(packet);
-        } else
+            // Generar un nuevo paquete con el TTL decrementado
+            packet = { ...packet, ttl: (packet.ttl ?? 1) - 1 };
+            // Reenviar el paquete al dispositivo correspondiente si el TTL es mayor a 0
+            if (packet.ttl > 0) connection.spreadPacket(packet);
+        } else 
             throw new Error(
                 `Impossible to forward the packet ${JSON.stringify(packet, null, 2)}, destination IP not found`,
             );

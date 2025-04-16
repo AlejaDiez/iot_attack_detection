@@ -4,6 +4,7 @@ import { CanvasComponent } from "@components/canvas/canvas.component";
 import { ConnectionComponent } from "@components/connection/connection.component";
 import { MenuBarComponent } from "@components/menu-bar/menu-bar.component";
 import { NodeComponent } from "@components/node/node.component";
+import { HlmButtonModule } from "@components/ui/ui-button-helm/src";
 import { Connection } from "@models/connection";
 import { Node, NodeType } from "@models/node";
 import { Router } from "@models/router";
@@ -48,6 +49,8 @@ export class BlankComponent {}
         MenuBarComponent,
         NodeComponent,
         NgIcon,
+
+        HlmButtonModule,
     ],
     providers: [
         provideIcons({
@@ -99,7 +102,12 @@ export class AppComponent {
         event?.preventDefault();
         this._networkManager.loadFromFile();
     }
-    
+
+    protected onLoadExternalLibrary(event?: Event) {
+        event?.preventDefault();
+        this._config.libraryManager.loadFromFile();
+    }
+
     @HostListener("document:keydown.meta.shift.s", ["$event"])
     protected onSaveFile(event?: Event) {
         event?.preventDefault();

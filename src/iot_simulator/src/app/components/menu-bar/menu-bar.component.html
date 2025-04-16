@@ -19,6 +19,12 @@
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
+            <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
+                Importar biblioteca externa
+            </button>
+        </hlm-menu-group>
+        <hlm-menu-separator />
+        <hlm-menu-group>
             <button hlmMenuItem (click)="handleOnSaveFile()">
                 Guardar
                 <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>

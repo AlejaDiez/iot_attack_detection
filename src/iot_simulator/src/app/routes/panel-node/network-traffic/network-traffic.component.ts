@@ -6,7 +6,10 @@ import {
     Validators,
 } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
+import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
 import { Device } from "@models/device";
+import { Commands } from "@models/flow-generator";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -34,6 +37,8 @@ import { map } from "rxjs";
         BrnTableModule,
         HlmButtonModule,
         HlmInputModule,
+        HlmLabelModule,
+        HlmMenuSeparatorComponent,
         HlmSelectModule,
         HlmTableModule,
         HlmTabsModule,
@@ -59,7 +64,7 @@ export class NetworkTrafficComponent implements OnInit {
         return this._node.type;
     }
     protected get traffic(): Packet[] {
-        return [...this._node.traffic];
+        return [...this._node.traffic.slice(-50)];
     }
     protected get isConnected(): boolean {
         return this._node.connected;
@@ -67,13 +72,20 @@ export class NetworkTrafficComponent implements OnInit {
     protected get canConnect(): boolean {
         return this._networkManager.router !== undefined;
     }
+    protected get internalCommands(): Commands {
+        return this._node.generator.internalCommands;
+    }
+    protected get externalCommands(): Commands {
+        return this._node.generator.externalCommands;
+    }
     protected get connectedNodes(): Node[] {
         return this._networkManager
             .getConnectedNodes()
             .filter((node) => node.mac !== this._node.mac);
     }
     protected readonly form: FormGroup = new FormGroup({
-        ip: new FormControl(null, [Validators.required]),
+        command: new FormControl(null, [Validators.required]),
+        target: new FormControl(null, [Validators.required]),
     });
 
     public constructor(
@@ -95,9 +107,18 @@ export class NetworkTrafficComponent implements OnInit {
         }
     }
 
-    protected submit() {
-        if (this.form.valid) {
-            this._node.generator.ping(this.form.value.ip);
+    protected execute() {
+        const { command, target } = this.form.value;
+
+        switch (command.id) {
+            case "ping":
+                this._node.generator.ping(target);
+                break;
+            default:
+                if (typeof target === "string")
+                    this._node.generator.execute(command, target);
+                else this._node.generator.execute(command, ...target);
+                break;
         }
     }
 }

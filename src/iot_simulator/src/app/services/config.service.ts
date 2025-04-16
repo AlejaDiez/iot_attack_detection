@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
-import { dump, load } from "js-yaml";
-import { BehaviorSubject } from "rxjs";
+import { parseScript } from "@utils/parse_script";
+import { toast } from "ngx-sonner";
+import { BehaviorSubject, ReplaySubject } from "rxjs";
 
 /**
  * Clase que permite gestionar los estados de la aplicación.
  */
 class StateManager {
     /** Número máximo de estados a almacenar. */
-    private static readonly _MAX_STATES: number = 20;
+    private static readonly MAX_STATES: number = 20;
     /** Lista de estados almacenados. */
     private _states: any[];
     /** Índice del estado actual. */
@@ -67,7 +68,7 @@ class StateManager {
         this._states.push(state);
         this._index++;
         // Eliminamos el más antiguo en caso de que se exceda el límite
-        if (this._states.length > StateManager._MAX_STATES) {
+        if (this._states.length > StateManager.MAX_STATES) {
             this._states.shift();
             this._index--;
         }
@@ -118,26 +119,81 @@ class StateManager {
     }
 }
 
+/**
+ * Clase que permite gestionar las bibliotecas de la aplicación.
+ */
+class LibraryManager {
+    /** Bibliotecas almacenada. */
+    private _library?: Function;
+    /** Observable para emitir el estado actual y que el NetworkManageService pueda suscribirse. */
+    private readonly _librarySubject: ReplaySubject<Function | undefined>;
+    /** Estado actual. */
+    public get library(): any {
+        return this._library;
+    }
+    /** Mostrar el estado actual como un observable. */
+    public get library$() {
+        return this._librarySubject.asObservable();
+    }
+
+    /**
+     * Constructor del gestor de bibliotecas.
+     */
+    public constructor(private readonly _config: ConfigService) {
+        const script = localStorage.getItem("script");
+
+        if (script) this._load(script);
+        this._librarySubject = new ReplaySubject<Function | undefined>(1);
+    }
+
+    /**
+     * Caraga una librería externa desde un string.
+     *
+     * @param script Contenido de la biblioteca a cargar.
+     */
+    private _load(script: string) {
+        this._library = parseScript(script);
+        localStorage.setItem("script", script);
+    }
+
+    /**
+     * Carga una biblioteca externa desde un archivo.
+     */
+    public loadFromFile(): void {
+        toast.promise(this._config.openFile(".js"), {
+            loading: "Importando biblioteca...",
+            success: (script: string) => {
+                this._load(script);
+                this._librarySubject.next(this._library);
+                return "Biblioteca importada correctamente.";
+            },
+            error: () => "No se ha podido importar la biblioteca.",
+        });
+    }
+}
+
 @Injectable({ providedIn: "root" })
 export class ConfigService {
+    /** Gestor de bibliotecas de la aplicación. */
+    public readonly libraryManager: LibraryManager = new LibraryManager(this);
     /** Gestor de estados de la aplicación. */
     public readonly stateManager: StateManager = new StateManager();
 
     /**
      * Abre un archivo existente.
      *
+     * @param extensions Extensiones de archivo a abrir.
      * @returns Archivo abierto.
      */
-    public async openFile(): Promise<any> {
+    public async openFile(extensions?: string): Promise<string> {
         const input: HTMLInputElement = document.createElement("input");
 
-        input.style.display = "none";
         input.type = "file";
-        input.accept = ".yaml";
-        input.click();
-        return new Promise<any>((resolve, reject) => {
-            input.onchange = async (event: any) => {
-                const file: File = event.target.files[0];
+        input.value = "";
+        if (extensions) input.accept = extensions;
+        return new Promise<string>((resolve, reject) => {
+            input.onchange = async (event: Event) => {
+                const file = (event.target as HTMLInputElement).files?.[0];
 
                 // Esperamos un segundo para que se pueda cargar el archivo
                 await new Promise((_) => setTimeout(_, 1000));
@@ -145,43 +201,34 @@ export class ConfigService {
                 if (file) {
                     const reader = new FileReader();
 
-                    reader.onload = () =>
-                        resolve(load(reader.result as string));
+                    reader.onload = () => resolve(reader.result as string);
                     reader.readAsText(file);
                 } else reject();
-                input.value = "";
                 input.remove();
             };
+            input.oncancel = () => reject();
+            // Abrir el diálogo de selección de archivos
+            input.click();
         });
     }
 
     /**
      * Guarda un archivo.
      *
-     * @param obj Objeto a guardar.
+     * @param name Nombre del archivo a guardar.
+     * @param value Contenido del archivo a guardar.
+     * @param type Tipo de archivo a guardar.
      */
-    public async saveFile(obj: any): Promise<void> {
-        const fileName: string = [
-            "iot",
-            "simulator",
-            ...new Date().toISOString().split(/T|\./g, 2),
-        ]
-            .join("_")
-            .replace(/-|:/g, "")
-            .concat(".yaml");
-        const fileContent: string = dump(obj, {
-            noCompatMode: true,
-            forceQuotes: true,
-        });
-        const fileBlob: Blob = new Blob([fileContent], {
-            type: "application/x-yaml",
-        });
+    public async saveFile(
+        name: string,
+        value: string,
+        type?: string,
+    ): Promise<void> {
+        const fileBlob: Blob = new Blob([value], { type });
         const link: HTMLAnchorElement = document.createElement("a");
 
-        link.style.display = "none";
         link.href = URL.createObjectURL(fileBlob);
-        link.download = fileName;
-
+        link.download = name;
         // Esperamos un segundo para que se pueda descargar el archivo
         await new Promise((_) => setTimeout(_, 1000));
         // Descargamos el archivo

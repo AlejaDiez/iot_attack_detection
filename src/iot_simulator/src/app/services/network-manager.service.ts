@@ -11,10 +11,11 @@ import {
     DeleteNodeDialogComponent,
     DeleteNodeDialogContext,
 } from "@routes/dialogs/delete-node-dialog.component";
+import { ConfigService } from "@services/config.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
+import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { debounceTime } from "rxjs";
-import { ConfigService } from "./config.service";
 
 @Injectable({ providedIn: "root" })
 export class NetworkManagerService {
@@ -54,6 +55,9 @@ export class NetworkManagerService {
         this._config.stateManager.state$.subscribe((state) =>
             this.fromObject(state),
         );
+        this._config.libraryManager.library$.subscribe((library) =>
+            this.nodes.forEach((e) => e.loadLibrary(library)),
+        );
     }
 
     /**
@@ -81,6 +85,7 @@ export class NetworkManagerService {
             .subscribe(() =>
                 this._config.stateManager.setState(this.toObject(), false),
             );
+        node.loadLibrary(this._config.libraryManager.library);
         if (state) this._config.stateManager.setState(this.toObject(), false);
         return node;
     }
@@ -111,7 +116,7 @@ export class NetworkManagerService {
     /**
      * Crea una nueva red de dispositivos.
      */
-    public new() {
+    public new(): void {
         this._reset();
         toast.success("Proyecto creado correctamente.");
     }
@@ -119,11 +124,11 @@ export class NetworkManagerService {
     /**
      * Carga una red de dispositivos desde un archivo.
      */
-    public loadFromFile() {
-        toast.promise(this._config.openFile(), {
+    public loadFromFile(): void {
+        toast.promise(this._config.openFile(".yaml"), {
             loading: "Importando proyecto...",
-            success: (data: any) => {
-                this.fromObject(data);
+            success: (data: string) => {
+                this.fromObject(load(data));
                 this._config.stateManager.reset(false);
                 this._config.stateManager.replaceState(this.toObject(), false);
                 return "Proyecto importado correctamente.";
@@ -135,15 +140,39 @@ export class NetworkManagerService {
     /**
      * Guarda la red de dispositivos en un archivo.
      */
-    public saveToFile() {
-        toast.promise(this._config.saveFile(this.toObject()), {
-            loading: "Exportando proyecto...",
-            success: () => {
-                this._config.stateManager.replaceState(this.toObject(), false);
-                return "Proyecto exportado correctamente.";
+    public saveToFile(): void {
+        toast.promise(
+            new Promise<[string, string, string]>((resolve, reject) => {
+                const name: string = [
+                    "iot",
+                    "simulator",
+                    ...new Date().toISOString().split(/T|\./g, 2),
+                ]
+                    .join("_")
+                    .replace(/-|:/g, "")
+                    .concat(".yaml");
+                const content: string = dump(this.toObject(), {
+                    noCompatMode: true,
+                    forceQuotes: true,
+                });
+                const type: string = "application/x-yaml";
+
+                resolve([name, content, type]);
+            }).then(([name, content, type]) =>
+                this._config.saveFile(name, content, type),
+            ),
+            {
+                loading: "Exportando proyecto...",
+                success: () => {
+                    this._config.stateManager.replaceState(
+                        this.toObject(),
+                        false,
+                    );
+                    return "Proyecto exportado correctamente.";
+                },
+                error: () => "No se ha podido exportar el proyecto.",
             },
-            error: () => "No se ha podido exportar el proyecto.",
-        });
+        );
     }
 
     /**

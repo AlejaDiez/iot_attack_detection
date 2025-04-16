@@ -1,11 +1,53 @@
-<form [formGroup]="form" class="flex flex-col gap-4">
+<form [formGroup]="form" (submit)="attack()" class="flex flex-col gap-4">
     @if (isConnected) {
         <label hlmLabel>
-            Objetivo
+            Ataque
             <brn-select
                 class="!mt-2 inline-block w-full"
-                placeholder="IP objetivo"
-                formControlName="target">
+                placeholder="Ataque a lanzar"
+                formControlName="attack">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @if (
+                        internalAttacks.length > 0 || externalAttacks.length > 0
+                    ) {
+                        @for (item of internalAttacks; track $index) {
+                            <hlm-option [value]="item">{{
+                                item.name
+                            }}</hlm-option>
+                        }
+                        @if (
+                            internalAttacks.length > 0 &&
+                            externalAttacks.length > 0
+                        ) {
+                            <hlm-menu-separator />
+                        }
+                        @for (item of externalAttacks; track $index) {
+                            <hlm-option [value]="item">{{
+                                item.name
+                            }}</hlm-option>
+                        }
+                    } @else {
+                        <hlm-option disabled class="px-2">
+                            No hay comandos disponibles
+                        </hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </label>
+        <label hlmLabel>
+            {{ form.get("attack")!.value?.multiple ? "Objetivos" : "Objetivo" }}
+            <brn-select
+                class="!mt-2 inline-block w-full"
+                [placeholder]="
+                    form.get('attack')!.value?.multiple
+                        ? 'IPs objetivo'
+                        : 'IP objetivo'
+                "
+                formControlName="target"
+                [multiple]="form.get('attack')!.value?.multiple">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>
@@ -16,24 +58,7 @@
                 </hlm-select-content>
             </brn-select>
         </label>
-        <div class="grid grid-cols-3 gap-4">
-            @for (item of phantomAttackerAttacks; track $index) {
-                <label
-                    hlmLabel
-                    class="flex cursor-pointer select-none flex-col items-center gap-3 rounded-md border-2 border-muted p-4 transition-all hover:bg-accent">
-                    <input
-                        type="radio"
-                        formControlName="type"
-                        [value]="item"
-                        class="peer hidden" />
-                    <ng-icon
-                        [name]="phantomAttackerAttackToIcon(item)"
-                        size="1.5rem" />
-                    {{ phantomAttackerAttackToString(item) }}
-                </label>
-            }
-        </div>
-        <button hlmBtn>Enviar ataque</button>
+        <button hlmBtn [disabled]="form.invalid">Atacar</button>
     } @else {
         <ng-icon
             name="lucideUnplug"

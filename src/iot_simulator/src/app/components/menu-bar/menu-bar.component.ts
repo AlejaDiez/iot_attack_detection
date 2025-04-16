@@ -36,6 +36,8 @@ export class MenuBarComponent {
     @Output()
     public onOpenFile: EventEmitter<void> = new EventEmitter<void>();
     @Output()
+    public onLoadExternalLibrary: EventEmitter<void> = new EventEmitter<void>();
+    @Output()
     public onSaveFile: EventEmitter<void> = new EventEmitter<void>();
     @Output()
     public onUndo: EventEmitter<void> = new EventEmitter<void>();
@@ -66,6 +68,10 @@ export class MenuBarComponent {
 
     protected handleOnOpenFile() {
         this.onOpenFile.emit();
+    }
+
+    protected handleOnLoadExternalLibrary() {
+        this.onLoadExternalLibrary.emit();
     }
 
     protected handleOnSaveFile() {

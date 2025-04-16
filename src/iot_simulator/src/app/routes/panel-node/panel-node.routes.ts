@@ -29,7 +29,8 @@ export const routes: Routes = [
                     (
                         route: ActivatedRouteSnapshot,
                         state: RouterStateSnapshot,
-                    ) => validNodeGuard(route, state, NodeType.COMPUTER),
+                    ) =>
+                        validNodeGuard(route, state, ...NodeType.AttackerTypes),
                 ],
             },
             {
