@@ -1,6 +1,7 @@
 import { Command, FlowGenerator } from "@models/flow-generator";
-import { Packet } from "@models/packet";
+import { Packet, UDPPacket } from "@models/packet";
 import { paramsCount } from "@utils/parse_script";
+import { randomInt, randomString } from "@utils/random";
 
 /**
  * Ataque que se puede realizar.
@@ -17,12 +18,43 @@ export type Attacks = Attack[];
  */
 export class PhantomAttacker extends FlowGenerator {
     /** Ataques internos que se pueden realizar */
-    public readonly internalAttacks: Attacks = [];
+    public readonly internalAttacks: Attacks = [
+        {
+            id: "dos",
+            name: "Denegación de servicio (DoS)",
+            multiple: false,
+        },
+    ];
     /** Ataques externos que se pueden realizar */
     private _externalAttacks: Attacks = [];
     /** Ataques externos que se pueden realizar */
     public get externalAttacks(): Attacks {
         return [...this._externalAttacks];
+    }
+
+    /**
+     * Realiza un ataque de denegación de servicio (DoS) a una dirección IP.
+     *
+     * @param dstIP Dirección IP de destino.
+     */
+    public dos(
+        dstIP: string,
+        dstPort: number,
+        packetRate: number,
+        ttlRange: [number, number],
+    ): void {
+        for (let i = 0; i < 500; i++) {
+            const packet: UDPPacket = Packet.UDP(
+                this.node.ip!,
+                dstIP,
+                randomInt(1024, 65535),
+                dstPort,
+                randomString(128),
+            );
+
+            packet.ttl = randomInt(ttlRange[0], ttlRange[1]);
+            this.node.sendPacket(packet);
+        }
     }
 
     public override loadLibrary(library: any | undefined): void {

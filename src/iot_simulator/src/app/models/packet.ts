@@ -169,4 +169,43 @@ export namespace Packet {
             sequence,
         };
     };
+
+    /**
+     * Crea un paquete UDP.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @param payload Datos del paquete.
+     * @returns Paquete UDP.
+     */
+    export const UDP = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        payload: string = "",
+    ): UDPPacket => {
+        const headerSize = 8;
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        return {
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            transportProtocol: TransportProtocol.UDP,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+        };
+    };
+
+    export function UDPPacket(arg0: string, dstIP: string, srcPort: number, dstPort: number, payload: string): UDPPacket {
+        throw new Error("Function not implemented.");
+    }
 }

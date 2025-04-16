@@ -77,18 +77,26 @@ export class AttackComponent implements OnInit {
     }
 
     protected attack() {
-        const { command, target } = this.form.value;
+        const { attack, target } = this.form.value;
 
-        switch (command.id) {
+        switch (attack.id) {
+            case "dos":
+                (this._node.generator as PhantomAttacker).dos(
+                    target,
+                    53,
+                    100,
+                    [32, 128],
+                );
+                break;
             default:
                 if (typeof target === "string")
                     (this._node.generator as PhantomAttacker).attack(
-                        command,
+                        attack,
                         target,
                     );
                 else
                     (this._node.generator as PhantomAttacker).attack(
-                        command,
+                        attack,
                         ...target,
                     );
                 break;

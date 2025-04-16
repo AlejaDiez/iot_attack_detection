@@ -64,7 +64,7 @@ export class NetworkTrafficComponent implements OnInit {
         return this._node.type;
     }
     protected get traffic(): Packet[] {
-        return [...this._node.traffic];
+        return [...this._node.traffic.slice(-50)];
     }
     protected get isConnected(): boolean {
         return this._node.connected;

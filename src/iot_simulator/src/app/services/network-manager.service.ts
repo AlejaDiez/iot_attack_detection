@@ -85,6 +85,7 @@ export class NetworkManagerService {
             .subscribe(() =>
                 this._config.stateManager.setState(this.toObject(), false),
             );
+        node.loadLibrary(this._config.libraryManager.library);
         if (state) this._config.stateManager.setState(this.toObject(), false);
         return node;
     }
@@ -200,7 +201,7 @@ export class NetworkManagerService {
                                   context.type as DeviceType,
                                   position,
                               ),
-                    ).loadLibrary(this._config.libraryManager.library);
+                    );
                     toast.success(
                         `Se ha añadido ${context.name} correctamente.`,
                     );

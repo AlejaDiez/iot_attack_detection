@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { parseScript } from "@utils/parse_script";
 import { toast } from "ngx-sonner";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, ReplaySubject } from "rxjs";
 
 /**
  * Clase que permite gestionar los estados de la aplicación.
@@ -126,7 +126,7 @@ class LibraryManager {
     /** Bibliotecas almacenada. */
     private _library?: Function;
     /** Observable para emitir el estado actual y que el NetworkManageService pueda suscribirse. */
-    private readonly _librarySubject: BehaviorSubject<Function | undefined>;
+    private readonly _librarySubject: ReplaySubject<Function | undefined>;
     /** Estado actual. */
     public get library(): any {
         return this._library;
@@ -140,12 +140,10 @@ class LibraryManager {
      * Constructor del gestor de bibliotecas.
      */
     public constructor(private readonly _config: ConfigService) {
-        const script = sessionStorage.getItem("script");
+        const script = localStorage.getItem("script");
 
         if (script) this._load(script);
-        this._librarySubject = new BehaviorSubject<Function | undefined>(
-            this._library,
-        );
+        this._librarySubject = new ReplaySubject<Function | undefined>(1);
     }
 
     /**
@@ -155,7 +153,7 @@ class LibraryManager {
      */
     private _load(script: string) {
         this._library = parseScript(script);
-        sessionStorage.setItem("script", script);
+        localStorage.setItem("script", script);
     }
 
     /**
