@@ -40,7 +40,6 @@ export const routes: Routes = [
                 title: "Configuración",
                 component: ConfigurationComponent,
             },
-            { path: "**", redirectTo: "/" },
         ],
     },
     { path: "**", redirectTo: "" },

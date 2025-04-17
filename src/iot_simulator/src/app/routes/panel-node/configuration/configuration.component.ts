@@ -1,7 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, InputSignal, OnInit } from "@angular/core";
+import {
+    Component,
+    effect,
+    inject,
+    input,
+    InputSignal,
+    OnInit,
+} from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { HlmButtonModule } from "@components/ui/ui-button-helm/src";
 import { Node, NodeType } from "@models/node";
 import { NetworkManagerService } from "@services/network-manager.service";
@@ -26,11 +32,10 @@ import { HlmSwitchModule } from "@spartan-ng/ui-switch-helm";
     host: { class: "flex flex-col gap-4" },
 })
 export class ConfigurationComponent implements OnInit {
-    public readonly router: Router = inject(Router);
     public readonly networkManager: NetworkManagerService = inject(
         NetworkManagerService,
     );
-    public readonly NodeType = NodeType;
+    public readonly NodeType: typeof NodeType = NodeType;
     protected readonly node: InputSignal<Node> = input.required<Node>();
     protected form: FormGroup = new FormGroup({
         name: new FormControl(null),
@@ -38,23 +43,25 @@ export class ConfigurationComponent implements OnInit {
         type: new FormControl(null),
     });
 
-    public ngOnInit(): void {
-        this.form.patchValue({
-            name: this.node().name,
-            ip: this.node().ip,
-            type: this.node().type,
+    public constructor() {
+        effect(() => {
+            const { name, ip, type } = this.node();
+
+            this.form.patchValue({ name, ip, type });
+            if (NodeType.getTypes(type).length === 1)
+                this.form.get("type")!.disable();
+            else this.form.get("type")!.enable();
         });
-        this.form.valueChanges.subscribe((value) => {
-            this.node().name = value.name;
-            this.node().type = value.type;
+    }
+
+    public ngOnInit(): void {
+        this.form.valueChanges.subscribe(({ name, type }) => {
+            if (name) this.node().name = name;
+            if (type) this.node().type = type;
         });
     }
 
     protected delete(): void {
-        this.networkManager
-            .deleteNode(this.node().mac)
-            .then((deleted: boolean) =>
-                deleted ? this.router.navigate([""]) : null,
-            );
+        this.networkManager.deleteNode(this.node().mac);
     }
 }

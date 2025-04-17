@@ -53,13 +53,15 @@ export namespace NodeType {
      * @param type Tipo de nodo.
      * @returns Lista de tipos de nodos.
      */
-    export const getTypes = (type: NodeType): ReadonlyArray<NodeType> => {
+    export const getTypes = (type?: NodeType): ReadonlyArray<NodeType> => {
         switch (type) {
             case NodeType.ROUTER:
                 return RouterTypes;
             case NodeType.COMPUTER:
             case NodeType.IOT:
                 return DeviceTypes;
+            default:
+                return Types;
         }
     };
 

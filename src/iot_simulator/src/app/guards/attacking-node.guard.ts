@@ -2,6 +2,9 @@ import { inject } from "@angular/core";
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
+    GuardResult,
+    RedirectCommand,
+    Router,
     RouterStateSnapshot,
 } from "@angular/router";
 import { NodeType } from "@models/node";
@@ -17,10 +20,13 @@ import { NetworkManagerService } from "@services/network-manager.service";
 export const attackingNodeGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
-): boolean => {
+): GuardResult => {
+    const router = inject(Router);
     const networkManager = inject(NetworkManagerService);
     const { mac } = route.parent!.params;
     const node = networkManager.findByMac(mac);
 
-    return NodeType.AttackerTypes.includes(node.type);
+    return NodeType.AttackerTypes.includes(node.type)
+        ? true
+        : new RedirectCommand(router.parseUrl(`/${mac}/network-traffic`));
 };

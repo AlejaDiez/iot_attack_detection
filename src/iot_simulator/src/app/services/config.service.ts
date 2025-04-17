@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { effect, Injectable, signal, WritableSignal } from "@angular/core";
 import { parseScript } from "@utils/parse_script";
 import { toast } from "ngx-sonner";
 import { BehaviorSubject } from "rxjs";
@@ -180,6 +180,20 @@ export class ConfigService {
     public readonly libraryManager: LibraryManager = new LibraryManager(this);
     /** Gestor de estados de la aplicación. */
     public readonly stateManager: StateManager = new StateManager();
+    /** Idioma de la aplicación. */
+    public readonly language: WritableSignal<string>;
+    /** Visualización de la cuadrícula. */
+    public readonly grid: WritableSignal<boolean>;
+
+    public constructor() {
+        this.language = signal(localStorage.getItem("language") ?? "es");
+        effect(() => localStorage.setItem("language", this.language()));
+
+        this.grid = signal(
+            localStorage.getItem("grid") === "false" ? false : true,
+        );
+        effect(() => localStorage.setItem("grid", this.grid().toString()));
+    }
 
     /**
      * Abre un archivo existente.

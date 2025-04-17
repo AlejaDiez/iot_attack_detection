@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import {
+    Component,
+    inject,
+    output,
+    OutputEmitterRef,
+    signal,
+    Signal,
+    WritableSignal,
+} from "@angular/core";
 import { ConfigService } from "@services/config.service";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
@@ -10,8 +18,10 @@ import {
     HlmMenuItemCheckboxDirective,
     HlmMenuItemCheckComponent,
     HlmMenuItemDirective,
+    HlmMenuItemSubIndicatorComponent,
     HlmMenuSeparatorComponent,
     HlmMenuShortcutComponent,
+    HlmSubMenuComponent,
 } from "@spartan-ng/ui-menu-helm";
 
 @Component({
@@ -20,7 +30,9 @@ import {
         BrnMenuTriggerDirective,
         HlmMenuComponent,
         HlmMenuBarComponent,
+        HlmSubMenuComponent,
         HlmMenuItemDirective,
+        HlmMenuItemSubIndicatorComponent,
         HlmMenuShortcutComponent,
         HlmMenuSeparatorComponent,
         HlmMenuBarItemDirective,
@@ -31,36 +43,34 @@ import {
     templateUrl: "menu-bar.component.html",
 })
 export class MenuBarComponent {
-    @Output()
-    public onNewFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onOpenFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onLoadExternalLibrary: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onSaveFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onUndo: EventEmitter<void> = new EventEmitter<void>();
+    public readonly config: ConfigService = inject(ConfigService);
+    public readonly networkManager: NetworkManagerService = inject(
+        NetworkManagerService,
+    );
+    protected readonly onNewFile: OutputEmitterRef<void> = output();
+    protected readonly onOpenFile: OutputEmitterRef<void> = output();
+    protected readonly onLoadExternalLibrary: OutputEmitterRef<void> = output();
+    protected readonly onLoadModels: OutputEmitterRef<void> = output();
+    protected readonly onSaveFile: OutputEmitterRef<void> = output();
+    protected readonly onUndo: OutputEmitterRef<void> = output();
     protected get canUndo(): boolean {
-        return this._config.stateManager.canUndo;
+        return this.config.stateManager.canUndo;
     }
-    @Output()
-    public onRedo: EventEmitter<void> = new EventEmitter<void>();
+    protected readonly onRedo: OutputEmitterRef<void> = output();
     protected get canRedo(): boolean {
-        return this._config.stateManager.canRedo;
+        return this.config.stateManager.canRedo;
     }
-    @Output()
-    public onInsertRouter: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onInsertDevice: EventEmitter<void> = new EventEmitter<void>();
+    protected readonly onInsertRouter: OutputEmitterRef<void> = output();
+    protected readonly onInsertDevice: OutputEmitterRef<void> = output();
     protected get canInsertRouter(): boolean {
-        return !this._networkManager.router;
+        return !this.networkManager.router;
     }
-
-    public constructor(
-        private readonly _config: ConfigService,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
+    protected readonly language: WritableSignal<string> = signal("es");
+    protected readonly showGrid: Signal<boolean> = this.config.grid;
+    protected readonly onCenter: OutputEmitterRef<void> = output();
+    protected readonly onResetZoom: OutputEmitterRef<void> = output();
+    protected readonly onZoomIn: OutputEmitterRef<void> = output();
+    protected readonly onZoomOut: OutputEmitterRef<void> = output();
 
     protected handleOnNewFile() {
         this.onNewFile.emit();
@@ -72,6 +82,10 @@ export class MenuBarComponent {
 
     protected handleOnLoadExternalLibrary() {
         this.onLoadExternalLibrary.emit();
+    }
+
+    protected handleOnLoadModels() {
+        this.onLoadModels.emit();
     }
 
     protected handleOnSaveFile() {
@@ -92,5 +106,29 @@ export class MenuBarComponent {
 
     protected handleOnInsertDevice() {
         this.onInsertDevice.emit();
+    }
+
+    protected handleOnLanguage(language: string) {
+        this.language.set(language);
+    }
+
+    protected handleOnGrid() {
+        this.config.grid.update((value) => !value);
+    }
+
+    protected handleOnCenter() {
+        this.onCenter.emit();
+    }
+
+    protected handleOnResetZoom() {
+        this.onResetZoom.emit();
+    }
+
+    protected handleOnZoomIn() {
+        this.onZoomIn.emit();
+    }
+
+    protected handleOnZoomOut() {
+        this.onZoomOut.emit();
     }
 }

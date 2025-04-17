@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, input, InputSignal } from "@angular/core";
 import { Connection, ConnectionStatus } from "@models/connection";
 import { Position } from "@models/position";
 
@@ -10,19 +10,18 @@ import { Position } from "@models/position";
     styleUrl: "connection.component.css",
 })
 export class ConnectionComponent {
-    @Input({ required: true })
-    public connection!: Connection;
+    public readonly connection: InputSignal<Connection> = input.required();
     protected get animate(): boolean {
-        return this.connection.status !== ConnectionStatus.IDLE;
+        return this.connection().status !== ConnectionStatus.IDLE;
     }
     protected get reverse(): boolean {
-        return this.connection.status === ConnectionStatus.REVERSE;
+        return this.connection().status === ConnectionStatus.REVERSE;
     }
     protected get node1(): Position {
-        return this.connection.node1.position;
+        return this.connection().node1.position;
     }
     protected get node2(): Position {
-        return this.connection.node2.position;
+        return this.connection().node2.position;
     }
     protected get w(): number {
         return Math.abs(this.node2.x - this.node1.x) + 60;

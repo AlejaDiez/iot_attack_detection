@@ -1,8 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, HostListener, Input } from "@angular/core";
-import { NavigationEnd, Router, RouterModule } from "@angular/router";
+import {
+    Component,
+    HostListener,
+    inject,
+    input,
+    InputSignal,
+} from "@angular/core";
+import { Router, RouterModule } from "@angular/router";
 import { Node, NodeType } from "@models/node";
-import { Position } from "@models/position";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
     lucideCpu,
@@ -13,7 +18,6 @@ import {
 } from "@ng-icons/lucide";
 import { NetworkManagerService } from "@services/network-manager.service";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
-import { filter } from "rxjs";
 
 @Component({
     selector: "app-node",
@@ -29,45 +33,20 @@ import { filter } from "rxjs";
     ],
     templateUrl: "node.component.html",
     styleUrl: "node.component.css",
+    host: { class: "contents" },
 })
 export class NodeComponent {
-    @Input({ required: true })
-    public node!: Node;
-    protected get ip(): string | undefined {
-        return this.node.ip;
+    public readonly router: Router = inject(Router);
+    public readonly networkManager: NetworkManagerService = inject(
+        NetworkManagerService,
+    );
+    public readonly NodeType: typeof NodeType = NodeType;
+    public readonly node: InputSignal<Node> = input.required();
+    protected get focused(): boolean {
+        return this.networkManager.focusedNode === this.node().mac;
     }
-    protected get name(): string {
-        return this.node.name;
-    }
-    protected get type(): NodeType {
-        return this.node.type;
-    }
-    protected focused: boolean = false;
     protected clicked: boolean = false;
     protected dragging: boolean = false;
-    protected get position(): Position {
-        return this.node.position;
-    }
-    protected get communicating(): boolean {
-        return this.node.communicating;
-    }
-    protected get cyberShieldActive(): boolean {
-        return this.node.type === NodeType.ROUTER;
-    }
-    protected get phantomAttackerActive(): boolean {
-        return NodeType.AttackerTypes.includes(this.node.type);
-    }
-
-    public constructor(
-        private readonly _router: Router,
-        private readonly _networkManager: NetworkManagerService,
-    ) {
-        this._router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe(
-                ({ url }) => (this.focused = url.includes(this.node.mac)),
-            );
-    }
 
     @HostListener("mousedown", ["$event"])
     private _mouseDown(event: MouseEvent): void {
@@ -83,11 +62,11 @@ export class NodeComponent {
             Math.sqrt(event.movementX ** 2 + event.movementY ** 2) > 1
         ) {
             this.dragging = true;
-            this._router.navigate([""]);
+            this.router.navigate([""]);
         }
         if (this.dragging) {
             this.clicked = false;
-            this.node.move(event.movementX, -event.movementY, true);
+            this.node().move(event.movementX, -event.movementY, true);
         }
     }
 
@@ -95,15 +74,21 @@ export class NodeComponent {
     private _mouseUp(event: MouseEvent): void {
         event.preventDefault();
         if (this.clicked) {
-            if (this.focused) this._router.navigate([""]);
-            else this._router.navigate([this.node.mac, "network-traffic"]);
+            if (this.focused) this.router.navigate([""]);
+            else {
+                const route =
+                    this.router.url.split("/").length > 2
+                        ? this.router.url.split("/")[2]
+                        : "network-traffic";
+
+                this.router.navigate([this.node().mac, route]);
+            }
         }
-        if (this.dragging) {
-            this.node.move(
-                Math.round(this.node.position.x / 20) * 20,
-                Math.round(this.node.position.y / 20) * 20,
+        if (this.dragging)
+            this.node().move(
+                Math.round(this.node().position.x / 20) * 20,
+                Math.round(this.node().position.y / 20) * 20,
             );
-        }
         this.clicked = false;
         this.dragging = false;
     }
@@ -112,10 +97,6 @@ export class NodeComponent {
     @HostListener("document:keydown.meta.backspace", ["$event"])
     private _supr(event: KeyboardEvent): void {
         event.preventDefault();
-        if (this.focused) {
-            this._networkManager.deleteNode(this.node.mac).then((value) => {
-                if (value) this._router.navigate([""]);
-            });
-        }
+        if (this.focused) this.networkManager.deleteNode(this.node().mac);
     }
 }

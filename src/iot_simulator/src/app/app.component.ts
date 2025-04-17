@@ -1,4 +1,11 @@
-import { Component, HostListener, ViewChild } from "@angular/core";
+import {
+    AfterViewInit,
+    Component,
+    HostListener,
+    inject,
+    Signal,
+    viewChild,
+} from "@angular/core";
 import { Router as NavigationRouter, RouterOutlet } from "@angular/router";
 import { CanvasComponent } from "@components/canvas/canvas.component";
 import { ConnectionComponent } from "@components/connection/connection.component";
@@ -39,6 +46,7 @@ export class BlankComponent {}
         BrnContextMenuTriggerDirective,
         CanvasComponent,
         ConnectionComponent,
+        HlmButtonModule,
         HlmMenuComponent,
         HlmMenuGroupComponent,
         HlmMenuItemDirective,
@@ -49,8 +57,6 @@ export class BlankComponent {}
         MenuBarComponent,
         NodeComponent,
         NgIcon,
-
-        HlmButtonModule,
     ],
     providers: [
         provideIcons({
@@ -63,24 +69,29 @@ export class BlankComponent {}
     templateUrl: "app.component.html",
     animations: [floatAnimation],
 })
-export class AppComponent {
-    @ViewChild(CanvasComponent)
-    protected readonly canvas!: CanvasComponent;
+export class AppComponent implements AfterViewInit {
+    public readonly navigationRouter: NavigationRouter =
+        inject(NavigationRouter);
+    public readonly config: ConfigService = inject(ConfigService);
+    public readonly networkManager: NetworkManagerService = inject(
+        NetworkManagerService,
+    );
+    public readonly NodeType: typeof NodeType = NodeType;
+    protected readonly canvas: Signal<CanvasComponent> =
+        viewChild.required(CanvasComponent);
     protected get nodes(): Node[] {
-        return this._networkManager.nodes;
-    }
-    protected get connections(): Connection[] {
-        return this._networkManager.router?.connections ?? [];
+        return this.networkManager.nodes;
     }
     protected get router(): Router | undefined {
-        return this._networkManager.router;
+        return this.networkManager.router;
+    }
+    protected get connections(): Connection[] {
+        return this.router?.connections ?? [];
     }
 
-    public constructor(
-        private readonly _router: NavigationRouter,
-        private readonly _config: ConfigService,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
+    public ngAfterViewInit(): void {
+        this.onCenter("instant");
+    }
 
     protected getAnimationData(outlet: RouterOutlet) {
         return (
@@ -94,45 +105,55 @@ export class AppComponent {
     @HostListener("document:keydown.meta.n", ["$event"])
     protected onNewFile(event?: Event) {
         event?.preventDefault();
-        this._networkManager.new();
+        this.networkManager.new();
     }
 
     @HostListener("document:keydown.meta.o", ["$event"])
     protected onOpenFile(event?: Event) {
         event?.preventDefault();
-        this._networkManager.loadFromFile();
+        this.networkManager.loadFromFile();
     }
 
     protected onLoadExternalLibrary(event?: Event) {
         event?.preventDefault();
-        this._config.libraryManager.loadFromFile();
+        this.config.libraryManager.loadFromFile();
     }
 
     @HostListener("document:keydown.meta.shift.s", ["$event"])
     protected onSaveFile(event?: Event) {
         event?.preventDefault();
-        this._networkManager.saveToFile();
+        this.networkManager.saveToFile();
     }
 
     @HostListener("document:keydown.meta.z", ["$event"])
     protected onUndo(event?: Event) {
         event?.preventDefault();
-        this._config.stateManager.undo();
+        this.config.stateManager.undo();
     }
 
     @HostListener("document:keydown.meta.shift.z", ["$event"])
     protected onRedo(event?: Event) {
         event?.preventDefault();
-        this._config.stateManager.redo();
+        this.config.stateManager.redo();
     }
 
-    @HostListener("document:keydown.meta.shift.r", ["'router'", "$event"])
-    @HostListener("document:keydown.meta.shift.d", ["undefined", "$event"])
-    protected onInsertNode(type?: string, event?: Event) {
+    @HostListener("document:keydown.meta.shift.r", [
+        "NodeType.RouterTypes",
+        "$event",
+    ])
+    @HostListener("document:keydown.meta.shift.d", [
+        "NodeType.DeviceTypes",
+        "$event",
+    ])
+    protected onInsertNode(
+        type?: NodeType | readonly NodeType[] | NodeType[],
+        event?: Event,
+    ) {
         const { scrollWidth, scrollHeight, scrollLeft, scrollTop } =
-            this.canvas.scrollable.nativeElement;
-        const { left, top, width, height } =
-            this.canvas.scrollable.nativeElement.getBoundingClientRect();
+            this.canvas().frame().nativeElement;
+        const { left, top, width, height } = this.canvas()
+            .frame()
+            .nativeElement.getBoundingClientRect();
         const centerX = scrollWidth / 2;
         const centerY = scrollHeight / 2;
 
@@ -140,39 +161,48 @@ export class AppComponent {
         if (event instanceof MouseEvent) {
             const { clientX, clientY } = event;
 
-            this._networkManager.addNode(type as NodeType, {
+            this.networkManager.addNode(type, {
                 x: clientX - left + scrollLeft - centerX,
                 y: centerY - (clientY - top + scrollTop),
             });
         } else {
-            this._networkManager.addNode(type as NodeType, {
+            this.networkManager.addNode(type, {
                 x: width / 2 - left + scrollLeft - centerX,
                 y: centerY - (height / 2 - top + scrollTop),
             });
         }
     }
 
+    @HostListener("document:keydown.alt.0", ["'smooth'", "$event"])
+    protected onCenter(behavior: ScrollBehavior, event?: Event) {
+        const frame = this.canvas().frame().nativeElement;
+        const { scrollHeight, clientHeight, scrollWidth, clientWidth } = frame;
+
+        event?.preventDefault();
+        frame.scrollTo({
+            top: (scrollHeight - clientHeight) / 2,
+            left: (scrollWidth - clientWidth) / 2,
+            behavior,
+        });
+    }
+
     protected onDeleteNode(mac: string, event?: Event) {
         event?.preventDefault();
-        this._networkManager.deleteNode(mac).then((value) => {
-            const { url } = this._router;
-
-            if (value && url.includes(mac)) this._router.navigate([""]);
-        });
+        this.networkManager.deleteNode(mac);
     }
 
     protected onNodeTraffic(mac: string, event?: Event) {
         event?.preventDefault();
-        this._router.navigate([mac, "network-traffic"]);
+        this.navigationRouter.navigate([mac, "network-traffic"]);
     }
 
     protected onNodeAttack(mac: string, event?: Event) {
         event?.preventDefault();
-        this._router.navigate([mac, "attack"]);
+        this.navigationRouter.navigate([mac, "attack"]);
     }
 
     protected onNodeConfig(mac: string, event?: Event) {
         event?.preventDefault();
-        this._router.navigate([mac, "configuration"]);
+        this.navigationRouter.navigate([mac, "configuration"]);
     }
 }

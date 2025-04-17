@@ -1,4 +1,4 @@
-import { Connection } from "@models/connection";
+import { Connection, ConnectionStatus } from "@models/connection";
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
@@ -146,8 +146,6 @@ class DHCPServer {
     }
 }
 
-export type RouterType = NodeType.ROUTER;
-
 /** Clase que representa un router dentro de la red. */
 export class Router extends Node {
     /** Tabla de direcciones ARP */
@@ -162,7 +160,9 @@ export class Router extends Node {
         return this.connections.length > 0;
     }
     public override get communicating(): boolean {
-        return false;
+        return this.connections.some(
+            (connection) => connection.status !== ConnectionStatus.IDLE,
+        );
     }
 
     /**
@@ -193,7 +193,7 @@ export class Router extends Node {
             packet = { ...packet, ttl: (packet.ttl ?? 1) - 1 };
             // Reenviar el paquete al dispositivo correspondiente si el TTL es mayor a 0
             if (packet.ttl > 0) connection.spreadPacket(packet);
-        } else 
+        } else
             throw new Error(
                 `Impossible to forward the packet ${JSON.stringify(packet, null, 2)}, destination IP not found`,
             );

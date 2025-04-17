@@ -68,7 +68,7 @@ export class NetworkTrafficComponent {
         NetworkManagerService,
     );
     protected readonly node: InputSignal<Node> = input.required<Node>();
-    public readonly NodeType = NodeType;
+    public readonly NodeType: typeof NodeType = NodeType;
     protected readonly displayedColumns: Signal<string[]> = computed(() => [
         "icon",
         "source",

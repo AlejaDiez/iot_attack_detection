@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, computed, inject, Signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Node } from "@models/node";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
@@ -32,7 +32,7 @@ export interface DeleteNodeDialogContext {
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>¿Estás seguro de eliminar {{ name }}?</h3>
+            <h3 hlmDialogTitle>¿Estás seguro de eliminar {{ name() }}?</h3>
         </hlm-dialog-header>
         <p hlmDialogDescription>
             Si elimina este nodo, se eliminará de forma permanente y no podrá
@@ -50,22 +50,20 @@ export interface DeleteNodeDialogContext {
     host: { class: "flex flex-col gap-4" },
 })
 export class DeleteNodeDialogComponent {
-    private readonly _context!: DeleteNodeDialogContext;
-    protected get name(): string {
-        return this._context.node.name;
-    }
-
-    public constructor(
-        private readonly _ref: BrnDialogRef<DeleteNodeDialogContext>,
-    ) {
-        this._context = injectBrnDialogContext<DeleteNodeDialogContext>();
-    }
+    protected readonly ref: BrnDialogRef<DeleteNodeDialogContext> = inject(
+        BrnDialogRef<DeleteNodeDialogContext>,
+    );
+    protected readonly context =
+        injectBrnDialogContext<DeleteNodeDialogContext>();
+    protected readonly name: Signal<string> = computed(
+        () => this.context.node.name,
+    );
 
     protected cancel() {
-        this._ref.close();
+        this.ref.close();
     }
 
     protected delete() {
-        this._ref.close({ node: this._context.node });
+        this.ref.close({ node: this.context.node });
     }
 }

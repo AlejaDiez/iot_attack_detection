@@ -11,12 +11,12 @@ import { HlmCardDirective, HlmCardModule } from "@spartan-ng/ui-card-helm";
     imports: [HlmButtonModule, HlmCardModule, NgIcon, RouterModule],
     providers: [provideIcons({ lucideGhost, lucideX })],
     host: {
-        class: "fixed right-5 top-1/2 flex flex-col max-h-[calc(100%-2.5rem)] min-w-[400px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl overflow-hidden",
+        class: "fixed right-5 top-1/2 flex flex-col max-h-[calc(100%-2.5rem)] min-w-[512px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl overflow-hidden",
     },
     hostDirectives: [HlmCardDirective],
     templateUrl: "panel-node.component.html",
 })
 export class PanelNodeComponent {
     protected readonly node: InputSignal<Node> = input.required<Node>();
-    protected readonly NodeType = NodeType;
+    protected readonly NodeType: typeof NodeType = NodeType;
 }

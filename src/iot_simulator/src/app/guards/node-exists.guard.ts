@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
+    GuardResult,
     RouterStateSnapshot,
 } from "@angular/router";
 import { NetworkManagerService } from "@services/network-manager.service";
@@ -16,7 +17,7 @@ import { NetworkManagerService } from "@services/network-manager.service";
 export const nodeExistsGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
-) => {
+): GuardResult => {
     const networkManager = inject(NetworkManagerService);
     const { mac } = route.params;
 

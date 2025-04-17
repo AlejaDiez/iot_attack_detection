@@ -4,9 +4,6 @@ import { Packet } from "@models/packet";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
 
-/** Tipo de dispositivo */
-export type DeviceType = NodeType.COMPUTER | NodeType.IOT;
-
 /**
  * Clase que representa un dispositivo en la red.
  */
@@ -30,7 +27,11 @@ export class Device extends Node {
      * @param type Tipo del dispositivo.
      * @param position Posición inicial del dispositivo.
      */
-    public constructor(name: string, type: DeviceType, position?: Position) {
+    public constructor(
+        name: string,
+        type: NodeType.COMPUTER | NodeType.IOT,
+        position?: Position,
+    ) {
         super(name, type, position);
     }
 

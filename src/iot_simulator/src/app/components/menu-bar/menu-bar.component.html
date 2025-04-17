@@ -22,6 +22,9 @@
             <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
                 Importar biblioteca externa
             </button>
+            <button hlmMenuItem (click)="handleOnLoadModels()">
+                Importar modelos
+            </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
@@ -68,37 +71,62 @@
 
 <ng-template #view>
     <hlm-menu variant="menubar" class="w-48">
+        <button inset hlmMenuItem [brnMenuTriggerFor]="languageSubmenu">
+            Idioma
+            <hlm-menu-item-sub-indicator />
+        </button>
+        <hlm-menu-separator />
         <hlm-menu-group>
             <button hlmMenuItemCheckbox>
                 <hlm-menu-item-check />
                 Alto contraste
             </button>
-            <button hlmMenuItemCheckbox checked>
+            <button
+                hlmMenuItemCheckbox
+                [checked]="showGrid()"
+                (click)="handleOnGrid()">
                 <hlm-menu-item-check />
                 Mostrar cuadrícula
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
-        <hlm-menu-group>
-            <button inset hlmMenuItem>
-                Centrar
-                <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
-            </button>
-        </hlm-menu-group>
+        <button inset hlmMenuItem (click)="handleOnCenter()">
+            Centrar
+            <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
+        </button>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button inset hlmMenuItem>
+            <button inset hlmMenuItem (click)="handleOnResetZoom()">
                 Tamaño original
                 <hlm-menu-shortcut>⌘0</hlm-menu-shortcut>
             </button>
-            <button inset hlmMenuItem>
+            <button inset hlmMenuItem (click)="handleOnZoomIn()">
                 Maximizar
                 <hlm-menu-shortcut>⌘+</hlm-menu-shortcut>
             </button>
-            <button inset hlmMenuItem>
+            <button inset hlmMenuItem (click)="handleOnZoomOut()">
                 Minimizar
                 <hlm-menu-shortcut>⌘-</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
+</ng-template>
+
+<ng-template #languageSubmenu>
+    <hlm-sub-menu>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'en'"
+            (click)="handleOnLanguage('en')">
+            <hlm-menu-item-check />
+            English
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'es'"
+            (click)="handleOnLanguage('es')">
+            <hlm-menu-item-check />
+            Español
+        </button>
+    </hlm-sub-menu>
 </ng-template>

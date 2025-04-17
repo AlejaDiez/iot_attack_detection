@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Device, DeviceType } from "@models/device";
+import { NavigationEnd, Router as NavigationRouter } from "@angular/router";
+import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
@@ -15,8 +16,7 @@ import { ConfigService } from "@services/config.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
-import { debounceTime, skip } from "rxjs";
-
+import { debounceTime, filter, map, skip } from "rxjs";
 @Injectable({ providedIn: "root" })
 export class NetworkManagerService {
     /** Nodos de la red */
@@ -41,21 +41,37 @@ export class NetworkManagerService {
 
         return devices.length > 0 ? devices : undefined;
     }
+    /** Dirección MAC del nodo seleccionado */
+    private _focusedNode: string | undefined;
+    /** Dirección MAC del nodo seleccionado */
+    public get focusedNode(): string | undefined {
+        return this._focusedNode;
+    }
 
     /**
      * Constructor del servicio de gestión de la red de dispositivos.
      *
-     * @param _config Servicio de configuración de la aplicación
-     * @param _dialog Servicio de diálogos de la aplicación
+     * @param navigationRouter Servicio de navegación de la aplicación
+     * @param config Servicio de configuración de la aplicación
+     * @param dialog Servicio de diálogos de la aplicación
      */
     public constructor(
-        private readonly _config: ConfigService,
-        private readonly _dialog: HlmDialogService,
+        public readonly navigationRouter: NavigationRouter,
+        public readonly config: ConfigService,
+        public readonly dialog: HlmDialogService,
     ) {
-        this._config.stateManager.state$.subscribe((state) =>
+        this.navigationRouter.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                map(({ url }) =>
+                    url.split("/").length > 1 ? url.split("/")[1] : undefined,
+                ),
+            )
+            .subscribe((url) => (this._focusedNode = url));
+        this.config.stateManager.state$.subscribe((state) =>
             this.fromObject(state),
         );
-        this._config.libraryManager.library$
+        this.config.libraryManager.library$
             .pipe(skip(1))
             .subscribe((library) =>
                 this.nodes.forEach((e) => e.loadLibrary(library)),
@@ -68,7 +84,7 @@ export class NetworkManagerService {
     private _reset(state: boolean = true) {
         this._nodes.clear();
         this._routerMac = undefined;
-        if (state) this._config.stateManager.reset(false);
+        if (state) this.config.stateManager.reset(false);
     }
 
     /**
@@ -85,10 +101,10 @@ export class NetworkManagerService {
         node.state$
             .pipe(debounceTime(500))
             .subscribe(() =>
-                this._config.stateManager.setState(this.toObject(), false),
+                this.config.stateManager.setState(this.toObject(), false),
             );
-        node.loadLibrary(this._config.libraryManager.library);
-        if (state) this._config.stateManager.setState(this.toObject(), false);
+        node.loadLibrary(this.config.libraryManager.library);
+        if (state) this.config.stateManager.setState(this.toObject(), false);
         return node;
     }
 
@@ -111,7 +127,7 @@ export class NetworkManagerService {
         else if (node.connected && this.router)
             (node as Device).disconnect(this.router);
         this._nodes.delete(node.mac);
-        if (state) this._config.stateManager.setState(this.toObject(), false);
+        if (state) this.config.stateManager.setState(this.toObject(), false);
         return true;
     }
 
@@ -120,6 +136,9 @@ export class NetworkManagerService {
      */
     public new(): void {
         this._reset();
+        // Check if device is selected and exists
+        if (this._focusedNode && !this.exists(this._focusedNode))
+            this.navigationRouter.navigate([""]);
         toast.success("Proyecto creado correctamente.");
     }
 
@@ -127,12 +146,12 @@ export class NetworkManagerService {
      * Carga una red de dispositivos desde un archivo.
      */
     public loadFromFile(): void {
-        toast.promise(this._config.openFile(".yaml"), {
+        toast.promise(this.config.openFile(".yaml"), {
             loading: "Importando proyecto...",
             success: (data: string) => {
                 this.fromObject(load(data));
-                this._config.stateManager.reset(false);
-                this._config.stateManager.replaceState(this.toObject(), false);
+                this.config.stateManager.reset(false);
+                this.config.stateManager.replaceState(this.toObject(), false);
                 return "Proyecto importado correctamente.";
             },
             error: () => "No se ha podido importar el proyecto.",
@@ -161,12 +180,12 @@ export class NetworkManagerService {
 
                 resolve([name, content, type]);
             }).then(([name, content, type]) =>
-                this._config.saveFile(name, content, type),
+                this.config.saveFile(name, content, type),
             ),
             {
                 loading: "Exportando proyecto...",
                 success: () => {
-                    this._config.stateManager.replaceState(
+                    this.config.stateManager.replaceState(
                         this.toObject(),
                         false,
                     );
@@ -183,24 +202,32 @@ export class NetworkManagerService {
      * @param type Tipo de nodo
      * @param position Posición del nodo
      */
-    public addNode(type?: NodeType, position?: Position): Promise<boolean> {
+    public addNode(
+        type?: NodeType | readonly NodeType[] | NodeType[],
+        position?: Position,
+    ): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            if (this._routerMac && type === NodeType.ROUTER) {
+            if (
+                this._routerMac &&
+                (Array.isArray(type)
+                    ? type.includes(NodeType.ROUTER)
+                    : type === NodeType.ROUTER)
+            ) {
                 toast.error("No se puede agregar más de un router a la red.");
                 return reject();
             }
 
-            this._dialog
+            this.dialog
                 .open(AddNodeDialogComponent, { context: { type } })
                 .closed$.subscribe((context: AddNodeDialogContext) => {
                     if (!context) return resolve(false);
 
                     this._addNode(
-                        type === NodeType.ROUTER
+                        NodeType.RouterTypes.includes(context.type)
                             ? new Router(context.name, position)
                             : new Device(
                                   context.name,
-                                  context.type as DeviceType,
+                                  context.type as any,
                                   position,
                               ),
                     );
@@ -226,7 +253,7 @@ export class NetworkManagerService {
                 return reject();
             }
 
-            this._dialog
+            this.dialog
                 .open(DeleteNodeDialogComponent, {
                     context: { node: this.findByMac(mac) },
                 })
@@ -234,6 +261,9 @@ export class NetworkManagerService {
                     if (!context) return resolve(false);
 
                     this._deleteNode(context.node.mac);
+                    // Check if device is selected and exists
+                    if (this._focusedNode && !this.exists(this._focusedNode))
+                        this.navigationRouter.navigate([""]);
                     toast.success(
                         `Se ha eliminado ${context.node.name} correctamente.`,
                     );
@@ -312,5 +342,8 @@ export class NetworkManagerService {
                     device.connect(this.router!, obj.connection);
             });
         }
+        // Check if device is selected and exists
+        if (this._focusedNode && !this.exists(this._focusedNode))
+            this.navigationRouter.navigate([""]);
     }
 }

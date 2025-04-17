@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, computed, inject, OnInit, Signal } from "@angular/core";
 import {
     FormControl,
     FormGroup,
@@ -38,10 +38,7 @@ export interface AddNodeDialogContext {
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>
-                Añadir un nuevo
-                {{ type === "router" ? "router" : "dispositivo" }}
-            </h3>
+            <h3 hlmDialogTitle>Añadir un nuevo nodo</h3>
         </hlm-dialog-header>
         <form [formGroup]="form" (submit)="submit()">
             <div class="grid gap-4 py-4">
@@ -59,9 +56,9 @@ export interface AddNodeDialogContext {
                             <hlm-select-value />
                         </hlm-select-trigger>
                         <hlm-select-content>
-                            @for (item of nodeTypes; track $index) {
+                            @for (item of type(); track $index) {
                                 <hlm-option [value]="item">{{
-                                    typeToString(item)
+                                    NodeType.toString(item)
                                 }}</hlm-option>
                             }
                         </hlm-select-content>
@@ -69,43 +66,36 @@ export interface AddNodeDialogContext {
                 </div>
             </div>
             <hlm-dialog-footer>
-                <button hlmBtn type="submit">Añadir</button>
+                <button hlmBtn [disabled]="form.invalid">Añadir</button>
             </hlm-dialog-footer>
         </form>
     `,
     host: { class: "flex flex-col gap-4" },
 })
 export class AddNodeDialogComponent implements OnInit {
-    private readonly _context!: AddNodeDialogContext;
-    protected form: FormGroup = new FormGroup({
-        name: new FormControl("", [Validators.required]),
+    public readonly NodeType: typeof NodeType = NodeType;
+    protected readonly ref: BrnDialogRef<AddNodeDialogContext> = inject(
+        BrnDialogRef<AddNodeDialogContext>,
+    );
+    protected readonly context = injectBrnDialogContext<AddNodeDialogContext>();
+    protected readonly type: Signal<NodeType[]> = computed(() =>
+        Array.isArray(this.context.type)
+            ? this.context.type
+            : [this.context.type],
+    );
+    protected readonly form: FormGroup = new FormGroup({
+        name: new FormControl(null, [Validators.required]),
         type: new FormControl(null, [Validators.required]),
     });
-    protected get type(): NodeType {
-        return this._context.type;
-    }
-    protected typeToString = NodeType.toString;
-    protected get nodeTypes() {
-        return this.type === NodeType.ROUTER
-            ? NodeType.RouterTypes
-            : NodeType.DeviceTypes;
-    }
-
-    public constructor(
-        private readonly _ref: BrnDialogRef<AddNodeDialogContext>,
-    ) {
-        this._context = injectBrnDialogContext<AddNodeDialogContext>();
-    }
 
     public ngOnInit(): void {
-        this.form.get("type")!.setValue(this._context.type ?? null);
-        if (this._context.type === NodeType.ROUTER)
+        if (this.type().length === 1) {
+            this.form.get("type")!.setValue(this.type()[0]);
             this.form.get("type")!.disable();
+        }
     }
 
     protected submit() {
-        if (this.form.invalid) return;
-
-        this._ref.close(this.form.getRawValue());
+        this.ref.close(this.form.getRawValue());
     }
 }
