@@ -19,7 +19,7 @@ def load_dataset(*path: str) -> list | tuple[list]:
 
     # Leer los archivos
     for p in dataset_path:
-        with open(p, "r") as file:
+        with open(p, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
             dataset = []
             # Salta la cabecera
@@ -60,7 +60,7 @@ def split_dataset(*paths: str, output: str, num_clients: int):
 
     datasets, headers = [], []
     for path in paths:
-        with open(path, "r") as file:
+        with open(path, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
             headers.append(next(reader))
             datasets.append(list(reader))
@@ -84,7 +84,7 @@ def split_dataset(*paths: str, output: str, num_clients: int):
     for i, size in enumerate(chunk_sizes):
         for j, (filename, header) in enumerate(zip(paths, headers)):
             # Escribir los datos en un archivo CSV
-            with open(f"{output_dir}/{Path(filename).stem}_{i}.csv", "w") as file:
+            with open(f"{output_dir}/{Path(filename).stem}_{i}.csv", "w", encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow(header)
                 writer.writerows(

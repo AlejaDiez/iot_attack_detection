@@ -310,7 +310,7 @@ class TensorFlowServer(FedAvg):
         Args:
             metrics_name (str, optional): Nombre del archivo de métricas, por defecto es "metrics.json".
         """
-        with open(f"{self.output_dir}/{metrics_name}", "w") as file:
+        with open(f"{self.output_dir}/{metrics_name}", "w", encoding="utf-8") as file:
             json.dump(self.metrics, file, indent=4)
 
     def start(
