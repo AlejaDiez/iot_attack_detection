@@ -1,0 +1,35 @@
+\documentclass[a4paper,12pt,twoside]{memoir}
+\usepackage{../assets/utils}
+
+% Datos
+\titulo{Detección de ataques en un entorno de red de dispositivos IoT}
+\autor{Alejandro Diez Bermejo}{71307675Q}
+\tutor{Daniel Urda Muñoz}
+\cotutor{Jaime Andres Rincón Argano}
+\fecha{\today}
+
+% Documento
+\begin{document}
+
+% Portada
+\portada
+
+% Índices
+\tableofcontents\clearpage
+\listoffigures\clearpage
+\listoftables\clearpage
+
+% Contenido
+\mainmatter\appendix
+\include{./tex/A_Plan_proyecto}
+\include{./tex/B_Requisitos}
+\include{./tex/C_Diseno}
+\include{./tex/D_Manual_programador}
+\include{./tex/E_Manual_usuario}
+\include{./tex/F_ODS}
+
+% Bibliografía
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
