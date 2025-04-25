@@ -8,7 +8,8 @@ import {
     WritableSignal,
 } from "@angular/core";
 import { ConfigService } from "@services/config.service";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
+import { StateService } from "@services/state.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
     HlmMenuBarComponent,
@@ -44,9 +45,8 @@ import {
 })
 export class MenuBarComponent {
     public readonly config: ConfigService = inject(ConfigService);
-    public readonly networkManager: NetworkManagerService = inject(
-        NetworkManagerService,
-    );
+    public readonly state: StateService = inject(StateService);
+    public readonly network: NetworkService = inject(NetworkService);
     protected readonly onNewFile: OutputEmitterRef<void> = output();
     protected readonly onOpenFile: OutputEmitterRef<void> = output();
     protected readonly onLoadExternalLibrary: OutputEmitterRef<void> = output();
@@ -54,16 +54,16 @@ export class MenuBarComponent {
     protected readonly onSaveFile: OutputEmitterRef<void> = output();
     protected readonly onUndo: OutputEmitterRef<void> = output();
     protected get canUndo(): boolean {
-        return this.config.stateManager.canUndo;
+        return this.state.canUndo;
     }
     protected readonly onRedo: OutputEmitterRef<void> = output();
     protected get canRedo(): boolean {
-        return this.config.stateManager.canRedo;
+        return this.state.canRedo;
     }
     protected readonly onInsertRouter: OutputEmitterRef<void> = output();
     protected readonly onInsertDevice: OutputEmitterRef<void> = output();
     protected get canInsertRouter(): boolean {
-        return !this.networkManager.router;
+        return !this.network.router;
     }
     protected readonly language: WritableSignal<string> = signal("es");
     protected readonly showGrid: Signal<boolean> = this.config.grid;

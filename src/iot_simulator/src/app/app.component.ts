@@ -23,7 +23,9 @@ import {
     lucideTrash,
 } from "@ng-icons/lucide";
 import { ConfigService } from "@services/config.service";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { LibraryService } from "@services/library.service";
+import { NetworkService } from "@services/network.service";
+import { StateService } from "@services/state.service";
 import { BrnContextMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
     HlmMenuComponent,
@@ -73,17 +75,17 @@ export class AppComponent implements AfterViewInit {
     public readonly navigationRouter: NavigationRouter =
         inject(NavigationRouter);
     public readonly config: ConfigService = inject(ConfigService);
-    public readonly networkManager: NetworkManagerService = inject(
-        NetworkManagerService,
-    );
+    public readonly state: StateService = inject(StateService);
+    public readonly network: NetworkService = inject(NetworkService);
+    public readonly library: LibraryService = inject(LibraryService);
     public readonly NodeType: typeof NodeType = NodeType;
     protected readonly canvas: Signal<CanvasComponent> =
         viewChild.required(CanvasComponent);
     protected get nodes(): Node[] {
-        return this.networkManager.nodes;
+        return this.network.nodes;
     }
     protected get router(): Router | undefined {
-        return this.networkManager.router;
+        return this.network.router;
     }
     protected get connections(): Connection[] {
         return this.router?.connections ?? [];
@@ -105,36 +107,36 @@ export class AppComponent implements AfterViewInit {
     @HostListener("document:keydown.meta.n", ["$event"])
     protected onNewFile(event?: Event) {
         event?.preventDefault();
-        this.networkManager.new();
+        this.network.new();
     }
 
     @HostListener("document:keydown.meta.o", ["$event"])
     protected onOpenFile(event?: Event) {
         event?.preventDefault();
-        this.networkManager.loadFromFile();
+        this.network.loadFromFile();
     }
 
     protected onLoadExternalLibrary(event?: Event) {
         event?.preventDefault();
-        this.config.libraryManager.loadFromFile();
+        this.library.loadFromFile();
     }
 
     @HostListener("document:keydown.meta.shift.s", ["$event"])
     protected onSaveFile(event?: Event) {
         event?.preventDefault();
-        this.networkManager.saveToFile();
+        this.network.saveToFile();
     }
 
     @HostListener("document:keydown.meta.z", ["$event"])
     protected onUndo(event?: Event) {
         event?.preventDefault();
-        this.config.stateManager.undo();
+        this.state.undo();
     }
 
     @HostListener("document:keydown.meta.shift.z", ["$event"])
     protected onRedo(event?: Event) {
         event?.preventDefault();
-        this.config.stateManager.redo();
+        this.state.redo();
     }
 
     @HostListener("document:keydown.meta.shift.r", [
@@ -161,12 +163,12 @@ export class AppComponent implements AfterViewInit {
         if (event instanceof MouseEvent) {
             const { clientX, clientY } = event;
 
-            this.networkManager.addNode(type, {
+            this.network.addNode(type, {
                 x: clientX - left + scrollLeft - centerX,
                 y: centerY - (clientY - top + scrollTop),
             });
         } else {
-            this.networkManager.addNode(type, {
+            this.network.addNode(type, {
                 x: width / 2 - left + scrollLeft - centerX,
                 y: centerY - (height / 2 - top + scrollTop),
             });
@@ -188,7 +190,7 @@ export class AppComponent implements AfterViewInit {
 
     protected onDeleteNode(mac: string, event?: Event) {
         event?.preventDefault();
-        this.networkManager.deleteNode(mac);
+        this.network.deleteNode(mac);
     }
 
     protected onNodeTraffic(mac: string, event?: Event) {

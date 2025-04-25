@@ -1,10 +1,12 @@
 import { CommonModule } from "@angular/common";
 import {
     Component,
+    computed,
     HostListener,
     inject,
     input,
     InputSignal,
+    Signal,
 } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { Node, NodeType } from "@models/node";
@@ -16,7 +18,7 @@ import {
     lucideRouter,
     lucideShield,
 } from "@ng-icons/lucide";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 
 @Component({
@@ -37,14 +39,12 @@ import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 })
 export class NodeComponent {
     public readonly router: Router = inject(Router);
-    public readonly networkManager: NetworkManagerService = inject(
-        NetworkManagerService,
-    );
+    public readonly network: NetworkService = inject(NetworkService);
     public readonly NodeType: typeof NodeType = NodeType;
     public readonly node: InputSignal<Node> = input.required();
-    protected get focused(): boolean {
-        return this.networkManager.focusedNode === this.node().mac;
-    }
+    public readonly focused: Signal<boolean> = computed(
+        () => this.network.focusedNode()?.mac === this.node().mac,
+    );
     protected clicked: boolean = false;
     protected dragging: boolean = false;
 
@@ -74,7 +74,7 @@ export class NodeComponent {
     private _mouseUp(event: MouseEvent): void {
         event.preventDefault();
         if (this.clicked) {
-            if (this.focused) this.router.navigate([""]);
+            if (this.focused()) this.router.navigate([""]);
             else {
                 const route =
                     this.router.url.split("/").length > 2
@@ -84,11 +84,14 @@ export class NodeComponent {
                 this.router.navigate([this.node().mac, route]);
             }
         }
-        if (this.dragging)
+        if (this.dragging) {
             this.node().move(
                 Math.round(this.node().position.x / 20) * 20,
                 Math.round(this.node().position.y / 20) * 20,
             );
+            // Guardar el estado de la red
+            this.network.saveState();
+        }
         this.clicked = false;
         this.dragging = false;
     }
@@ -97,6 +100,6 @@ export class NodeComponent {
     @HostListener("document:keydown.meta.backspace", ["$event"])
     private _supr(event: KeyboardEvent): void {
         event.preventDefault();
-        if (this.focused) this.networkManager.deleteNode(this.node().mac);
+        if (this.focused()) this.network.deleteNode(this.node().mac);
     }
 }

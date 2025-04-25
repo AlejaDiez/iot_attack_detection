@@ -209,6 +209,7 @@ export class Router extends Node {
     public acceptConnection(
         node: Node,
         latency?: number,
+        latencyVariation?: number,
     ): [string, Connection] | null {
         // Si el dispositivo tiene una IP fija, registrarla en el servidor DHCP, si no, asignar una IP dinámica
         if (node.ip) this._dhcpServer.registerFixedIP(node.mac, node.ip);
@@ -220,7 +221,12 @@ export class Router extends Node {
         if (!ip) return null;
 
         // Se crea una conexión entre el router y el dispositivo
-        const connection = new Connection(this, node, latency);
+        const connection = new Connection(
+            this,
+            node,
+            latency,
+            latencyVariation,
+        );
 
         // Añadir la ip y la conexión a la tabla ARP
         this._arpTable.add(ip, connection);

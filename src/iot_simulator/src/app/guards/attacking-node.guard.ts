@@ -8,7 +8,7 @@ import {
     RouterStateSnapshot,
 } from "@angular/router";
 import { NodeType } from "@models/node";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
 
 /**
  * Protector que verifica si un nodo es de tipo "atacante".
@@ -22,9 +22,9 @@ export const attackingNodeGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ): GuardResult => {
     const router = inject(Router);
-    const networkManager = inject(NetworkManagerService);
+    const network = inject(NetworkService);
     const { mac } = route.parent!.params;
-    const node = networkManager.findByMac(mac);
+    const node = network.getNode(mac)!;
 
     return NodeType.AttackerTypes.includes(node.type)
         ? true

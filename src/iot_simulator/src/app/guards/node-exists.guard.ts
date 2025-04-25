@@ -5,7 +5,7 @@ import {
     GuardResult,
     RouterStateSnapshot,
 } from "@angular/router";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
 
 /**
  * Protector que verifica si un nodo existe en la red.
@@ -18,8 +18,8 @@ export const nodeExistsGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ): GuardResult => {
-    const networkManager = inject(NetworkManagerService);
+    const network = inject(NetworkService);
     const { mac } = route.params;
 
-    return networkManager.exists(mac);
+    return network.getNode(mac) ? true : false;
 };

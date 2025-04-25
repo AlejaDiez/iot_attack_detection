@@ -11,7 +11,7 @@ import { Node } from "@models/node";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideUnplug } from "@ng-icons/lucide";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmLabelModule } from "@spartan-ng/ui-label-helm";
@@ -35,9 +35,7 @@ import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/s
     host: { class: "flex flex-col gap-4" },
 })
 export class AttackComponent {
-    public readonly networkManager: NetworkManagerService = inject(
-        NetworkManagerService,
-    );
+    public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
     protected readonly form: FormGroup = new FormGroup({
         attack: new FormControl(null, [Validators.required]),
@@ -59,7 +57,7 @@ export class AttackComponent {
         ),
     );
     protected get canConnect(): boolean {
-        return this.networkManager.router !== undefined;
+        return this.network.router !== undefined;
     }
     protected get attacks(): any[] {
         const internalAttacks = (this.node().generator as PhantomAttacker)
@@ -72,11 +70,13 @@ export class AttackComponent {
         return [...internalAttacks, ...externalAttacks];
     }
     protected get connectedNodes(): Node[] {
-        return this.networkManager.getConnectedNodes(this.node().mac);
+        return this.network.getConnectedNodes(this.node().mac);
     }
 
     protected connect() {
-        (this.node() as Device).connect(this.networkManager.router!);
+        (this.node() as Device).connect(this.network.router!);
+        // Guardar el estado de la red
+        this.network.saveState();
     }
 
     protected attack() {

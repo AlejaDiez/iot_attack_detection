@@ -2,7 +2,7 @@
     hlmCard
     class="node"
     [ngClass]="{
-        focused,
+        focused: focused(),
         dragging,
         communicating: node().communicating,
     }"

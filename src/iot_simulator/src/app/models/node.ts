@@ -3,7 +3,6 @@ import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
-import { Observable, ReplaySubject } from "rxjs";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -109,7 +108,7 @@ export abstract class Node {
             throw new Error("Invalid IP address");
 
         this._ip = value;
-        this.state.next();
+        // this.state.next();
     }
     /** Nombre del nodo */
     private _name: string;
@@ -122,7 +121,7 @@ export abstract class Node {
         if (this._name === value) return;
 
         this._name = value;
-        this.state.next();
+        // this.state.next();
     }
     /** Tipo de nodo */
     private _type: NodeType;
@@ -145,7 +144,7 @@ export abstract class Node {
             this._generator = new FlowGenerator(this);
         this._generator.loadLibrary(this._library);
         this._type = value;
-        this.state.next();
+        // this.state.next();
     }
     /** Biblioteca externa */
     private _library?: any;
@@ -173,15 +172,13 @@ export abstract class Node {
     public abstract get connected(): boolean;
     /** Indica si el nodo está comunicando */
     public abstract get communicating(): boolean;
-    /** Event emitter para el cambio de estado del nodo */
-    protected readonly state: ReplaySubject<void>;
-    /** Event emitter para el cambio de estado del nodo */
-    public get state$(): Observable<void> {
-        return this.state;
-    }
 
     /**
      * Crea una instancia de la clase Node.
+     *
+     * @param name Nombre del nodo.
+     * @param type Tipo de nodo.
+     * @param position Posición del nodo.
      */
     protected constructor(
         name: string,
@@ -198,7 +195,6 @@ export abstract class Node {
             : new FlowGenerator(this);
         this._traffic = [];
         this._position = { ...position };
-        this.state = new ReplaySubject<void>(1);
     }
 
     /**
@@ -285,7 +281,7 @@ export abstract class Node {
             this._position.x += x;
             this._position.y += y;
         } else this._position = { x, y };
-        this.state.next();
+        // this.state.next();
     }
 
     /**

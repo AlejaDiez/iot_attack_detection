@@ -41,10 +41,15 @@ export class Device extends Node {
      * @param router Router al que se conectará el dispositivo.
      * @param latency Latencia de la conexión.
      */
-    public connect(router: Router, latency?: number): void {
+    public connect(
+        router: Router,
+        latency?: number,
+        latencyVariation?: number,
+    ): void {
         [this.ip, this._connection] = router.acceptConnection(
             this,
             latency,
+            latencyVariation,
         ) ?? [undefined, undefined];
 
         if (this._connection === undefined)

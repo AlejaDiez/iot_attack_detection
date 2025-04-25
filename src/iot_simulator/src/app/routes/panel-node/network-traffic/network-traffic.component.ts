@@ -26,7 +26,7 @@ import {
     lucideTrafficCone,
     lucideUnplug,
 } from "@ng-icons/lucide";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { BrnTableModule } from "@spartan-ng/brain/table";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
@@ -64,9 +64,7 @@ import { map, tap } from "rxjs";
     host: { class: "flex flex-col gap-4" },
 })
 export class NetworkTrafficComponent {
-    public readonly networkManager: NetworkManagerService = inject(
-        NetworkManagerService,
-    );
+    public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
     public readonly NodeType: typeof NodeType = NodeType;
     protected readonly displayedColumns: Signal<string[]> = computed(() => [
@@ -97,7 +95,7 @@ export class NetworkTrafficComponent {
         { initialValue: false },
     );
     protected get canConnect(): boolean {
-        return this.networkManager.router !== undefined;
+        return this.network.router !== undefined;
     }
     protected get commands(): any[] {
         const internalCommands = this.node().generator.internalCommands;
@@ -108,11 +106,13 @@ export class NetworkTrafficComponent {
         return [...internalCommands, ...externalCommands];
     }
     protected get connectedNodes(): Node[] {
-        return this.networkManager.getConnectedNodes(this.node().mac);
+        return this.network.getConnectedNodes(this.node().mac);
     }
 
     protected connect() {
-        (this.node() as Device).connect(this.networkManager.router!);
+        (this.node() as Device).connect(this.network.router!);
+        // Guardar el estado de la red
+        this.network.saveState();
     }
 
     protected execute() {
