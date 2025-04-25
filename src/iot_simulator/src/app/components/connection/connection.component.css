@@ -1,10 +1,16 @@
-:host {
-    display: contents;
-}
-
 .connection {
     @apply stroke-border stroke-1;
+    @apply transition-[stroke-width,stroke-color];
+    @apply pointer-events-none;
     stroke-linecap: round;
+}
+
+.pseudo-connection {
+    @apply stroke-transparent stroke-[24];
+}
+
+.pseudo-connection:hover ~ .connection {
+    @apply stroke-[4];
 }
 
 .connection.animate {

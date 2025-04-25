@@ -1,5 +1,7 @@
 import { Node } from "@models/node";
 import { Packet } from "@models/packet";
+import { randomInt, randomMeanStd } from "@utils/random";
+import { Observable, ReplaySubject } from "rxjs";
 
 /**
  * Enumeración de los estados de transmisión de la conexión.
@@ -23,10 +25,49 @@ export class Connection {
     /** Nodo para el que se establece la conexión */
     public readonly node2: Node;
     /** Latencia de la conexión */
-    public readonly latency: number;
+    private _latency: number;
+    /** Latencia de la conexión. */
+    public get latency(): number {
+        return this._latency;
+    }
+    /** Latencia de la conexión. */
+    public set latency(value: number) {
+        if (value < 0) throw new Error("The latency cannot be negative");
+        this._latency = value;
+        this._state.next();
+    }
+    /** Variación de la latencia de la conexión */
+    private _latencyVariation: number;
+    /** Variación de la latencia de la conexión. */
+    public get latencyVariation(): number {
+        return this._latencyVariation;
+    }
+    /** Variación de la latencia de la conexión. */
+    public set latencyVariation(value: number) {
+        if (value < 0)
+            throw new Error("The latency variation cannot be negative");
+        if (this.latency < value)
+            throw new Error(
+                "The latency variation cannot be greater than the latency",
+            );
+        this._latencyVariation = value;
+        this._state.next();
+    }
+    /**
+     * Estado de la conexión.
+     * - IDLE: La conexión está inactiva.
+     * - FORWARD: La conexión está transmitiendo un paquete desde el nodo 1 al nodo 2.
+     * - REVERSE: La conexión está transmitiendo un paquete desde el nodo 2 al nodo 1.
+     */
     private _status: ConnectionStatus;
     public get status(): ConnectionStatus {
         return this._status;
+    }
+    /** Event emitter para el cambio de estado de la conexión */
+    private readonly _state: ReplaySubject<void>;
+    /** Event emitter para el cambio de estado de la conexión */
+    public get state$(): Observable<void> {
+        return this._state;
     }
 
     /**
@@ -34,16 +75,23 @@ export class Connection {
      *
      * @param node1 Primer nodo de la conexión, suele ser un router.
      * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
-     * @param latency Latencia de la conexión, se genera aleatoriamente si no se especifica.
+     * @param latency Latencia de la conexión, si no se especifica, se asigna un valor aleatorio entre 0 y 1000 ms.
+     * @param latencyVariation Variación de la latencia, si no se especifica, se asigna 0.
      */
-    public constructor(node1: Node, node2: Node, latency?: number) {
+    public constructor(
+        node1: Node,
+        node2: Node,
+        latency?: number,
+        latencyVariation?: number,
+    ) {
         this._queue = [];
         this._processing = false;
         this.node1 = node1;
         this.node2 = node2;
-        this.latency =
-            latency ?? Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
+        this._latency = latency ?? randomInt(0, 1000);
+        this._latencyVariation = latencyVariation ?? 0;
         this._status = ConnectionStatus.IDLE;
+        this._state = new ReplaySubject<void>(1);
     }
 
     /**
@@ -65,7 +113,12 @@ export class Connection {
                 reciver = this.node1;
             }
 
-            await new Promise((resolve) => setTimeout(resolve, this.latency));
+            await new Promise((resolve) =>
+                setTimeout(
+                    resolve,
+                    randomMeanStd(this._latency, this._latencyVariation),
+                ),
+            );
             reciver.receivePacket(packet);
         }
         this._processing = false;
@@ -88,6 +141,9 @@ export class Connection {
      * @returns Objeto plano con los datos de la conexión.
      */
     public toObject(): any {
-        return this.latency;
+        return {
+            latency: this.latency,
+            latencyVariation: this.latencyVariation,
+        };
     }
 }

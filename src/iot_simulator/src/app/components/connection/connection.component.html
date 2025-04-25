@@ -7,6 +7,14 @@
         height: h + 'px',
     }">
     <line
+        hlmTooltipTrigger
+        (click)="onClick()"
+        [attr.x1]="node1.x - t.x"
+        [attr.y1]="t.y - node1.y"
+        [attr.x2]="node2.x - t.x"
+        [attr.y2]="t.y - node2.y"
+        class="pseudo-connection" />
+    <line
         [attr.x1]="node1.x - t.x"
         [attr.y1]="t.y - node1.y"
         [attr.x2]="node2.x - t.x"
