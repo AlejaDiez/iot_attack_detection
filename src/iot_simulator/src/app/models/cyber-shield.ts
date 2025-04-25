@@ -1,32 +1,81 @@
+import { Packet } from "./packet";
+
 /**
- * Enum que representa los diferentes tipos de modelos de Cyber Shield.
+ * Modelo de redes neuronal.
  */
-export enum CyberShieldModel {
-    TENSORFLOW = "tensorflow",
-    FEDERATED_LEARNING = "federated-learning",
+export interface Model {
+    /** Identificador del modelo */
+    id: string;
+    /** Nombre del modelo */
+    name: string;
 }
 
-export namespace CyberShieldModel {
-    /**
-     * Lista de modelos de Cyber Shield.
-     */
-    export const Types: ReadonlyArray<CyberShieldModel> = [
-        CyberShieldModel.TENSORFLOW,
-        CyberShieldModel.FEDERATED_LEARNING,
-    ];
+/**
+ * Modelo de Tensorflow.
+ */
+interface TensorflowModel extends Model {
+    /** Modelo de Tensorflow */
+    model: any;
+}
+
+/**
+ * Modelos que se pueden usar.
+ */
+export type Models = Model[];
+
+/**
+ * Modelos de redes neuronales.
+ */
+export class CyberShield {
+    /** Modelos de redes neuronales */
+    private _models?: {
+        [model: string]: TensorflowModel;
+    };
+    /** Estado del cyber shield */
+    public enabled: boolean = false;
+    /** Modelo que se esta usando */
+    private _model?: TensorflowModel;
+    /** Modelo que se esta usando */
+    public get model(): Model | undefined {
+        if (this._model) return { id: this._model.id, name: this._model.name };
+        else return undefined;
+    }
+    /** Modelo que se esta usando */
+    public set model(model: string | undefined) {
+        if (model && this._models) this._model = this._models[model];
+        else this._model = undefined;
+    }
+    /** Comandos que se pueden realizar */
+    public get availableModels(): Readonly<Models> {
+        return this._models
+            ? Object.values(this._models).map(({ id, name }) => ({ id, name }))
+            : [];
+    }
 
     /**
-     * Convierte un string a un tipo de modelo de Cyber Shield.
+     * Cargar los modelos.
      *
-     * @param type String que representa un modelo de Cyber Shield.
-     * @returns Modelo de Cyber Shield.
+     * @param models Modelos a cargar
      */
-    export const toString = (type: CyberShieldModel): string => {
-        switch (type) {
-            case CyberShieldModel.TENSORFLOW:
-                return "TensorFlow";
-            case CyberShieldModel.FEDERATED_LEARNING:
-                return "Federaed Learning";
-        }
-    };
+    public loadModels(models: any[] | undefined): void {}
+
+    /**
+     * Se encarga de analizar el paquete con el modelo.
+     *
+     * @param packet Paquete a analizar
+     * @returns Resultado del analisis
+     */
+    public analyze(packet: Packet): void {}
+
+    /**
+     * Convierte el ciber shield a un objeto plano.
+     *
+     * @returns Objeto plano con los datos del ciber shield.
+     */
+    public toObject(): any {
+        return {
+            enabled: this.enabled,
+            model: this.model,
+        };
+    }
 }

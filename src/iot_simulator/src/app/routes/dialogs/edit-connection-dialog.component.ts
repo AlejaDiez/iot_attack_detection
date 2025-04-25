@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit } from "@angular/core";
 import {
     FormControl,
@@ -11,7 +10,7 @@ import { Connection } from "@models/connection";
 import { NetworkService } from "@services/network.service";
 import { StateService } from "@services/state.service";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
-import { BrnSelectComponent } from "@spartan-ng/brain/select";
+import { BrnSelectModule } from "@spartan-ng/brain/select";
 import {
     HlmDialogHeaderComponent,
     HlmDialogTitleDirective,
@@ -30,9 +29,8 @@ export interface EditConnectionContext {
 @Component({
     selector: "app-edit-connection-dialog",
     imports: [
-        CommonModule,
         ReactiveFormsModule,
-        BrnSelectComponent,
+        BrnSelectModule,
         HlmDialogHeaderComponent,
         HlmDialogTitleDirective,
         HlmInputDirective,
@@ -77,7 +75,21 @@ export interface EditConnectionContext {
                         <hlm-select-trigger class="w-full">
                             <hlm-select-value />
                         </hlm-select-trigger>
-                        <hlm-select-content> </hlm-select-content>
+                        <hlm-select-content>
+                            @for (
+                                item of context.connection.cyberShield
+                                    .availableModels;
+                                track $index
+                            ) {
+                                <hlm-option [value]="item.id">
+                                    {{ item.name }}
+                                </hlm-option>
+                            } @empty {
+                                <hlm-option disabled class="px-2">
+                                    No hay modelos disponibles
+                                </hlm-option>
+                            }
+                        </hlm-select-content>
                     </brn-select>
                 </div>
             }
@@ -109,8 +121,9 @@ export class EditConnectionDialogComponent implements OnInit {
             {
                 latency: this.context.connection.latency,
                 latencyVariation: this.context.connection.latencyVariation,
-                // cyberShield: this.context.connection.cyberShield,
-                // cyberShieldModel: this.context.connection.cyberShieldModel,
+                cyberShield: this.context.connection.cyberShield.enabled,
+                cyberShieldModel:
+                    this.context.connection.cyberShield.model?.id ?? null,
             },
             { emitEvent: false },
         );
@@ -120,9 +133,9 @@ export class EditConnectionDialogComponent implements OnInit {
                 this.context.connection.latency = value.latency;
                 this.context.connection.latencyVariation =
                     value.latencyVariation;
-                // this.context.connection.cyberShield = value.cyberShield;
-                // this.context.connection.cyberShieldModel =
-                //     value.cyberShieldModel;
+                this.context.connection.cyberShield.enabled = value.cyberShield;
+                this.context.connection.cyberShield.model =
+                    value.cyberShieldModel;
             });
         // Guardar el estado de la red
         this.form.valueChanges
