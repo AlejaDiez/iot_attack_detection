@@ -28,7 +28,7 @@ export class ConnectionComponent {
         return this.connection().node2.position;
     }
     protected get point(): Position {
-        const d = 80;
+        const d = 60;
         const dx = this.node2.x - this.node1.x;
         const dy = this.node2.y - this.node1.y;
         const len = Math.sqrt(dx * dx + dy * dy);

@@ -96,12 +96,8 @@ export class AppComponent implements AfterViewInit {
     }
 
     protected getAnimationData(outlet: RouterOutlet) {
-        return (
-            (outlet &&
-                outlet.isActivated &&
-                outlet.activatedRoute.snapshot.params["mac"]) ||
-            "_"
-        );
+        if (outlet && !outlet.isActivated) return "_";
+        return outlet.activatedRoute.snapshot.params["mac"] ?? "_";
     }
 
     @HostListener("document:keydown.meta.n", ["$event"])
