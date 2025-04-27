@@ -139,6 +139,8 @@ export class Connection {
     /**
      * Convierte un objeto plano en una conexión.
      *
+     * @param node1 Primer nodo de la conexión, suele ser un router.
+     * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
      * @param object Objeto plano a convertir.
      * @returns Conexión convertida.
      */
