@@ -1,7 +1,7 @@
 import { Node } from "@models/node";
 import { Packet } from "@models/packet";
 import { randomInt, randomMeanStd } from "@utils/random";
-import { Observable, ReplaySubject } from "rxjs";
+import { CyberShield } from "./cyber-shield";
 
 /**
  * Enumeración de los estados de transmisión de la conexión.
@@ -34,7 +34,6 @@ export class Connection {
     public set latency(value: number) {
         if (value < 0) throw new Error("The latency cannot be negative");
         this._latency = value;
-        this._state.next();
     }
     /** Variación de la latencia de la conexión */
     private _latencyVariation: number;
@@ -51,7 +50,6 @@ export class Connection {
                 "The latency variation cannot be greater than the latency",
             );
         this._latencyVariation = value;
-        this._state.next();
     }
     /**
      * Estado de la conexión.
@@ -63,12 +61,8 @@ export class Connection {
     public get status(): ConnectionStatus {
         return this._status;
     }
-    /** Event emitter para el cambio de estado de la conexión */
-    private readonly _state: ReplaySubject<void>;
-    /** Event emitter para el cambio de estado de la conexión */
-    public get state$(): Observable<void> {
-        return this._state;
-    }
+    /** Protector de flujo de red */
+    public readonly cyberShield: CyberShield;
 
     /**
      * Crea una instancia de la clase Connection.
@@ -76,22 +70,16 @@ export class Connection {
      * @param node1 Primer nodo de la conexión, suele ser un router.
      * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
      * @param latency Latencia de la conexión, si no se especifica, se asigna un valor aleatorio entre 0 y 1000 ms.
-     * @param latencyVariation Variación de la latencia, si no se especifica, se asigna 0.
      */
-    public constructor(
-        node1: Node,
-        node2: Node,
-        latency?: number,
-        latencyVariation?: number,
-    ) {
+    public constructor(node1: Node, node2: Node, latency?: number) {
         this._queue = [];
         this._processing = false;
         this.node1 = node1;
         this.node2 = node2;
         this._latency = latency ?? randomInt(0, 1000);
-        this._latencyVariation = latencyVariation ?? 0;
+        this._latencyVariation = 0;
         this._status = ConnectionStatus.IDLE;
-        this._state = new ReplaySubject<void>(1);
+        this.cyberShield = new CyberShield();
     }
 
     /**
@@ -119,6 +107,9 @@ export class Connection {
                     randomMeanStd(this._latency, this._latencyVariation),
                 ),
             );
+            // Analiza el paquete con el modelo
+            this.cyberShield.analyze(packet);
+            // Envia el paquete al receptor
             reciver.receivePacket(packet);
         }
         this._processing = false;
@@ -144,6 +135,30 @@ export class Connection {
         return {
             latency: this.latency,
             latencyVariation: this.latencyVariation,
+            cyberShield: this.cyberShield.toObject(),
         };
+    }
+
+    /**
+     * Convierte un objeto plano en una conexión.
+     *
+     * @param node1 Primer nodo de la conexión, suele ser un router.
+     * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
+     * @param object Objeto plano a convertir.
+     * @returns Conexión convertida.
+     */
+    public static fromObject(
+        node1: Node,
+        node2: Node,
+        object: any,
+    ): Connection {
+        const connection = new Connection(node1, node2, object.latency);
+
+        connection.latencyVariation = object.latencyVariation;
+        if (object.cyberShield) {
+            connection.cyberShield.enabled = object.cyberShield.enabled;
+            connection.cyberShield.model = object.cyberShield.model;
+        }
+        return connection;
     }
 }

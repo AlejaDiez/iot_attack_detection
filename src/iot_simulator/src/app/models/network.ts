@@ -1,6 +1,7 @@
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Router } from "@models/router";
+import { Connection } from "./connection";
 
 /**
  * Clase que representa una red de dispositivos.
@@ -132,12 +133,16 @@ export class Network {
             object.devices.forEach((obj: any) => {
                 const device = this.addNode(Device.fromObject(obj)) as Device;
 
-                if (obj.connection)
+                if (obj.connection) {
                     device.connect(
                         this.router!,
-                        obj.connection["latency"],
-                        obj.connection["latencyVariation"],
+                        Connection.fromObject(
+                            this.router!,
+                            device,
+                            obj.connection,
+                        ),
                     );
+                }
             });
         }
     }

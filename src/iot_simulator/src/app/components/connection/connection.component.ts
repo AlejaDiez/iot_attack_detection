@@ -4,7 +4,6 @@ import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
 import { Connection, ConnectionStatus } from "@models/connection";
 import { Position } from "@models/position";
 import { EditConnectionDialogComponent } from "@routes/dialogs/edit-connection-dialog.component";
-import { NetworkService } from "@services/network.service";
 
 @Component({
     selector: "app-connection",
@@ -27,6 +26,18 @@ export class ConnectionComponent {
     }
     protected get node2(): Position {
         return this.connection().node2.position;
+    }
+    protected get point(): Position {
+        const d = 60;
+        const dx = this.node2.x - this.node1.x;
+        const dy = this.node2.y - this.node1.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+
+        if (len === 0) return { x: this.node1.x, y: this.node1.y };
+        return {
+            x: this.node1.x + (dx / len) * Math.min(d, len / 2),
+            y: this.node1.y + (dy / len) * Math.min(d, len / 2),
+        };
     }
     protected get w(): number {
         return Math.abs(this.node2.x - this.node1.x) + 60;

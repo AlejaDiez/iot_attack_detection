@@ -108,7 +108,6 @@ export abstract class Node {
             throw new Error("Invalid IP address");
 
         this._ip = value;
-        // this.state.next();
     }
     /** Nombre del nodo */
     private _name: string;
@@ -121,7 +120,6 @@ export abstract class Node {
         if (this._name === value) return;
 
         this._name = value;
-        // this.state.next();
     }
     /** Tipo de nodo */
     private _type: NodeType;
@@ -144,7 +142,6 @@ export abstract class Node {
             this._generator = new FlowGenerator(this);
         this._generator.loadLibrary(this._library);
         this._type = value;
-        // this.state.next();
     }
     /** Biblioteca externa */
     private _library?: any;
@@ -281,7 +278,6 @@ export abstract class Node {
             this._position.x += x;
             this._position.y += y;
         } else this._position = { x, y };
-        // this.state.next();
     }
 
     /**

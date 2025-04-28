@@ -24,6 +24,7 @@ import {
 } from "@ng-icons/lucide";
 import { ConfigService } from "@services/config.service";
 import { LibraryService } from "@services/library.service";
+import { ModelsService } from "@services/models.service";
 import { NetworkService } from "@services/network.service";
 import { StateService } from "@services/state.service";
 import { BrnContextMenuTriggerDirective } from "@spartan-ng/brain/menu";
@@ -78,6 +79,7 @@ export class AppComponent implements AfterViewInit {
     public readonly state: StateService = inject(StateService);
     public readonly network: NetworkService = inject(NetworkService);
     public readonly library: LibraryService = inject(LibraryService);
+    public readonly model: ModelsService = inject(ModelsService);
     public readonly NodeType: typeof NodeType = NodeType;
     protected readonly canvas: Signal<CanvasComponent> =
         viewChild.required(CanvasComponent);
@@ -96,12 +98,8 @@ export class AppComponent implements AfterViewInit {
     }
 
     protected getAnimationData(outlet: RouterOutlet) {
-        return (
-            (outlet &&
-                outlet.isActivated &&
-                outlet.activatedRoute.snapshot.params["mac"]) ||
-            "_"
-        );
+        if (outlet && !outlet.isActivated) return "_";
+        return outlet.activatedRoute.snapshot.params["mac"] ?? "_";
     }
 
     @HostListener("document:keydown.meta.n", ["$event"])
@@ -119,6 +117,11 @@ export class AppComponent implements AfterViewInit {
     protected onLoadExternalLibrary(event?: Event) {
         event?.preventDefault();
         this.library.loadFromFile();
+    }
+
+    protected onLoadModels(event?: Event) {
+        event?.preventDefault();
+        this.model.loadFromFile();
     }
 
     @HostListener("document:keydown.meta.shift.s", ["$event"])

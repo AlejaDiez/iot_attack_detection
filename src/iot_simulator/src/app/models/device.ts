@@ -39,19 +39,13 @@ export class Device extends Node {
      * Conectar el dispositivo a un router.
      *
      * @param router Router al que se conectará el dispositivo.
-     * @param latency Latencia de la conexión.
+     * @param connection Conexión a establecer.
      */
-    public connect(
-        router: Router,
-        latency?: number,
-        latencyVariation?: number,
-    ): void {
+    public connect(router: Router, connection?: Connection): void {
         [this.ip, this._connection] = router.acceptConnection(
             this,
-            latency,
-            latencyVariation,
+            connection,
         ) ?? [undefined, undefined];
-
         if (this._connection === undefined)
             throw new Error(`${this.mac} could not connect to router`);
     }

@@ -1,5 +1,5 @@
 <svg
-    class="absolute z-0 origin-center -translate-x-1/2 -translate-y-1/2"
+    class="pointer-events-none absolute z-0 origin-center -translate-x-1/2 -translate-y-1/2"
     [style]="{
         left: 'calc(50% + ' + (node1.x + node2.x) / 2 + 'px)',
         top: 'calc(50% - ' + (node1.y + node2.y) / 2 + 'px)',
@@ -21,4 +21,13 @@
         [attr.y2]="t.y - node2.y"
         class="connection"
         [ngClass]="{ animate, reverse }" />
+    <circle
+        [attr.cx]="point.x - t.x"
+        [attr.cy]="t.y - point.y"
+        r="5"
+        class="cyber-shield"
+        [ngClass]="{
+            animate,
+            enabled: connection().cyberShield.enabled && connection().cyberShield.model
+        }" />
 </svg>

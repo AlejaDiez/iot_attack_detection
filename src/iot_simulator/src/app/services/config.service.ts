@@ -27,24 +27,31 @@ export class ConfigService {
      * @param extensions Extensiones de archivo a abrir.
      * @returns Archivo abierto.
      */
-    public static async openFile(extensions?: string): Promise<string> {
+    public static async openFile(
+        extensions?: string,
+        multiple?: boolean,
+    ): Promise<any> {
         const input: HTMLInputElement = document.createElement("input");
 
         input.type = "file";
         input.value = "";
         if (extensions) input.accept = extensions;
-        return new Promise<string>((resolve, reject) => {
+        if (multiple) input.multiple = multiple;
+        return new Promise<any>((resolve, reject) => {
             input.onchange = async (event: Event) => {
-                const file = (event.target as HTMLInputElement).files?.[0];
+                const files = (event.target as HTMLInputElement).files;
 
                 // Esperamos un segundo para que se pueda cargar el archivo
                 await new Promise((_) => setTimeout(_, 1000));
-                // Cargamos el archivo
-                if (file) {
-                    const reader = new FileReader();
+                if (files) {
+                    if (multiple) resolve([...files]);
+                    else {
+                        // Cargamos el archivo
+                        const reader = new FileReader();
 
-                    reader.onload = () => resolve(reader.result as string);
-                    reader.readAsText(file);
+                        reader.onload = () => resolve(reader.result as string);
+                        reader.readAsText(files[0]);
+                    }
                 } else reject();
                 input.remove();
             };
