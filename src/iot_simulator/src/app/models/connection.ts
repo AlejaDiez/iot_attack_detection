@@ -107,6 +107,9 @@ export class Connection {
                     randomMeanStd(this._latency, this._latencyVariation),
                 ),
             );
+            // Analiza el paquete con el modelo
+            this.cyberShield.analyze(packet);
+            // Envia el paquete al receptor
             reciver.receivePacket(packet);
         }
         this._processing = false;
