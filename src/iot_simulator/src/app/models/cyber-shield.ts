@@ -1,5 +1,6 @@
 import { Packet, TransportProtocol } from "@models/packet";
 import { ModelsService } from "@services/models.service";
+import { StateService } from "@services/state.service";
 import { LayersModel, Tensor, tensor } from "@tensorflow/tfjs";
 
 /** Tiempo de espera para el flujo. */
@@ -38,36 +39,51 @@ export type TensorflowModels = TensorflowModel[];
  */
 export class CyberShield {
     /** Estado del cyber shield. */
-    public enabled: boolean = false;
+    private _enabled: boolean;
+    /** Estado del cyber shield. */
+    public get enabled(): boolean {
+        return this._enabled;
+    }
+    /** Estado del cyber shield. */
+    @StateService.SetState
+    public set enabled(value: boolean) {
+        if (this._models && Object.keys(this._models).length > 0)
+            this._enabled = value;
+        else this._enabled = false;
+    }
     /** Modelos de redes neuronales. */
     private _models?: { [model: string]: TensorflowModel };
-    /** Modelo que se esta usando. */
-    private _model?: TensorflowModel;
-    /** Modelo que se esta usando. */
-    public get model(): Model | undefined {
-        if (this._model) return { id: this._model.id, name: this._model.name };
-        else return undefined;
-    }
-    /** Modelo que se esta usando. */
-    public set model(model: string | undefined) {
-        if (model && this._models) this._model = this._models[model];
-        else this._model = undefined;
-    }
-    /** Comandos que se pueden realizar. */
-    public get availableModels(): Readonly<Models> {
+    /** Modelos de redes neuronales. */
+    public get models(): Readonly<Models> {
         return this._models
             ? Object.values(this._models).map(({ id, name }) => ({ id, name }))
             : [];
     }
+    /** Modelo que se esta usando. */
+    private _model?: TensorflowModel;
+    /** Modelo que se esta usando. */
+    public get model(): string | undefined {
+        return this._model?.id;
+    }
+    /** Modelo que se esta usando. */
+    public set model(model: string | undefined) {
+        console.log("Setting model", model);
+        if (model && this._models) this._model = this._models[model];
+        else this._model = undefined;
+    }
 
     /**
-     * Crea una nueva instancia de CyberShield.
+     * Crea una instancia de CyberShield.
      */
     public constructor() {
-        const models = ModelsService.instance;
+        this._enabled = false;
+        this._model = undefined;
+        this._models = undefined;
 
-        this.loadModels(models.models);
-        models.models$.subscribe((models) => this.loadModels(models));
+        this.loadModels(ModelsService.instance.models);
+        ModelsService.instance.models$.subscribe((models) =>
+            this.loadModels(models),
+        );
     }
 
     /**
@@ -202,14 +218,30 @@ export class CyberShield {
     }
 
     /**
-     * Convierte el ciber shield a un objeto plano.
+     * Convierte el cyber shield a un objeto plano.
      *
-     * @returns Objeto plano con los datos del ciber shield.
+     * @returns Objeto plano con los datos del cyber shield.
      */
     public toObject(): any {
         return {
             enabled: this.enabled,
-            model: this.model?.id,
+            model: this.model,
         };
+    }
+
+    /**
+     * Convierte un objeto plano en un cyber shield.
+     *
+     * @param object Objeto plano a convertir.
+     * @returns CyberShield convertido.
+     */
+    public static fromObject(object: any): CyberShield {
+        const cyberShield = new CyberShield();
+
+        // Establecer propiedades
+        if (object.enabled) cyberShield._enabled = object.enabled;
+        if (object.model && cyberShield._models)
+            cyberShield._model = cyberShield._models[object.model];
+        return cyberShield;
     }
 }

@@ -1,14 +1,14 @@
+import { Connection } from "@models/connection";
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
 import { Router } from "@models/router";
-import { Connection } from "./connection";
+import { StateService } from "@services/state.service";
 
 /**
  * Clase que representa una red de dispositivos.
  */
+@StateService.UseState
 export class Network {
-    /** Biblioteca externa */
-    private _library?: Function;
     /** Nodos de la red */
     private readonly _nodes: Map<string, Node> = new Map<string, Node>();
     /** Obtiene los nodos de la red */
@@ -50,7 +50,6 @@ export class Network {
         if (NodeType.RouterTypes.includes(node.type))
             this._router = node as Router;
         this._nodes.set(node.mac, node);
-        node.loadLibrary(this._library);
         return node;
     }
 
@@ -94,16 +93,6 @@ export class Network {
      */
     public getConnectedNodes(mac?: string): Node[] {
         return this.nodes.filter((node) => node.ip && mac !== node.mac);
-    }
-
-    /**
-     * Carga una biblioteca externa en la red de dispositivos.
-     *
-     * @param library Biblioteca externa
-     */
-    public loadLibrary(library: Function | undefined): void {
-        this._library = library;
-        this.nodes.forEach((e) => e.loadLibrary(library));
     }
 
     /**

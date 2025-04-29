@@ -3,6 +3,8 @@ import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
+import { LibraryService } from "@services/library.service";
+import { StateService } from "@services/state.service";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -99,8 +101,8 @@ export abstract class Node {
         return this._ip;
     }
     /** Dirección IP del nodo */
+    @StateService.SetState
     protected set ip(value: any) {
-        if (this._ip === value) return;
         if (
             value !== undefined &&
             (typeof value !== "string" || !IP_REGEX.test(value))
@@ -116,6 +118,7 @@ export abstract class Node {
         return this._name;
     }
     /** Nombre del nodo */
+    @StateService.SetState
     public set name(value: string) {
         if (this._name === value) return;
 
@@ -128,6 +131,7 @@ export abstract class Node {
         return this._type;
     }
     /** Tipo de nodo */
+    @StateService.SetState
     public set type(value: any) {
         if (this._type === value) return;
         if (!NodeType.Types.includes(value))
@@ -144,7 +148,7 @@ export abstract class Node {
         this._type = value;
     }
     /** Biblioteca externa */
-    private _library?: any;
+    private _library?: Function;
     /** Interceptor de flujo de red */
     protected readonly interceptor: FlowInterceptor;
     /** Generador de flujos de red */
@@ -192,6 +196,12 @@ export abstract class Node {
             : new FlowGenerator(this);
         this._traffic = [];
         this._position = { ...position };
+
+        // Cargar biblioteca y obtener cambios
+        this.loadLibrary(LibraryService.instance.library);
+        LibraryService.instance.library$.subscribe((library) =>
+            this.loadLibrary(library),
+        );
     }
 
     /**
@@ -270,6 +280,7 @@ export abstract class Node {
      * @param y Coordenada Y de la nueva posición.
      * @param relative Indica si el movimiento es relativo a la posición actual, por defecto es falso.
      */
+    @StateService.SetState
     public move(x: number, y: number, relative: boolean = false): void {
         if (!relative && this._position.x === x && this._position.y === y)
             return;

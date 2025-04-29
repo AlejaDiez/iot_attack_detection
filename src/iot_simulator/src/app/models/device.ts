@@ -42,12 +42,14 @@ export class Device extends Node {
      * @param connection Conexión a establecer.
      */
     public connect(router: Router, connection?: Connection): void {
-        [this.ip, this._connection] = router.acceptConnection(
-            this,
-            connection,
-        ) ?? [undefined, undefined];
-        if (this._connection === undefined)
-            throw new Error(`${this.mac} could not connect to router`);
+        const result = router.acceptConnection(this, connection);
+
+        if (!result) throw new Error(`${this.mac} could not connect to router`);
+
+        const [ip, newConnection] = result;
+
+        if (this.ip !== ip) this.ip = ip;
+        this._connection = newConnection;
     }
 
     /**

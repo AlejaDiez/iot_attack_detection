@@ -1,39 +1,39 @@
-<form [formGroup]="form" (submit)="delete()" class="contents">
-    <label hlmLabel>
-        Nombre
-        <input
-            hlmInput
-            type="text"
-            formControlName="name"
-            placeholder="Nombre del dispositivo"
-            class="!mt-2 w-full" />
-    </label>
-    <label hlmLabel>
-        IP
-        <input
-            hlmInput
-            type="text"
-            formControlName="ip"
-            placeholder="IP del dispositivo"
-            class="!mt-2 w-full" />
-    </label>
-    <label hlmLabel>
-        Tipo
-        <brn-select
-            formControlName="type"
-            placeholder="Selecciona un tipo"
-            class="!mt-2 inline-block w-full">
-            <hlm-select-trigger class="w-full">
-                <hlm-select-value />
-            </hlm-select-trigger>
-            <hlm-select-content>
-                @for (item of NodeType.getTypes(node().type); track $index) {
-                    <hlm-option [value]="item">{{
-                        NodeType.toString(item)
-                    }}</hlm-option>
-                }
-            </hlm-select-content>
-        </brn-select>
-    </label>
-    <button hlmBtn variant="destructive">Eliminar</button>
-</form>
+<label hlmLabel>
+    Nombre
+    <input
+        hlmInput
+        type="text"
+        [(ngModel)]="node().name"
+        placeholder="Nombre del dispositivo"
+        class="!mt-2 w-full" />
+</label>
+<label hlmLabel>
+    IP
+    <input
+        hlmInput
+        type="text"
+        [ngModel]="node().ip"
+        placeholder="IP del dispositivo"
+        disabled
+        class="!mt-2 w-full" />
+</label>
+<label hlmLabel>
+    Tipo
+    <brn-select
+        [(ngModel)]="node().type"
+        placeholder="Selecciona un tipo"
+        [disabled]="NodeType.getTypes(node().type).length <= 1"
+        class="!mt-2 inline-block w-full">
+        <hlm-select-trigger class="w-full">
+            <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content>
+            @for (item of NodeType.getTypes(node().type); track $index) {
+                <hlm-option [value]="item">{{
+                    NodeType.toString(item)
+                }}</hlm-option>
+            }
+        </hlm-select-content>
+    </brn-select>
+</label>
+<button hlmBtn variant="destructive" (click)="delete()">Eliminar</button>

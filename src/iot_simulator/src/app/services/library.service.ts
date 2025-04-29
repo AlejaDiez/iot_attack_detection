@@ -1,23 +1,26 @@
 import { Injectable } from "@angular/core";
+import { ConfigService } from "@services/config.service";
 import { parseScript } from "@utils/parse_script";
 import { toast } from "ngx-sonner";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ConfigService } from "./config.service";
 
 /**
  * Clase que permite gestionar las bibliotecas de la aplicación.
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class LibraryService {
+    /** Instancia única de la clase. */
+    public static readonly instance: LibraryService = new LibraryService();
     /** Bibliotecas almacenada. */
-    private _library?: Function;
-    /** Observable para emitir el estado actual de la biblioteca cargada. */
-    private readonly _librarySubject: BehaviorSubject<Function | undefined>;
-    /** Estado actual de la biblioteca. */
+    private _library?: Function = undefined;
+    /** Biblioteca almacenada. */
     public get library(): Function | undefined {
         return this._library;
     }
-    /** Mostrar el estado actual como un observable. */
+    /** Observable para emitir el estado actual de la biblioteca cargada. */
+    private readonly _librarySubject: BehaviorSubject<Function | undefined> =
+        new BehaviorSubject<Function | undefined>(undefined);
+    /** Observable que notifica cada vez que se carga una biblioteca */
     public get library$(): Observable<Function | undefined> {
         return this._librarySubject.asObservable();
     }
@@ -25,14 +28,10 @@ export class LibraryService {
     /**
      * Constructor del gestor de bibliotecas.
      */
-    public constructor() {
-        // Cargar la biblioteca desde el localStorage
+    private constructor() {
         const script = localStorage.getItem("script");
 
         if (script) this._load(script);
-        this._librarySubject = new BehaviorSubject<Function | undefined>(
-            this._library,
-        );
     }
 
     /**
@@ -42,6 +41,7 @@ export class LibraryService {
      */
     private _load(script: string) {
         this._library = parseScript(script);
+        this._librarySubject.next(this._library);
         localStorage.setItem("script", script);
     }
 
@@ -53,7 +53,6 @@ export class LibraryService {
             loading: "Importando biblioteca...",
             success: (script: string) => {
                 this._load(script);
-                this._librarySubject.next(this._library);
                 return "Biblioteca importada correctamente.";
             },
             error: () => "No se ha podido importar la biblioteca.",

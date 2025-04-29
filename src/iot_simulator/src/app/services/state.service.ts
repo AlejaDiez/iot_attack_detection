@@ -1,29 +1,87 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, debounceTime, Observable, ReplaySubject } from "rxjs";
+
+/** Máximos estados a almacenar. */
+const MAX_STATES = 40;
 
 /**
  * Clase que permite gestionar los estados de la aplicación.
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class StateService {
-    /** Espera para actualizar el estado */
-    public static readonly UPDATE_WAIT: number = 1000;
-    /** Número máximo de estados a almacenar */
-    private static readonly MAX_STATES: number = 40;
-    /** Lista de estados almacenados */
+    /** Instancia única de la clase. */
+    public static readonly instance: StateService = new StateService();
+    /** Anotación para usar el gestor de estados en una clase. */
+    public static readonly UseState = <T extends { new (...args: any[]): {} }>(
+        constructor: T,
+    ) => {
+        return class extends constructor {
+            constructor(...args: any[]) {
+                super(...args);
+
+                // Escuchar el estado de la aplicación
+                (this as any).fromObject(StateService.instance.state);
+                StateService.instance.state$.subscribe((state) =>
+                    (this as any).fromObject(state),
+                );
+                // Guardar un nuevo estado
+                StateService.instance._requestStateSubject
+                    .pipe(debounceTime(500))
+                    .subscribe(() =>
+                        StateService.instance.setState(
+                            (this as any).toObject(),
+                            false,
+                        ),
+                    );
+            }
+        };
+    };
+    /** Anotación para requerir un cambio de estado. */
+    public static readonly SetState: Function = (
+        target: Object,
+        propertyKey: string,
+        descriptor: PropertyDescriptor,
+    ) => {
+        const { value, set } = descriptor;
+
+        if (value)
+            descriptor.value = function (...args: any[]) {
+                const result = value.apply(this, args);
+
+                console.log("setState", propertyKey);
+                StateService.instance._requestStateSubject.next();
+                return result;
+            };
+        else if (set)
+            descriptor.set = function (value: any) {
+                console.log("setState", propertyKey);
+                set.apply(this, [value]);
+                StateService.instance._requestStateSubject.next();
+            };
+        else
+            throw new Error(
+                "The setState decorator can only be used on methods or properties that change the state.",
+            );
+    };
+    /** Lista de estados almacenados. */
     private _states: any[];
-    /** Índice del estado actual */
+    /** Índice del estado actual. */
     private _index: number;
-    /** Observable para emitir el estado actual y que el NetworkManageService pueda suscribirse */
-    private readonly _stateSubject: BehaviorSubject<any>;
-    /** Estado actual */
+    /** Estado actual. */
     public get state(): any {
         return this._states[this._index];
     }
-    /** Mostrar el estado actual como un observable */
-    public get state$() {
+    /** Observable para requerir un cambio de estado. */
+    private readonly _requestStateSubject: ReplaySubject<void>;
+    /** Observable para emitir el estado actual de la aplicación. */
+    private readonly _stateSubject: BehaviorSubject<any>;
+    /** Observable que notifica cada vez que se cambia de estado la aplicación. */
+    public get state$(): Observable<Function | undefined> {
         return this._stateSubject.asObservable();
     }
+    /**
+     * Función que permite requerir un cambio de estado.
+     */
     /** Permite obtener si se puede deshacer un cambio */
     public get canUndo(): boolean {
         return this._index > 0;
@@ -36,25 +94,16 @@ export class StateService {
     /**
      * Constructor del gestor de estados.
      */
-    public constructor() {
+    private constructor() {
         const state = sessionStorage.getItem("state");
 
         if (state) this._states = [JSON.parse(state)];
         else this._states = [{}];
         this._index = 0;
+        this._requestStateSubject = new ReplaySubject<void>(1);
         this._stateSubject = new BehaviorSubject<any>(
             this._states[this._index],
         );
-    }
-
-    /**
-     * Manda un nuevo estado al observable.
-     *
-     * @param notify Notificar al suscriptor del estado actual.
-     */
-    private _stateChange(notify: boolean) {
-        if (notify) this._stateSubject.next(this.state);
-        sessionStorage.setItem("state", JSON.stringify(this.state));
     }
 
     /**
@@ -69,12 +118,13 @@ export class StateService {
         this._states.push(state);
         this._index++;
         // Eliminamos el más antiguo en caso de que se exceda el límite
-        if (this._states.length > StateService.MAX_STATES) {
+        if (this._states.length > MAX_STATES) {
             this._states.shift();
             this._index--;
         }
         // Notificamos el cambio
-        this._stateChange(notify);
+        if (notify) this._stateSubject.next(this.state);
+        sessionStorage.setItem("state", JSON.stringify(this.state));
     }
 
     /**
@@ -86,7 +136,8 @@ export class StateService {
         // Reemplazamos el estado actual
         this._states[this._index] = state;
         // Notificamos el cambio
-        this._stateChange(notify);
+        if (notify) this._stateSubject.next(this.state);
+        sessionStorage.setItem("state", JSON.stringify(this.state));
     }
 
     /**
@@ -97,7 +148,8 @@ export class StateService {
             // Decrementamos el índice
             this._index--;
             // Notificamos el cambio
-            this._stateChange(notify);
+            if (notify) this._stateSubject.next(this.state);
+            sessionStorage.setItem("state", JSON.stringify(this.state));
         }
     }
 
@@ -109,7 +161,8 @@ export class StateService {
             // Incrementamos el índice
             this._index++;
             // Notificamos el cambio
-            this._stateChange(notify);
+            if (notify) this._stateSubject.next(this.state);
+            sessionStorage.setItem("state", JSON.stringify(this.state));
         }
     }
 
@@ -121,6 +174,7 @@ export class StateService {
         this._states = [{}];
         this._index = 0;
         // Notificamos el cambio
-        this._stateChange(notify);
+        if (notify) this._stateSubject.next(this.state);
+        sessionStorage.setItem("state", JSON.stringify(this.state));
     }
 }

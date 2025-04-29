@@ -1,5 +1,6 @@
 import { Node } from "@models/node";
 import { Packet } from "@models/packet";
+import { StateService } from "@services/state.service";
 import { randomInt, randomMeanStd } from "@utils/random";
 import { CyberShield } from "./cyber-shield";
 
@@ -17,9 +18,9 @@ export enum ConnectionStatus {
  */
 export class Connection {
     /** Cola de paquetes */
-    private _queue: Packet[] = [];
+    private _queue: Packet[];
     /** Indica si la conexión está procesando un paquete */
-    private _processing: boolean = false;
+    private _processing: boolean;
     /** Router al que se conecta el dispositivo */
     public readonly node1: Node;
     /** Nodo para el que se establece la conexión */
@@ -31,6 +32,7 @@ export class Connection {
         return this._latency;
     }
     /** Latencia de la conexión. */
+    @StateService.SetState
     public set latency(value: number) {
         if (value < 0) throw new Error("The latency cannot be negative");
         this._latency = value;
@@ -42,6 +44,7 @@ export class Connection {
         return this._latencyVariation;
     }
     /** Variación de la latencia de la conexión. */
+    @StateService.SetState
     public set latencyVariation(value: number) {
         if (value < 0)
             throw new Error("The latency variation cannot be negative");
@@ -62,7 +65,11 @@ export class Connection {
         return this._status;
     }
     /** Protector de flujo de red */
-    public readonly cyberShield: CyberShield;
+    private _cyberShield: CyberShield;
+    /** Protector de flujo de red. */
+    public get cyberShield(): CyberShield {
+        return this._cyberShield;
+    }
 
     /**
      * Crea una instancia de la clase Connection.
@@ -79,7 +86,7 @@ export class Connection {
         this._latency = latency ?? randomInt(0, 1000);
         this._latencyVariation = 0;
         this._status = ConnectionStatus.IDLE;
-        this.cyberShield = new CyberShield();
+        this._cyberShield = new CyberShield();
     }
 
     /**
@@ -154,11 +161,11 @@ export class Connection {
     ): Connection {
         const connection = new Connection(node1, node2, object.latency);
 
-        connection.latencyVariation = object.latencyVariation;
-        if (object.cyberShield) {
-            connection.cyberShield.enabled = object.cyberShield.enabled;
-            connection.cyberShield.model = object.cyberShield.model;
-        }
+        connection._latencyVariation = object.latencyVariation;
+        if (object.cyberShield)
+            connection._cyberShield = CyberShield.fromObject(
+                object.cyberShield,
+            );
         return connection;
     }
 }

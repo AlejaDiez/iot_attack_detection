@@ -15,12 +15,11 @@ import {
     DeleteNodeDialogContext,
 } from "@routes/dialogs/delete-node-dialog.component";
 import { ConfigService } from "@services/config.service";
-import { LibraryService } from "@services/library.service";
+import { StateService } from "@services/state.service";
 import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { filter, map } from "rxjs";
-import { StateService } from "./state.service";
 
 /**
  * Clase que permite gestionar la red de dispositivos.
@@ -28,7 +27,7 @@ import { StateService } from "./state.service";
 @Injectable({ providedIn: "root" })
 export class NetworkService {
     /** Red de dispositivos */
-    private readonly _network: Network;
+    private readonly _network: Network = new Network();
     /** Obtiene los nodos de la red de dispositivos */
     public get nodes(): Node[] {
         return this._network.nodes;
@@ -56,10 +55,7 @@ export class NetworkService {
         public readonly dialog: HlmDialogService,
         public readonly config: ConfigService,
         public readonly state: StateService,
-        public readonly library: LibraryService,
     ) {
-        // Crear la red de dispositivos
-        this._network = new Network();
         // Obtener el nodo seleccionado
         this.focusedNode = toSignal(
             this.navigationRouter.events.pipe(
@@ -70,19 +66,6 @@ export class NetworkService {
                 map((mac) => this._network.getNode(mac ?? "")),
             ),
         );
-        // Obtener el estado de la red de dispositivos
-        this.state.state$.subscribe((state) => this._network.fromObject(state));
-        // Obtener la librería de dispositivos
-        this.library.library$.subscribe((library) =>
-            this._network.loadLibrary(library),
-        );
-    }
-
-    /**
-     * Guarda el estado actual de la red de dispositivos.
-     */
-    public saveState(): void {
-        this.state.setState(this._network.toObject(), false);
     }
 
     /**

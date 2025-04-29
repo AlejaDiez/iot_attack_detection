@@ -111,8 +111,6 @@ export class NetworkTrafficComponent {
 
     protected connect() {
         (this.node() as Device).connect(this.network.router!);
-        // Guardar el estado de la red
-        this.network.saveState();
     }
 
     protected execute() {

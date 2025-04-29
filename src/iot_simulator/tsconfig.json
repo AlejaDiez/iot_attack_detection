@@ -23,7 +23,6 @@
             "@routes/*": ["./src/app/routes/*"],
             "@services/*": ["./src/app/services/*"],
             "@utils/*": ["./src/app/utils/*"],
-            "@validators/*": ["./src/app/validators/*"],
             "@spartan-ng/ui-accordion-helm": [
                 "./src/app/components/ui/ui-accordion-helm/src/index.ts"
             ],

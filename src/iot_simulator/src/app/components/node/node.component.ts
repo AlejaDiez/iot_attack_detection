@@ -84,14 +84,11 @@ export class NodeComponent {
                 this.router.navigate([this.node().mac, route]);
             }
         }
-        if (this.dragging) {
+        if (this.dragging)
             this.node().move(
                 Math.round(this.node().position.x / 20) * 20,
                 Math.round(this.node().position.y / 20) * 20,
             );
-            // Guardar el estado de la red
-            this.network.saveState();
-        }
         this.clicked = false;
         this.dragging = false;
     }
