@@ -1,12 +1,12 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	ViewEncapsulation,
-	computed,
-	effect,
-	inject,
-	input,
-	untracked,
+    ChangeDetectionStrategy,
+    Component,
+    ViewEncapsulation,
+    computed,
+    effect,
+    inject,
+    input,
+    untracked,
 } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideArrowLeft } from '@ng-icons/lucide';

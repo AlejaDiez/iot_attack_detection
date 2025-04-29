@@ -1,14 +1,14 @@
 import { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
-	booleanAttribute,
-	Component,
-	computed,
-	forwardRef,
-	input,
-	model,
-	numberAttribute,
-	output,
-	signal,
+    booleanAttribute,
+    Component,
+    computed,
+    forwardRef,
+    input,
+    model,
+    numberAttribute,
+    output,
+    signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';

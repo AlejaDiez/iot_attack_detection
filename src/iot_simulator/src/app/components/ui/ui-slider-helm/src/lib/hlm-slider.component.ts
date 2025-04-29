@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import {
-	BrnSliderDirective,
-	BrnSliderRangeDirective,
-	BrnSliderThumbDirective,
-	BrnSliderTickDirective,
-	BrnSliderTrackDirective,
-	injectBrnSlider,
+    BrnSliderDirective,
+    BrnSliderRangeDirective,
+    BrnSliderThumbDirective,
+    BrnSliderTickDirective,
+    BrnSliderTrackDirective,
+    injectBrnSlider,
 } from '@spartan-ng/brain/slider';
 import type { ClassValue } from 'clsx';
 
 @Component({
 	selector: 'hlm-slider, brn-slider [hlm]',
-	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	hostDirectives: [
 		{

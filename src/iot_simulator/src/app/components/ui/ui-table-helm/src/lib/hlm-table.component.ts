@@ -1,12 +1,12 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	ViewEncapsulation,
-	computed,
-	effect,
-	input,
-	signal,
-	untracked,
+    ChangeDetectionStrategy,
+    Component,
+    ViewEncapsulation,
+    computed,
+    effect,
+    input,
+    signal,
+    untracked,
 } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import type { ClassValue } from 'clsx';

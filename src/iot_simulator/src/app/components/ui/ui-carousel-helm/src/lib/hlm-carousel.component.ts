@@ -1,22 +1,22 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	HostListener,
-	type InputSignal,
-	type Signal,
-	ViewChild,
-	ViewEncapsulation,
-	computed,
-	input,
-	signal,
+    ChangeDetectionStrategy,
+    Component,
+    HostListener,
+    type InputSignal,
+    type Signal,
+    ViewChild,
+    ViewEncapsulation,
+    computed,
+    input,
+    signal,
 } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import type { ClassValue } from 'clsx';
 import {
-	EmblaCarouselDirective,
-	type EmblaEventType,
-	type EmblaOptionsType,
-	type EmblaPluginType,
+    EmblaCarouselDirective,
+    type EmblaEventType,
+    type EmblaOptionsType,
+    type EmblaPluginType,
 } from 'embla-carousel-angular';
 
 @Component({

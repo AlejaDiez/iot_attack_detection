@@ -1,13 +1,13 @@
 import { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	booleanAttribute,
-	computed,
-	input,
-	model,
-	numberAttribute,
-	untracked,
+    ChangeDetectionStrategy,
+    Component,
+    booleanAttribute,
+    computed,
+    input,
+    model,
+    numberAttribute,
+    untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrnSelectImports } from '@spartan-ng/brain/select';

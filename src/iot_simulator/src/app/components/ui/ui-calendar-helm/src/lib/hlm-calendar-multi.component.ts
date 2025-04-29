@@ -3,17 +3,17 @@ import { Component, booleanAttribute, computed, input, model, numberAttribute, v
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideChevronLeft, lucideChevronRight } from '@ng-icons/lucide';
 import {
-	BrnCalendarCellButtonDirective,
-	BrnCalendarCellDirective,
-	BrnCalendarGridDirective,
-	BrnCalendarHeaderDirective,
-	BrnCalendarMultiDirective,
-	BrnCalendarNextButtonDirective,
-	BrnCalendarPreviousButtonDirective,
-	BrnCalendarWeekDirective,
-	BrnCalendarWeekdayDirective,
-	Weekday,
-	injectBrnCalendarI18n,
+    BrnCalendarCellButtonDirective,
+    BrnCalendarCellDirective,
+    BrnCalendarGridDirective,
+    BrnCalendarHeaderDirective,
+    BrnCalendarMultiDirective,
+    BrnCalendarNextButtonDirective,
+    BrnCalendarPreviousButtonDirective,
+    BrnCalendarWeekDirective,
+    BrnCalendarWeekdayDirective,
+    Weekday,
+    injectBrnCalendarI18n,
 } from '@spartan-ng/brain/calendar';
 import { hlm } from '@spartan-ng/brain/core';
 import { injectDateAdapter } from '@spartan-ng/brain/date-time';

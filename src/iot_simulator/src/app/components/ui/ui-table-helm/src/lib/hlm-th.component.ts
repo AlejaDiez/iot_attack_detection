@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	ViewEncapsulation,
-	booleanAttribute,
-	computed,
-	inject,
-	input,
+    ChangeDetectionStrategy,
+    Component,
+    ViewEncapsulation,
+    booleanAttribute,
+    computed,
+    inject,
+    input,
 } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import { BrnColumnDefComponent } from '@spartan-ng/brain/table';
