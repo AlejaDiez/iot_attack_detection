@@ -28,6 +28,8 @@
         class="cyber-shield"
         [ngClass]="{
             animate,
-            enabled: connection().cyberShield.enabled && connection().cyberShield.model
+            enabled:
+                connection().cyberShield.enabled &&
+                connection().cyberShield.model,
         }" />
 </svg>

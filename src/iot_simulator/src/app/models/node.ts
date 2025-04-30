@@ -75,11 +75,11 @@ export namespace NodeType {
     export const toString = (type: NodeType): string => {
         switch (type) {
             case NodeType.ROUTER:
-                return "Router";
+                return "ROUTER";
             case NodeType.COMPUTER:
-                return "Ordenador";
+                return "COMPUTER";
             case NodeType.IOT:
-                return "Dispositivo IoT";
+                return "IOT_DEVICE";
         }
     };
 }

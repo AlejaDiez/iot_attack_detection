@@ -11,6 +11,7 @@ import { Node } from "@models/node";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideUnplug } from "@ng-icons/lucide";
+import { TranslateModule } from "@ngx-translate/core";
 import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
@@ -29,6 +30,7 @@ import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/s
         HlmSelectModule,
         NgIcon,
         HlmMenuSeparatorComponent,
+        TranslateModule,
     ],
     providers: [provideIcons({ lucideUnplug })],
     templateUrl: "attack.component.html",

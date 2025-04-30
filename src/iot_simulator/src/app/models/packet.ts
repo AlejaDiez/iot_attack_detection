@@ -205,7 +205,13 @@ export namespace Packet {
         };
     };
 
-    export function UDPPacket(arg0: string, dstIP: string, srcPort: number, dstPort: number, payload: string): UDPPacket {
+    export function UDPPacket(
+        arg0: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        payload: string,
+    ): UDPPacket {
         throw new Error("Function not implemented.");
     }
 }

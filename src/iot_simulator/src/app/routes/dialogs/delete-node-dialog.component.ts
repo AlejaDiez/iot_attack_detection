@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, computed, inject, Signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Node } from "@models/node";
+import { TranslateModule } from "@ngx-translate/core";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
 import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
@@ -29,21 +30,23 @@ export interface DeleteNodeDialogContext {
         HlmDialogTitleDirective,
         HlmDialogFooterComponent,
         HlmSelectModule,
+        TranslateModule,
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>¿Estás seguro de eliminar {{ name() }}?</h3>
+            <h3 hlmDialogTitle>
+                {{ "DELETE_NODE" | translate: { name: name() } }}
+            </h3>
         </hlm-dialog-header>
         <p hlmDialogDescription>
-            Si elimina este nodo, se eliminará de forma permanente y no podrá
-            recuperarlo.
+            {{ "DELETE_DESC" | translate }}
         </p>
         <hlm-dialog-footer>
             <button hlmBtn variant="outline" (click)="cancel()">
-                Cancelar
+                {{ "CANCEL" | translate }}
             </button>
             <button hlmBtn variant="destructive" (click)="delete()">
-                Eliminar
+                {{ "DELETE" | translate }}
             </button>
         </hlm-dialog-footer>
     `,

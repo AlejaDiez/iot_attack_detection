@@ -26,6 +26,7 @@ import {
     lucideTrafficCone,
     lucideUnplug,
 } from "@ng-icons/lucide";
+import { TranslateModule } from "@ngx-translate/core";
 import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { BrnTableModule } from "@spartan-ng/brain/table";
@@ -49,6 +50,7 @@ import { map, tap } from "rxjs";
         HlmTableModule,
         HlmTabsModule,
         NgIcon,
+        TranslateModule,
     ],
     providers: [
         provideIcons({

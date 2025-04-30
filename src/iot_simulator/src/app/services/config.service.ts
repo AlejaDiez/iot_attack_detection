@@ -1,4 +1,5 @@
 import { effect, Injectable, signal, WritableSignal } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 
 /**
  * Clase que permite gestionar la configuración de la aplicación.
@@ -7,13 +8,30 @@ import { effect, Injectable, signal, WritableSignal } from "@angular/core";
 export class ConfigService {
     /** Idioma de la aplicación. */
     public readonly language: WritableSignal<string>;
+    public readonly languageList: string[] = [
+        "en",
+        "es",
+        "fr",
+        "pt",
+        "it",
+        "de",
+    ];
     /** Visualización de la cuadrícula. */
     public readonly grid: WritableSignal<boolean>;
 
-    public constructor() {
+    public constructor(public readonly translate: TranslateService) {
         // Lenguaje
-        this.language = signal(localStorage.getItem("language") ?? "es");
-        effect(() => localStorage.setItem("language", this.language()));
+        this.translate.addLangs(this.languageList);
+        this.translate.setDefaultLang("en");
+        this.language = signal(
+            localStorage.getItem("language") ??
+                this.translate.getBrowserLang() ??
+                "en",
+        );
+        effect(() => {
+            this.translate.use(this.language());
+            localStorage.setItem("language", this.language());
+        });
         // Visibilidad de la cuadrícula
         this.grid = signal(
             localStorage.getItem("grid") === "false" ? false : true,

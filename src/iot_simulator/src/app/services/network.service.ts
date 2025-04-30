@@ -20,6 +20,8 @@ import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { filter, map } from "rxjs";
+import { LibraryService } from "./library.service";
+import { ModelsService } from "./models.service";
 
 /**
  * Clase que permite gestionar la red de dispositivos.
@@ -47,14 +49,17 @@ export class NetworkService {
      * Constructor del servicio de gestión de la red de dispositivos.
      *
      * @param navigationRouter Servicio de navegación de la aplicación
-     * @param config Servicio de configuración de la aplicación
      * @param dialog Servicio de diálogos de la aplicación
+     * @param config Servicio de configuración de la aplicación
+     * @param state Servicio de estado de la aplicación
      */
     public constructor(
         public readonly navigationRouter: NavigationRouter,
         public readonly dialog: HlmDialogService,
         public readonly config: ConfigService,
         public readonly state: StateService,
+        _: ModelsService,
+        __: LibraryService,
     ) {
         // Obtener el nodo seleccionado
         this.focusedNode = toSignal(
@@ -77,7 +82,7 @@ export class NetworkService {
         if (this.focusedNode()) this.navigationRouter.navigate([""]);
         // Guardar el estado de la red de dispositivos
         this.state.reset(false);
-        toast.success("Proyecto creado correctamente.");
+        toast.success(this.config.translate.instant("PROJECT_CREATED"));
     }
 
     /**
@@ -85,7 +90,7 @@ export class NetworkService {
      */
     public loadFromFile(): void {
         toast.promise(ConfigService.openFile(".yaml"), {
-            loading: "Importando proyecto...",
+            loading: this.config.translate.instant("PROJECT_IMPORTING"),
             success: (data: string) => {
                 this._network.fromObject(load(data));
                 // Comprobar si hay un nodo seleccionado
@@ -97,9 +102,9 @@ export class NetworkService {
                 // Guardar el estado de la red de dispositivos
                 this.state.reset(false);
                 this.state.setState(this._network.toObject(), false);
-                return "Proyecto importado correctamente.";
+                return this.config.translate.instant("PROJECT_IMPORTED");
             },
-            error: () => "No se ha podido importar el proyecto.",
+            error: () => this.config.translate.instant("PROJECT_NOT_IMPORTED"),
         });
     }
 
@@ -128,13 +133,14 @@ export class NetworkService {
                 ConfigService.saveFile(name, content, type),
             ),
             {
-                loading: "Exportando proyecto...",
+                loading: this.config.translate.instant("PROJECT_EXPORTING"),
                 success: () => {
                     // Guardar el estado de la red de dispositivos
                     this.state.replaceState(this._network.toObject(), false);
-                    return "Proyecto exportado correctamente.";
+                    return this.config.translate.instant("PROJECT_EXPORTED");
                 },
-                error: () => "No se ha podido exportar el proyecto.",
+                error: () =>
+                    this.config.translate.instant("PROJECT_NOT_EXPORTED"),
             },
         );
     }
@@ -156,7 +162,7 @@ export class NetworkService {
                     ? NodeType.RouterTypes.some((t) => type.includes(t))
                     : NodeType.RouterTypes.includes(type as NodeType))
             ) {
-                toast.error("No se puede agregar más de un router a la red.");
+                toast.error(this.config.translate.instant("ROUTER_EXISTS"));
                 return reject();
             }
 
@@ -177,7 +183,9 @@ export class NetworkService {
                     // Guardar el estado de la red de dispositivos
                     this.state.setState(this._network.toObject(), false);
                     toast.success(
-                        `Se ha añadido ${context.name} correctamente.`,
+                        this.config.translate.instant("NODE_ADDED", {
+                            name: context.name,
+                        }),
                     );
                     return resolve(true);
                 });
@@ -195,7 +203,9 @@ export class NetworkService {
 
             if (!node) {
                 toast.error(
-                    "No existe un nodo con la dirección MAC especificada.",
+                    this.config.translate.instant("NODE_NOT_FOUND", {
+                        name: mac,
+                    }),
                 );
                 return reject();
             }
@@ -214,7 +224,9 @@ export class NetworkService {
                     // Guardar el estado de la red de dispositivos
                     this.state.setState(this._network.toObject(), false);
                     toast.success(
-                        `Se ha eliminado ${context.node.name} correctamente.`,
+                        this.config.translate.instant("NODE_DELETED", {
+                            name: context.node.name,
+                        }),
                     );
                     return resolve(true);
                 });

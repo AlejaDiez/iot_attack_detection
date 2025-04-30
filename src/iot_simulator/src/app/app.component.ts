@@ -22,6 +22,7 @@ import {
     lucideSettings,
     lucideTrash,
 } from "@ng-icons/lucide";
+import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
 import { LibraryService } from "@services/library.service";
 import { ModelsService } from "@services/models.service";
@@ -60,6 +61,7 @@ export class BlankComponent {}
         MenuBarComponent,
         NodeComponent,
         NgIcon,
+        TranslateModule
     ],
     providers: [
         provideIcons({

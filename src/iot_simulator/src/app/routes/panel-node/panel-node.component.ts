@@ -10,6 +10,7 @@ import { HlmDialogCloseDirective } from "@components/ui/ui-dialog-helm/src";
 import { Node, NodeType } from "@models/node";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideGhost, lucideX } from "@ng-icons/lucide";
+import { TranslateModule } from "@ngx-translate/core";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmCardDirective, HlmCardModule } from "@spartan-ng/ui-card-helm";
 import { fadeAnimation } from "../../app.routes.transition";
@@ -22,6 +23,7 @@ import { fadeAnimation } from "../../app.routes.transition";
         HlmDialogCloseDirective,
         NgIcon,
         RouterModule,
+        TranslateModule,
     ],
     providers: [provideIcons({ lucideGhost, lucideX })],
     templateUrl: "panel-node.component.html",

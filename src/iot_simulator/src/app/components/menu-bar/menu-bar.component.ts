@@ -3,10 +3,10 @@ import {
     inject,
     output,
     OutputEmitterRef,
-    signal,
     Signal,
-    WritableSignal,
+    WritableSignal
 } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
 import { NetworkService } from "@services/network.service";
 import { StateService } from "@services/state.service";
@@ -28,6 +28,7 @@ import {
 @Component({
     selector: "app-menu-bar",
     imports: [
+        TranslateModule,
         BrnMenuTriggerDirective,
         HlmMenuComponent,
         HlmMenuBarComponent,
@@ -65,7 +66,7 @@ export class MenuBarComponent {
     protected get canInsertRouter(): boolean {
         return !this.network.router;
     }
-    protected readonly language: WritableSignal<string> = signal("es");
+    protected readonly language: WritableSignal<string> = this.config.language;
     protected readonly showGrid: Signal<boolean> = this.config.grid;
     protected readonly onCenter: OutputEmitterRef<void> = output();
     protected readonly onResetZoom: OutputEmitterRef<void> = output();

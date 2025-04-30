@@ -32,25 +32,25 @@
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="source" class="w-28">
-                <hlm-th *brnHeaderDef>Origen</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "SOURCE" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.srcIP }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="destination" class="w-28">
-                <hlm-th *brnHeaderDef>Destino</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "DESTINATION" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.dstIP }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="size" class="w-[86px]">
-                <hlm-th *brnHeaderDef>Bytes</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "BYTES" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item" class="justify-center">
                     {{ item.totalBytes }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="data" class="w-56">
-                <hlm-th *brnHeaderDef>Dato</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "DATA" | translate }}</hlm-th>
                 <hlm-td truncate *brnCellDef="let item">
                     {{ item.payload }}
                 </hlm-td>
@@ -63,9 +63,7 @@
             class="mb-8 mt-4 self-center text-secondary" />
         <p
             class="mb-4 w-96 self-center text-center text-sm text-muted-foreground">
-            No hay tráfico disponible. Espera a que llegue el tráfico de otro
-            dispositivo o puedes ejecutar un comando para enviar tráfico a otro
-            dispositivo.
+            {{ "NO_TRAFFIC" | translate }}
         </p>
     }
     <form
@@ -73,10 +71,10 @@
         (submit)="execute()"
         class="flex w-[584px] flex-row items-center justify-end gap-2">
         <label hlmLabel class="w-40">
-            Comando
+            {{ "COMMAND" | translate }}
             <brn-select
                 class="!mt-2 inline-block w-full"
-                placeholder="Comando a ejecutar"
+                [placeholder]="'SELECT_COMMAND' | translate"
                 formControlName="command">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
@@ -92,17 +90,19 @@
                         }
                     } @empty {
                         <hlm-option disabled class="px-2">
-                            No hay comandos disponibles
+                            {{ "NO_COMMANDS" | translate }}
                         </hlm-option>
                     }
                 </hlm-select-content>
             </brn-select>
         </label>
         <label hlmLabel class="grow">
-            {{ multiple() ? "Objetivos" : "Objetivo" }}
+            {{ (multiple() ? "TARGETS" : "TARGET") | translate }}
             <brn-select
                 class="!mt-2 inline-block w-full"
-                [placeholder]="multiple() ? 'IPs objetivo' : 'IP objetivo'"
+                [placeholder]="
+                    (multiple() ? 'TARGETS_IP' : 'TARGET_IP') | translate
+                "
                 formControlName="target"
                 [multiple]="multiple()">
                 <hlm-select-trigger class="w-full">
@@ -116,7 +116,7 @@
             </brn-select>
         </label>
         <button hlmBtn [disabled]="form.invalid" class="self-end">
-            Ejecutar
+            {{ "LAUNCH_COMMAND" | translate }}
         </button>
     </form>
 } @else {
@@ -126,8 +126,7 @@
             size="6rem"
             class="mb-8 mt-4 self-center text-secondary" />
         <p class="w-96 self-center text-center text-sm text-muted-foreground">
-            No tienes dispositivos conectados. Espera a que algún dispositivo se
-            conecte para poder enviar y recibir datos.
+            {{ "NO_CONNECTED_DEVICES" | translate }}
         </p>
     } @else {
         <ng-icon
@@ -135,11 +134,10 @@
             size="6rem"
             class="mb-8 mt-4 self-center text-secondary" />
         <p class="w-96 self-center text-center text-sm text-muted-foreground">
-            No estas conectado a ningún router. Para poder enviar y recibir
-            datos, debes estar conectado a un router.
+            {{ "NO_ROUTER" | translate }}
         </p>
         <button hlmBtn (click)="connect()" [disabled]="!canConnect">
-            Conectar
+            {{ "CONNECT" | translate }}
         </button>
     }
 }

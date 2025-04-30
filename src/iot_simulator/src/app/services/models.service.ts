@@ -11,7 +11,11 @@ import { BehaviorSubject, Observable } from "rxjs";
 @Injectable()
 export class ModelsService {
     /** Instancia única de la clase. */
-    public static readonly instance: ModelsService = new ModelsService();
+    private static _instance: ModelsService;
+    /** Instancia única de la clase. */
+    public static get instance(): ModelsService {
+        return ModelsService._instance;
+    }
     /** Modelos cargados. */
     private _models?: TensorflowModels;
     /** Observable para emitir los modelos cargados. */
@@ -28,11 +32,20 @@ export class ModelsService {
     }
 
     /** Constructor privado para evitar instanciación externa */
-    private constructor() {
+    private constructor(readonly config: ConfigService) {
         // TODO: Cargar los modelos desde el localStorage
         this._modelsSubject = new BehaviorSubject<TensorflowModels | undefined>(
             this._models,
         );
+    }
+
+    /**
+     * Método estático para inicializar la clase.
+     */
+    public static init(config: ConfigService): ModelsService {
+        if (!ModelsService.instance)
+            ModelsService._instance = new ModelsService(config);
+        return ModelsService.instance;
     }
 
     /**
@@ -67,13 +80,14 @@ export class ModelsService {
         toast.promise(
             ConfigService.openFile(".json,.bin", true).then(this._load),
             {
-                loading: "Importando modelos...",
+                loading: this.config.translate.instant("MODELS_LOADING"),
                 success: (models?: TensorflowModels) => {
                     this._models = models;
                     this._modelsSubject.next(this._models);
-                    return "Modelos importados correctamente.";
+                    return this.config.translate.instant("MODELS_LOADED");
                 },
-                error: (err) => "No se ha podido importar los modelos.",
+                error: (err) =>
+                    this.config.translate.instant("MODELS_NOT_LOADED"),
             },
         );
     }

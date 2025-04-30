@@ -3,6 +3,8 @@ import { Component, inject, input, InputSignal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HlmButtonModule } from "@components/ui/ui-button-helm/src";
 import { Node, NodeType } from "@models/node";
+import { TranslateModule } from "@ngx-translate/core";
+import { ConfigService } from "@services/config.service";
 import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmInputModule } from "@spartan-ng/ui-input-helm";
@@ -20,11 +22,13 @@ import { HlmSwitchModule } from "@spartan-ng/ui-switch-helm";
         HlmLabelModule,
         HlmSelectModule,
         HlmSwitchModule,
+        TranslateModule,
     ],
     templateUrl: "configuration.component.html",
     host: { class: "flex flex-col gap-4" },
 })
 export class ConfigurationComponent {
+    public readonly config: ConfigService = inject(ConfigService);
     public readonly network: NetworkService = inject(NetworkService);
     public readonly NodeType: typeof NodeType = NodeType;
     protected readonly node: InputSignal<Node> = input.required<Node>();

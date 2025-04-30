@@ -1,10 +1,10 @@
 @if (node().connected) {
     <form [formGroup]="form" (submit)="attack()" class="contents">
         <label hlmLabel>
-            Ataque
+            {{ "ATTACK" | translate }}
             <brn-select
                 class="!mt-2 inline-block w-full"
-                placeholder="Ataque a lanzar"
+                [placeholder]="'SELECT_ATTACK' | translate"
                 formControlName="attack">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
@@ -20,17 +20,19 @@
                         }
                     } @empty {
                         <hlm-option disabled class="px-2">
-                            No hay ataques disponibles
+                            {{ "NO_ATTACKS" | translate }}
                         </hlm-option>
                     }
                 </hlm-select-content>
             </brn-select>
         </label>
         <label hlmLabel>
-            {{ multiple() ? "Objetivos" : "Objetivo" }}
+            {{ (multiple() ? "TARGETS" : "TARGET") | translate }}
             <brn-select
                 class="!mt-2 inline-block w-full"
-                [placeholder]="multiple() ? 'IPs objetivo' : 'IP objetivo'"
+                [placeholder]="
+                    (multiple() ? 'TARGETS_IP' : 'TARGET_IP') | translate
+                "
                 formControlName="target"
                 [multiple]="multiple()">
                 <hlm-select-trigger class="w-full">
@@ -43,7 +45,9 @@
                 </hlm-select-content>
             </brn-select>
         </label>
-        <button hlmBtn [disabled]="form.invalid">Atacar</button>
+        <button hlmBtn [disabled]="form.invalid">
+            {{ "LAUNCH_ATTACK" | translate }}
+        </button>
     </form>
 } @else {
     <ng-icon
@@ -51,7 +55,6 @@
         size="6rem"
         class="mb-8 mt-4 self-center text-secondary" />
     <p class="w-96 self-center text-center text-sm text-muted-foreground">
-        No estás conectado a ninguna red, por lo que no puedes enviar ataques.
-        Para poder enviar ataques, debes estar conectado a una red.
+        {{ "ATTACKER_NOT_CONNECTED" | translate }}
     </p>
 }

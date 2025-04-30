@@ -6,6 +6,7 @@ import {
     Validators,
 } from "@angular/forms";
 import { NodeType } from "@models/node";
+import { TranslateModule } from "@ngx-translate/core";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
 import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
@@ -35,21 +36,26 @@ export interface AddNodeDialogContext {
         HlmInputDirective,
         HlmLabelDirective,
         HlmSelectModule,
+        TranslateModule,
     ],
     template: `
         <hlm-dialog-header class="w-96">
-            <h3 hlmDialogTitle>Añadir un nuevo nodo</h3>
+            <h3 hlmDialogTitle>{{ "ADD_NODE" | translate }}</h3>
         </hlm-dialog-header>
         <form [formGroup]="form" (submit)="submit()">
             <div class="grid gap-4 py-4">
                 <div class="grid grid-cols-4 items-center gap-4">
-                    <label hlmLabel class="text-right">Nombre</label>
+                    <label hlmLabel class="text-right">{{
+                        "NAME" | translate
+                    }}</label>
                     <input hlmInput formControlName="name" class="col-span-3" />
                 </div>
                 <div class="grid grid-cols-4 items-center gap-4">
-                    <label hlmLabel class="text-right">Tipo</label>
+                    <label hlmLabel class="text-right">{{
+                        "TYPE" | translate
+                    }}</label>
                     <brn-select
-                        placeholder="Selecciona un tipo"
+                        [placeholder]="'SELECT_DEVICE_TYPE' | translate"
                         formControlName="type"
                         class="col-span-3 inline-block">
                         <hlm-select-trigger class="w-full">
@@ -58,7 +64,7 @@ export interface AddNodeDialogContext {
                         <hlm-select-content>
                             @for (item of type(); track $index) {
                                 <hlm-option [value]="item">{{
-                                    NodeType.toString(item)
+                                    NodeType.toString(item) | translate
                                 }}</hlm-option>
                             }
                         </hlm-select-content>
@@ -66,7 +72,9 @@ export interface AddNodeDialogContext {
                 </div>
             </div>
             <hlm-dialog-footer>
-                <button hlmBtn [disabled]="form.invalid">Añadir</button>
+                <button hlmBtn [disabled]="form.invalid">
+                    {{ "ADD" | translate }}
+                </button>
             </hlm-dialog-footer>
         </form>
     `,

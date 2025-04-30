@@ -38,7 +38,7 @@ export class FlowGenerator {
     public get externalCommands(): Readonly<Commands> {
         return [...this._externalCommands];
     }
-    
+
     /**
      * Crea un generador de flujos de red.
      *

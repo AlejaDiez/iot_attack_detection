@@ -1,39 +1,45 @@
 <label hlmLabel>
-    Nombre
+    {{ "NAME" | translate }}
     <input
         hlmInput
         type="text"
         [(ngModel)]="node().name"
-        placeholder="Nombre del dispositivo"
+        [placeholder]="'DEVICE_NAME' | translate"
         class="!mt-2 w-full" />
 </label>
 <label hlmLabel>
-    IP
+    {{ "IP" | translate }}
     <input
         hlmInput
         type="text"
         [ngModel]="node().ip"
-        placeholder="IP del dispositivo"
+        [placeholder]="'DEVICE_IP' | translate"
         disabled
         class="!mt-2 w-full" />
 </label>
 <label hlmLabel>
-    Tipo
+    {{ "TYPE" | translate }}
     <brn-select
         [(ngModel)]="node().type"
-        placeholder="Selecciona un tipo"
+        [placeholder]="'SELECT_DEVICE_TYPE' | translate"
         [disabled]="NodeType.getTypes(node().type).length <= 1"
         class="!mt-2 inline-block w-full">
         <hlm-select-trigger class="w-full">
-            <hlm-select-value />
+            <hlm-select-value>
+                <ng-container *brnSelectValue="let item">
+                    {{ NodeType.toString(item) | translate }}
+                </ng-container>
+            </hlm-select-value>
         </hlm-select-trigger>
         <hlm-select-content>
             @for (item of NodeType.getTypes(node().type); track $index) {
-                <hlm-option [value]="item">{{
-                    NodeType.toString(item)
-                }}</hlm-option>
+                <hlm-option [value]="item">
+                    {{ config.translate.instant(NodeType.toString(item)) }}
+                </hlm-option>
             }
         </hlm-select-content>
     </brn-select>
 </label>
-<button hlmBtn variant="destructive" (click)="delete()">Eliminar</button>
+<button hlmBtn variant="destructive" (click)="delete()">
+    {{ "DELETE" | translate }}
+</button>

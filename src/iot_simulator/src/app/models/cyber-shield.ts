@@ -67,7 +67,6 @@ export class CyberShield {
     }
     /** Modelo que se esta usando. */
     public set model(model: string | undefined) {
-        console.log("Setting model", model);
         if (model && this._models) this._model = this._models[model];
         else this._model = undefined;
     }

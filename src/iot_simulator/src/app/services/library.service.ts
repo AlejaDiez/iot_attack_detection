@@ -10,7 +10,11 @@ import { BehaviorSubject, Observable } from "rxjs";
 @Injectable()
 export class LibraryService {
     /** Instancia única de la clase. */
-    public static readonly instance: LibraryService = new LibraryService();
+    private static _instance: LibraryService;
+    /** Instancia única de la clase. */
+    public static get instance(): LibraryService {
+        return LibraryService._instance;
+    }
     /** Bibliotecas almacenada. */
     private _library?: Function = undefined;
     /** Biblioteca almacenada. */
@@ -28,10 +32,19 @@ export class LibraryService {
     /**
      * Constructor del gestor de bibliotecas.
      */
-    private constructor() {
+    private constructor(readonly config: ConfigService) {
         const script = localStorage.getItem("script");
 
         if (script) this._load(script);
+    }
+
+    /**
+     * Método estático para inicializar la clase.
+     */
+    public static init(config: ConfigService): LibraryService {
+        if (!LibraryService.instance)
+            LibraryService._instance = new LibraryService(config);
+        return LibraryService.instance;
     }
 
     /**
@@ -50,12 +63,12 @@ export class LibraryService {
      */
     public loadFromFile(): void {
         toast.promise(ConfigService.openFile(".js"), {
-            loading: "Importando biblioteca...",
+            loading: this.config.translate.instant("LIBRARY_LOADING"),
             success: (script: string) => {
                 this._load(script);
-                return "Biblioteca importada correctamente.";
+                return this.config.translate.instant("LIBRARY_LOADED");
             },
-            error: () => "No se ha podido importar la biblioteca.",
+            error: () => this.config.translate.instant("LIBRARY_NOT_LOADED"),
         });
     }
 }

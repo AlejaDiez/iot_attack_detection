@@ -1,6 +1,6 @@
-import { Component, computed, input } from '@angular/core';
-import { hlm } from '@spartan-ng/brain/core';
-import type { ClassValue } from 'clsx';
+import { Component, computed, input } from "@angular/core";
+import { hlm } from "@spartan-ng/brain/core";
+import type { ClassValue } from "clsx";
 
 @Component({
     selector: "hlm-sheet-header",

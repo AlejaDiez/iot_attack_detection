@@ -10,7 +10,11 @@ const MAX_STATES = 40;
 @Injectable()
 export class StateService {
     /** Instancia única de la clase. */
-    public static readonly instance: StateService = new StateService();
+    private static _instance: StateService;
+    /** Instancia única de la clase. */
+    public static get instance(): StateService {
+        return StateService._instance;
+    }
     /** Anotación para usar el gestor de estados en una clase. */
     public static readonly UseState = <T extends { new (...args: any[]): {} }>(
         constructor: T,
@@ -48,13 +52,11 @@ export class StateService {
             descriptor.value = function (...args: any[]) {
                 const result = value.apply(this, args);
 
-                console.log("setState", propertyKey);
                 StateService.instance._requestStateSubject.next();
                 return result;
             };
         else if (set)
             descriptor.set = function (value: any) {
-                console.log("setState", propertyKey);
                 set.apply(this, [value]);
                 StateService.instance._requestStateSubject.next();
             };
@@ -104,6 +106,14 @@ export class StateService {
         this._stateSubject = new BehaviorSubject<any>(
             this._states[this._index],
         );
+    }
+
+    /**
+     * Método estático para inicializar la clase.
+     */
+    public static init(): StateService {
+        if (!StateService.instance) StateService._instance = new StateService();
+        return StateService.instance;
     }
 
     /**
