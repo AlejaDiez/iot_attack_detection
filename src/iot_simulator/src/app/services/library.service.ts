@@ -71,4 +71,14 @@ export class LibraryService {
             error: () => this.config.translate.instant("LIBRARY_NOT_LOADED"),
         });
     }
+
+    /**
+     * Elimina la biblioteca externa cargada.
+     */
+    public deleteFile(): void {
+        localStorage.removeItem("script");
+        this._library = undefined;
+        this._librarySubject.next(this._library);
+        toast.success(this.config.translate.instant("LIBRARY_DELETED"));
+    }
 }

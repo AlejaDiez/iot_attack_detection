@@ -2,8 +2,12 @@
     "FILE": "Archivo",
     "NEW_FILE": "Nuevo archivo...",
     "OPEN": "Abrir...",
+    "EXTERNAL_LIBRARY": "Biblioteca externa",
     "IMPORT_EXTERNAL_LIBRARY": "Importar biblioteca externa",
+    "DELETE_EXTERNAL_LIBRARY": "Eliminar biblioteca externa",
+    "MODELS": "Modelos",
     "IMPORT_MODELS": "Importar modelos",
+    "DELETE_MODELS": "Eliminar modelos",
     "SAVE": "Guardar",
     "EDIT": "Editar",
     "UNDO": "Deshacer",
@@ -79,7 +83,9 @@
     "MODELS_LOADING": "Cargando modelos...",
     "MODELS_LOADED": "Modelos cargados correctamente.",
     "MODELS_NOT_LOADED": "No se han podido cargar los modelos.",
+    "MODELS_DELETED": "Se han eliminado los modelos correctamente.",
     "LIBRARY_LOADING": "Cargando biblioteca...",
     "LIBRARY_LOADED": "Biblioteca cargada correctamente.",
-    "LIBRARY_NOT_LOADED": "No se ha podido cargar la biblioteca."
+    "LIBRARY_NOT_LOADED": "No se ha podido cargar la biblioteca.",
+    "LIBRARY_DELETED": "Se ha eliminado la biblioteca correctamente."
 }

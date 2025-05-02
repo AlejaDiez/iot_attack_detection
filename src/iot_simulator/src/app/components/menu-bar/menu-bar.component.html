@@ -27,12 +27,26 @@
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
-                {{ "IMPORT_EXTERNAL_LIBRARY" | translate }}
-            </button>
-            <button hlmMenuItem (click)="handleOnLoadModels()">
-                {{ "IMPORT_MODELS" | translate }}
-            </button>
+            @if (externalLibrary()) {
+                <button hlmMenuItem [brnMenuTriggerFor]="librarySubmenu">
+                    {{ "EXTERNAL_LIBRARY" | translate }}
+                    <hlm-menu-item-sub-indicator />
+                </button>
+            } @else {
+                <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
+                    {{ "IMPORT_EXTERNAL_LIBRARY" | translate }}
+                </button>
+            }
+            @if (models()) {
+                <button hlmMenuItem [brnMenuTriggerFor]="modelsSubmenu">
+                    {{ "MODELS" | translate }}
+                    <hlm-menu-item-sub-indicator />
+                </button>
+            } @else {
+                <button hlmMenuItem (click)="handleOnLoadModels()">
+                    {{ "IMPORT_MODELS" | translate }}
+                </button>
+            }
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
@@ -42,6 +56,28 @@
             </button>
         </hlm-menu-group>
     </hlm-menu>
+</ng-template>
+
+<ng-template #librarySubmenu>
+    <hlm-sub-menu>
+        <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
+            {{ "IMPORT_EXTERNAL_LIBRARY" | translate }}
+        </button>
+        <button hlmMenuItem (click)="handleOnDeleteExternalLibrary()">
+            {{ "DELETE_EXTERNAL_LIBRARY" | translate }}
+        </button>
+    </hlm-sub-menu>
+</ng-template>
+
+<ng-template #modelsSubmenu>
+    <hlm-sub-menu>
+        <button hlmMenuItem (click)="handleOnLoadModels()">
+            {{ "IMPORT_MODELS" | translate }}
+        </button>
+        <button hlmMenuItem (click)="handleOnDeleteModels()">
+            {{ "DELETE_MODELS" | translate }}
+        </button>
+    </hlm-sub-menu>
 </ng-template>
 
 <ng-template #edit>

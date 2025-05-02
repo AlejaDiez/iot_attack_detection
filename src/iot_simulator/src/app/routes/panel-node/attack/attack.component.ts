@@ -87,8 +87,8 @@ export class AttackComponent {
                 (this.node().generator as PhantomAttacker).dos(
                     target,
                     53,
-                    100,
                     [32, 128],
+                    200,
                 );
                 break;
             default:

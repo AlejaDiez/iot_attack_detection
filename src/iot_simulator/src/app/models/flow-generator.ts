@@ -1,5 +1,6 @@
 import { Node } from "@models/node";
 import { paramsCount } from "@utils/parse_script";
+import { FlowInterceptor } from "./flow-interceptor";
 import { Packet } from "./packet";
 
 /**
@@ -31,6 +32,11 @@ export class FlowGenerator {
             name: "Ping",
             multiple: false,
         },
+        {
+            id: "threeWayHandshake",
+            name: "Three-Way Handshake",
+            multiple: false,
+        },
     ];
     /** Comandos externos que se pueden realizar */
     private _externalCommands: Commands = [];
@@ -44,7 +50,10 @@ export class FlowGenerator {
      *
      * @param node Nodo de red.
      */
-    public constructor(protected readonly node: Node) {}
+    public constructor(
+        protected readonly node: Node,
+        private readonly interceptor: FlowInterceptor,
+    ) {}
 
     /**
      * Realiza un ping a una dirección IP.
@@ -52,7 +61,25 @@ export class FlowGenerator {
      * @param dstIP Dirección IP de destino.
      */
     public ping(dstIP: string): void {
-        this.node.sendPacket(Packet.ICMPEchoRequest(this.node.ip ?? "", dstIP));
+        this.node.sendPacket(Packet.ICMPEchoRequest(this.node.ip!, dstIP));
+    }
+
+    /**
+     * Realiza un handshake de tres vías.
+     *
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Dirección IP de destino.
+     * @param dstPort Puerto de destino.
+     * @returns void
+     */
+    public threeWayHandshake(
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+    ): void {
+        this.node.sendPacket(
+            Packet.TCPSYN(this.node.ip!, dstIP, srcPort, dstPort),
+        );
     }
 
     /**
@@ -63,6 +90,7 @@ export class FlowGenerator {
     public loadLibrary(library: any | undefined): void {
         if (!library) {
             this.library = undefined;
+            this._externalCommands = [];
             return;
         }
 

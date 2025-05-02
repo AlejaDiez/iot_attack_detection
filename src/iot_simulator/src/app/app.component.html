@@ -1,8 +1,12 @@
 <app-menu-bar
     (onNewFile)="onNewFile()"
     (onOpenFile)="onOpenFile()"
+    [externalLibrary]="library.library !== undefined"
     (onLoadExternalLibrary)="onLoadExternalLibrary()"
+    (onDeleteExternalLibrary)="onDeleteExternalLibrary()"
+    [models]="model.models !== undefined"
     (onLoadModels)="onLoadModels()"
+    (onDeleteModels)="onDeleteModels()"
     (onSaveFile)="onSaveFile()"
     (onUndo)="onUndo()"
     (onRedo)="onRedo()"

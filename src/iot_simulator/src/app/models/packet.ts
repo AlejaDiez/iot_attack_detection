@@ -95,6 +95,10 @@ export enum TCPFlags {
 export interface TCPPacket extends Packet {
     /* Bandera TCP */
     tcpFlags: number;
+    /* Número de secuencia */
+    sequence: number;
+    /* Número de acuse de recibo */
+    ack: number;
 }
 
 /**
@@ -169,6 +173,131 @@ export namespace Packet {
             sequence,
         };
     };
+
+    /**
+     * Crea un paquete TCP.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @param sequence Número de secuencia.
+     * @param ack Número de acuse de recibo.
+     * @param tcpFlags Banderas TCP.
+     * @param payload Datos del paquete.
+     * @returns Paquete TCP.
+     */
+    export const TCP = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        sequence: number,
+        ack: number,
+        tcpFlags: number,
+        payload: string = "",
+    ): TCPPacket => {
+        const headerSize = 20;
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        return {
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            transportProtocol: TransportProtocol.TCP,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+            sequence,
+            ack,
+            tcpFlags,
+        };
+    };
+
+    /**
+     * Crea un paquete TCP SYN.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @returns Paquete TCP SYN.
+     */
+    export const TCPSYN = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+    ): TCPPacket =>
+        TCP(
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            Math.floor(Math.random() * 1000),
+            0,
+            TCPFlags.SYN,
+        );
+
+    /**
+     * Crea un paquete TCP SYN-ACK.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @param sequence Número de secuencia del paquete SYN.
+     * @returns Paquete TCP SYN-ACK.
+     **/
+    export const TCPSYNACK = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        sequence: number,
+    ): TCPPacket =>
+        TCP(
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            Math.floor(Math.random() * 1000),
+            sequence + 1,
+            TCPFlags.SYN | TCPFlags.ACK,
+        );
+
+    /**
+     * Crea un paquete TCP ACK.
+     *
+     * @param srcIP Dirección IP de origen.
+     * @param dstIP Dirección IP de destino.
+     * @param srcPort Puerto de origen.
+     * @param dstPort Puerto de destino.
+     * @param sequence Número de secuencia del paquete SYN-ACK.
+     * @param ack Número de acuse de recibo del paquete SYN-ACK.
+     * @returns Paquete TCP ACK.
+     **/
+    export const TCPACK = (
+        srcIP: string,
+        dstIP: string,
+        srcPort: number,
+        dstPort: number,
+        sequence: number,
+        ack: number,
+    ): TCPPacket =>
+        TCP(
+            srcIP,
+            dstIP,
+            srcPort,
+            dstPort,
+            ack + 1,
+            sequence + 1,
+            TCPFlags.ACK,
+        );
 
     /**
      * Crea un paquete UDP.

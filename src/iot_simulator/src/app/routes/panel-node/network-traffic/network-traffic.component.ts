@@ -122,6 +122,9 @@ export class NetworkTrafficComponent {
             case "ping":
                 this.node().generator.ping(target);
                 break;
+            case "threeWayHandshake":
+                this.node().generator.threeWayHandshake(target, 80, 80);
+                break;
             default:
                 this.node().generator.execute(
                     command,

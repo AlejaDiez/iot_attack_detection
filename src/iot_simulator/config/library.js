@@ -41,11 +41,14 @@ function hiddenFunction(...args) {
  * @param {number} packet.identifier - ICMP message identifier
  * @param {number} packet.sequence - ICMP message sequence number
  * @param {number} packet.tcpFlags - TCP flags (FIN = 1, SYN = 2, RST = 4, PSH = 8, ACK = 16, URG = 32)
- * @return {void}
+ * @return {void} - If you don't want to run the default interceptor of the simulator, return null or other value
  */
 function intcp(self, packet) {
     // Hey there is a packet here!
     // You can modify or log the packet before sending it to the target
+    
+    // If you don't want to run the default interceptor of the simulator, you can return null or other value
+    // return null;
 }
 
 /**

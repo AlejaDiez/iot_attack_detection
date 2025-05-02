@@ -91,4 +91,13 @@ export class ModelsService {
             },
         );
     }
+
+    /**
+     * Elimina los modelos cargados.
+     */
+    public deleteFile(): void {
+        this._models = undefined;
+        this._modelsSubject.next(this._models);
+        toast.success(this.config.translate.instant("MODELS_DELETED"));
+    }
 }

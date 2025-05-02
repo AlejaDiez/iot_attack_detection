@@ -3,15 +3,25 @@ import {
     ICMPPacket,
     ICMPType,
     Packet,
+    TCPFlags,
+    TCPPacket,
     TransportProtocol,
 } from "@models/packet";
+import { BehaviorSubject, Observable } from "rxjs";
 
 /**
  * Interceptor de flujo.
  */
 export class FlowInterceptor {
+    /** Observable para emitir los paquetes interceptados. */
+    private readonly _intercept: BehaviorSubject<Packet | null> =
+        new BehaviorSubject<Packet | null>(null);
+    /** Observable para emitir los paquetes interceptados. */
+    public get intercept$(): Observable<Packet | null> {
+        return this._intercept;
+    }
     /** Interceptor externo */
-    private _externalInterceptor?: (packet: Packet) => void;
+    private _externalInterceptor?: (packet: Packet) => any;
 
     /**
      * Crea un generador de flujos de red.
@@ -43,21 +53,59 @@ export class FlowInterceptor {
     }
 
     /**
+     * Itercepta un paquete TCP y realiza una acción en caso de ser necesario.
+     *
+     * @param packet Paquete TCP.
+     */
+    private _interceptTCP(packet: TCPPacket): void {
+        switch (packet.tcpFlags) {
+            case TCPFlags.SYN:
+                this.node.sendPacket(
+                    Packet.TCPSYNACK(
+                        this.node.ip!,
+                        packet.srcIP,
+                        packet.dstPort!,
+                        packet.srcPort!,
+                        packet.sequence,
+                    ),
+                );
+                break;
+            case TCPFlags.SYN | TCPFlags.ACK:
+                this.node.sendPacket(
+                    Packet.TCPACK(
+                        this.node.ip!,
+                        packet.srcIP,
+                        packet.dstPort!,
+                        packet.srcPort!,
+                        packet.sequence,
+                        packet.ack,
+                    ),
+                );
+                break;
+            case TCPFlags.ACK:
+                break;
+        }
+    }
+
+    /**
      * Intercepta un paquete de red y realiza una acción en caso de ser necesario.
      *
      * @param packet Paquete de red.
      */
     public intercept(packet: Packet): void {
+        if (this._externalInterceptor)
+            if (this._externalInterceptor({ ...packet }) !== undefined) return;
+        this._intercept.next({ ...packet });
         switch (packet.transportProtocol) {
             case TransportProtocol.ICMP:
                 this._interceptICMP(packet as ICMPPacket);
                 break;
             case TransportProtocol.TCP:
+                this._interceptTCP(packet as TCPPacket);
                 break;
             case TransportProtocol.UDP:
                 break;
         }
-        if (this._externalInterceptor) this._externalInterceptor({ ...packet });
     }
 
     /**

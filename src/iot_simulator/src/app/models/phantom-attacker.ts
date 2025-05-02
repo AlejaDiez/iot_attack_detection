@@ -1,7 +1,7 @@
 import { Command, FlowGenerator } from "@models/flow-generator";
-import { Packet, UDPPacket } from "@models/packet";
+import { Packet } from "@models/packet";
 import { paramsCount } from "@utils/parse_script";
-import { randomInt, randomString } from "@utils/random";
+import { randomInt } from "@utils/random";
 
 /**
  * Ataque que se puede realizar.
@@ -21,7 +21,7 @@ export class PhantomAttacker extends FlowGenerator {
     public readonly internalAttacks: Attacks = [
         {
             id: "dos",
-            name: "Denegación de servicio (DoS)",
+            name: "Denial of Service (DoS)",
             multiple: false,
         },
     ];
@@ -36,22 +36,35 @@ export class PhantomAttacker extends FlowGenerator {
      * Realiza un ataque de denegación de servicio (DoS) a una dirección IP.
      *
      * @param dstIP Dirección IP de destino.
+     * @param dstPort Puerto de destino.
+     * @param ttlRange Rango de TTL.
+     * @param packetNum Número de paquetes a enviar.
      */
     public dos(
         dstIP: string,
         dstPort: number,
-        packetRate: number,
         ttlRange: [number, number],
+        packetNum: number,
     ): void {
-        for (let i = 0; i < 500; i++) {
-            const packet: UDPPacket = Packet.UDP(
+        // for (let i = 0; i < packetNum; i++) {
+        //     const packet: UDPPacket = Packet.UDP(
+        //         this.node.ip!,
+        //         dstIP,
+        //         randomInt(1024, 65535),
+        //         dstPort,
+        //         randomString(128),
+        //     );
+        //     packet.ttl = randomInt(ttlRange[0], ttlRange[1]);
+        //     this.node.sendPacket(packet);
+        // }
+
+        for (let i = 0; i < packetNum; i++) {
+            const packet = Packet.TCPSYN(
                 this.node.ip!,
                 dstIP,
                 randomInt(1024, 65535),
                 dstPort,
-                randomString(128),
             );
-
             packet.ttl = randomInt(ttlRange[0], ttlRange[1]);
             this.node.sendPacket(packet);
         }
@@ -60,6 +73,7 @@ export class PhantomAttacker extends FlowGenerator {
     public override loadLibrary(library: any | undefined): void {
         if (!library) {
             this.library = undefined;
+            this._externalAttacks = [];
             return;
         }
 

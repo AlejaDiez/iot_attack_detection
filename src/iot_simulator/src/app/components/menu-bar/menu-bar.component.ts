@@ -50,8 +50,13 @@ export class MenuBarComponent {
     public readonly network: NetworkService = inject(NetworkService);
     protected readonly onNewFile: OutputEmitterRef<void> = output();
     protected readonly onOpenFile: OutputEmitterRef<void> = output();
+    public readonly externalLibrary: InputSignal<boolean> = input.required();
     protected readonly onLoadExternalLibrary: OutputEmitterRef<void> = output();
+    protected readonly onDeleteExternalLibrary: OutputEmitterRef<void> =
+        output();
+    public readonly models: InputSignal<boolean> = input.required();
     protected readonly onLoadModels: OutputEmitterRef<void> = output();
+    protected readonly onDeleteModels: OutputEmitterRef<void> = output();
     protected readonly onSaveFile: OutputEmitterRef<void> = output();
     protected readonly onUndo: OutputEmitterRef<void> = output();
     protected get canUndo(): boolean {
@@ -95,8 +100,16 @@ export class MenuBarComponent {
         this.onLoadExternalLibrary.emit();
     }
 
+    protected handleOnDeleteExternalLibrary() {
+        this.onDeleteExternalLibrary.emit();
+    }
+
     protected handleOnLoadModels() {
         this.onLoadModels.emit();
+    }
+
+    protected handleOnDeleteModels() {
+        this.onDeleteModels.emit();
     }
 
     protected handleOnSaveFile() {

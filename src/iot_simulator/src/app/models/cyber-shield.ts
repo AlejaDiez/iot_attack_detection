@@ -212,7 +212,7 @@ export class CyberShield {
             const inputData = dataTransform(closedFlows);
             const scores = predictAttack(this._model!.model, inputData);
 
-            console.log(scores);
+            console.log((scores as number[])[0]);
         }
     }
 

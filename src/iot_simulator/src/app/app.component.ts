@@ -124,9 +124,19 @@ export class AppComponent implements AfterViewInit {
         this.library.loadFromFile();
     }
 
+    protected onDeleteExternalLibrary(event?: Event) {
+        event?.preventDefault();
+        this.library.deleteFile();
+    }
+
     protected onLoadModels(event?: Event) {
         event?.preventDefault();
         this.model.loadFromFile();
+    }
+
+    protected onDeleteModels(event?: Event) {
+        event?.preventDefault();
+        this.library.deleteFile();
     }
 
     @HostListener("document:keydown.meta.s", ["$event"])

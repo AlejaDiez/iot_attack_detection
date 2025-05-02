@@ -142,9 +142,9 @@ export abstract class Node {
         if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
             throw new Error("Cannot change the type of a device to a router");
         if (NodeType.AttackerTypes.includes(value))
-            this._generator = new PhantomAttacker(this);
+            this._generator = new PhantomAttacker(this, this.interceptor);
         else if (this._generator instanceof PhantomAttacker)
-            this._generator = new FlowGenerator(this);
+            this._generator = new FlowGenerator(this, this.interceptor);
         this._generator.loadLibrary(this._library);
         this._type = value;
     }
@@ -193,8 +193,8 @@ export abstract class Node {
         this._type = type;
         this.interceptor = new FlowInterceptor(this);
         this._generator = NodeType.AttackerTypes.includes(type)
-            ? new PhantomAttacker(this)
-            : new FlowGenerator(this);
+            ? new PhantomAttacker(this, this.interceptor)
+            : new FlowGenerator(this, this.interceptor);
         this._traffic = [];
         this._position = {
             x: Math.min(
