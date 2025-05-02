@@ -14,26 +14,39 @@ import { ConfigService } from "@services/config.service";
         <div
             #frame
             class="fixed left-0 top-0 h-screen w-screen cursor-default overflow-scroll">
-            <div class="canvas" [ngClass]="{ grid: showGrid() }">
-                <ng-content></ng-content>
+            <div
+                [ngStyle]="{
+                    width: config.size() * config.zoom() + 'px',
+                    height: config.size() * config.zoom() + 'px',
+                }"
+                class="m-auto flex items-center justify-center overflow-visible">
+                <div
+                    [ngStyle]="{
+                        minWidth: config.size() + 'px',
+                        maxWidth: config.size() + 'px',
+                        minHeight: config.size() + 'px',
+                        maxHeight: config.size() + 'px',
+                        transform: 'scale(' + config.zoom() + ')',
+                    }"
+                    class="relative overflow-hidden transition-transform"
+                    [ngClass]="{ 'grid-view': showGrid() }">
+                    <ng-content></ng-content>
+                </div>
             </div>
         </div>
     `,
     styles: `
-        .canvas {
-            position: relative;
-            width: 4000px;
-            height: 4000px;
-            overflow: hidden;
-        }
-
-        .canvas.grid {
+        .grid-view {
             background-image: radial-gradient(
                 circle,
                 hsl(var(--border)) 1.5px,
                 transparent 1.5px
             );
             background-size: 20px 20px;
+
+            ::ng-deep .high-contrast & {
+                @apply !bg-border;
+            }
         }
     `,
     imports: [CommonModule],

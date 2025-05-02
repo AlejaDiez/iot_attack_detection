@@ -8,7 +8,16 @@
     (onRedo)="onRedo()"
     (onInsertRouter)="onInsertNode(NodeType.RouterTypes)"
     (onInsertDevice)="onInsertNode(NodeType.DeviceTypes)"
+    [language]="config.language()"
+    (onChangeLanguage)="onChangeLanguage($event)"
+    [highContrast]="config.highContrast()"
+    (onHighContrast)="onHighContrast()"
+    [showGrid]="config.grid()"
+    (onShowGrid)="onShowGrid()"
     (onCenter)="onCenter('smooth')"
+    (onZoomReset)="onZoomReset()"
+    (onZoomIn)="onZoomIn()"
+    (onZoomOut)="onZoomOut()"
     class="fixed left-5 top-5 z-inf" />
 <div [@floatAnimation]="getAnimationData(outlet)" class="relative z-inf">
     <router-outlet #outlet="outlet" />

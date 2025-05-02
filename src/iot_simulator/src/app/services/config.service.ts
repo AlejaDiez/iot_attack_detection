@@ -1,5 +1,15 @@
-import { effect, Injectable, signal, WritableSignal } from "@angular/core";
+import {
+    computed,
+    effect,
+    Injectable,
+    Signal,
+    signal,
+    WritableSignal,
+} from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+
+/** Tamaño del canvas. */
+export const CANVAS_SIZE: number = 4000;
 
 /**
  * Clase que permite gestionar la configuración de la aplicación.
@@ -18,6 +28,14 @@ export class ConfigService {
     ];
     /** Visualización de la cuadrícula. */
     public readonly grid: WritableSignal<boolean>;
+    /** Modo de alto contraste. */
+    public readonly highContrast: WritableSignal<boolean> = signal(false);
+    /** El tamaño del canvas. */
+    public readonly size: Signal<number> = computed(() => CANVAS_SIZE);
+    /** Ampliación de la cuadrícula. */
+    public readonly _zoom: WritableSignal<number> = signal(1);
+    /** Ampliación de la cuadrícula. */
+    public readonly zoom: Signal<number> = this._zoom.asReadonly();
 
     public constructor(public readonly translate: TranslateService) {
         // Lenguaje
@@ -37,6 +55,19 @@ export class ConfigService {
             localStorage.getItem("grid") === "false" ? false : true,
         );
         effect(() => localStorage.setItem("grid", this.grid().toString()));
+        // Modo de alto contraste
+        this.highContrast.set(
+            localStorage.getItem("highContrast") === "true" ? true : false,
+        );
+        effect(() =>
+            localStorage.setItem(
+                "highContrast",
+                this.highContrast().toString(),
+            ),
+        );
+        // Ampliación de la cuadrícula
+        this._zoom.set(parseFloat(localStorage.getItem("zoom") ?? "1") ?? 1);
+        effect(() => localStorage.setItem("zoom", this._zoom().toString()));
     }
 
     /**
@@ -102,5 +133,28 @@ export class ConfigService {
         link.click();
         URL.revokeObjectURL(link.href);
         link.remove();
+    }
+
+    /**
+     * Amplia la cuadrícula.
+     */
+    public zoomIn(): void {
+        if (this._zoom() >= 2) return;
+        this._zoom.set(this._zoom() + 0.1);
+    }
+
+    /**
+     * Reduce la cuadrícula.
+     */
+    public zoomOut(): void {
+        if (this._zoom() <= 0.5) return;
+        this._zoom.set(this._zoom() - 0.1);
+    }
+
+    /**
+     * Restablece la ampliación de la cuadrícula.
+     */
+    public resetZoom(): void {
+        this._zoom.set(1);
     }
 }

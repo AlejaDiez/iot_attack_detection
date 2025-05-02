@@ -3,6 +3,7 @@ import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
+import { CANVAS_SIZE } from "@services/config.service";
 import { LibraryService } from "@services/library.service";
 import { StateService } from "@services/state.service";
 
@@ -195,7 +196,16 @@ export abstract class Node {
             ? new PhantomAttacker(this)
             : new FlowGenerator(this);
         this._traffic = [];
-        this._position = { ...position };
+        this._position = {
+            x: Math.min(
+                Math.max(position.x, -CANVAS_SIZE / 2),
+                CANVAS_SIZE / 2,
+            ),
+            y: Math.min(
+                Math.max(position.y, -CANVAS_SIZE / 2),
+                CANVAS_SIZE / 2,
+            ),
+        };
 
         // Cargar biblioteca y obtener cambios
         this.loadLibrary(LibraryService.instance.library);
@@ -286,9 +296,13 @@ export abstract class Node {
             return;
 
         if (relative) {
-            this._position.x += x;
-            this._position.y += y;
-        } else this._position = { x, y };
+            x = this._position.x + x;
+            y = this._position.y + y;
+        }
+        this._position = {
+            x: Math.min(Math.max(x, -CANVAS_SIZE / 2), CANVAS_SIZE / 2),
+            y: Math.min(Math.max(y, -CANVAS_SIZE / 2), CANVAS_SIZE / 2),
+        };
     }
 
     /**

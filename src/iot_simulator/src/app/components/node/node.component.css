@@ -74,6 +74,10 @@
     height: 60px;
     pointer-events: none;
     @apply select-none;
+
+    ::ng-deep .high-contrast & .ip {
+        @apply !text-primary !opacity-100;
+    }
 }
 
 .node-info.dragging {

@@ -2,7 +2,12 @@
     @apply stroke-border stroke-1;
     @apply transition-[stroke-width,stroke-color];
     stroke-linecap: round;
+
+    ::ng-deep .high-contrast & {
+        @apply !stroke-primary;
+    }
 }
+
 
 .connection.animate {
     @apply stroke-primary stroke-2;

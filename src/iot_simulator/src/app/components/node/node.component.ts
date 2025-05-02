@@ -18,6 +18,7 @@ import {
     lucideRouter,
     lucideShield,
 } from "@ng-icons/lucide";
+import { ConfigService } from "@services/config.service";
 import { NetworkService } from "@services/network.service";
 import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 
@@ -39,6 +40,7 @@ import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 })
 export class NodeComponent {
     public readonly router: Router = inject(Router);
+    public readonly config: ConfigService = inject(ConfigService);
     public readonly network: NetworkService = inject(NetworkService);
     public readonly NodeType: typeof NodeType = NodeType;
     public readonly node: InputSignal<Node> = input.required();
@@ -66,7 +68,11 @@ export class NodeComponent {
         }
         if (this.dragging) {
             this.clicked = false;
-            this.node().move(event.movementX, -event.movementY, true);
+            this.node().move(
+                event.movementX / this.config.zoom(),
+                -event.movementY / this.config.zoom(),
+                true,
+            );
         }
     }
 

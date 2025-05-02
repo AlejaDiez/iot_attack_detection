@@ -61,7 +61,7 @@ export class BlankComponent {}
         MenuBarComponent,
         NodeComponent,
         NgIcon,
-        TranslateModule
+        TranslateModule,
     ],
     providers: [
         provideIcons({
@@ -73,6 +73,9 @@ export class BlankComponent {}
     ],
     templateUrl: "app.component.html",
     animations: [floatAnimation],
+    host: {
+        "[class.high-contrast]": "config.highContrast()",
+    },
 })
 export class AppComponent implements AfterViewInit {
     public readonly navigationRouter: NavigationRouter =
@@ -126,7 +129,7 @@ export class AppComponent implements AfterViewInit {
         this.model.loadFromFile();
     }
 
-    @HostListener("document:keydown.meta.shift.s", ["$event"])
+    @HostListener("document:keydown.meta.s", ["$event"])
     protected onSaveFile(event?: Event) {
         event?.preventDefault();
         this.network.saveToFile();
@@ -169,15 +172,31 @@ export class AppComponent implements AfterViewInit {
             const { clientX, clientY } = event;
 
             this.network.addNode(type, {
-                x: clientX - left + scrollLeft - centerX,
-                y: centerY - (clientY - top + scrollTop),
+                x: (clientX - left + scrollLeft - centerX) / this.config.zoom(),
+                y: (centerY - (clientY - top + scrollTop)) / this.config.zoom(),
             });
         } else {
             this.network.addNode(type, {
-                x: width / 2 - left + scrollLeft - centerX,
-                y: centerY - (height / 2 - top + scrollTop),
+                x:
+                    (width / 2 - left + scrollLeft - centerX) /
+                    this.config.zoom(),
+                y:
+                    (centerY - (height / 2 - top + scrollTop)) /
+                    this.config.zoom(),
             });
         }
+    }
+
+    protected onChangeLanguage(lang: string) {
+        this.config.language.set(lang);
+    }
+
+    protected onHighContrast() {
+        this.config.highContrast.update((prev) => !prev);
+    }
+
+    protected onShowGrid() {
+        this.config.grid.update((prev) => !prev);
     }
 
     @HostListener("document:keydown.alt.0", ["'smooth'", "$event"])
@@ -191,6 +210,26 @@ export class AppComponent implements AfterViewInit {
             left: (scrollWidth - clientWidth) / 2,
             behavior,
         });
+    }
+
+    @HostListener("document:keydown.meta.0", ["$event"])
+    protected onZoomReset(event?: Event) {
+        console.log("reset zoom");
+
+        event?.preventDefault();
+        this.config.resetZoom();
+    }
+
+    @HostListener("document:keydown.meta.+", ["$event"])
+    protected onZoomIn(event?: Event) {
+        event?.preventDefault();
+        this.config.zoomIn();
+    }
+
+    @HostListener("document:keydown.meta.-", ["$event"])
+    protected onZoomOut(event?: Event) {
+        event?.preventDefault();
+        this.config.zoomOut();
     }
 
     protected onDeleteNode(mac: string, event?: Event) {

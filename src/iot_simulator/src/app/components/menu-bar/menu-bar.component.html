@@ -85,7 +85,10 @@
         </button>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItemCheckbox>
+            <button
+                hlmMenuItemCheckbox
+                [checked]="highContrast()"
+                (click)="handleOnHighContrast()">
                 <hlm-menu-item-check />
                 {{ "HIGH_CONTRAST" | translate }}
             </button>
@@ -104,7 +107,7 @@
         </button>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button inset hlmMenuItem (click)="handleOnResetZoom()">
+            <button inset hlmMenuItem (click)="handleOnZoomReset()">
                 {{ "ORIGINAL_ZOOM" | translate }}
                 <hlm-menu-shortcut>⌘0</hlm-menu-shortcut>
             </button>

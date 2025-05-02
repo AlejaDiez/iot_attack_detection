@@ -1,10 +1,10 @@
 import {
     Component,
     inject,
+    input,
+    InputSignal,
     output,
     OutputEmitterRef,
-    Signal,
-    WritableSignal
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
@@ -66,12 +66,22 @@ export class MenuBarComponent {
     protected get canInsertRouter(): boolean {
         return !this.network.router;
     }
-    protected readonly language: WritableSignal<string> = this.config.language;
-    protected readonly showGrid: Signal<boolean> = this.config.grid;
+    public readonly language: InputSignal<string> = input.required();
+    protected readonly onChangeLanguage: OutputEmitterRef<string> = output();
+    public readonly highContrast: InputSignal<boolean> = input.required();
+    protected onHighContrast: OutputEmitterRef<void> = output();
+    public readonly showGrid: InputSignal<boolean> = input.required();
+    protected readonly onShowGrid: OutputEmitterRef<void> = output();
     protected readonly onCenter: OutputEmitterRef<void> = output();
-    protected readonly onResetZoom: OutputEmitterRef<void> = output();
+    protected readonly onZoomReset: OutputEmitterRef<void> = output();
     protected readonly onZoomIn: OutputEmitterRef<void> = output();
+    protected get canZoomIn(): boolean {
+        return this.config.zoom() < 2;
+    }
     protected readonly onZoomOut: OutputEmitterRef<void> = output();
+    protected get canZoomOut(): boolean {
+        return this.config.zoom() > 0.5;
+    }
 
     protected handleOnNewFile() {
         this.onNewFile.emit();
@@ -110,19 +120,23 @@ export class MenuBarComponent {
     }
 
     protected handleOnLanguage(language: string) {
-        this.language.set(language);
+        this.onChangeLanguage.emit(language);
+    }
+
+    protected handleOnHighContrast() {
+        this.onHighContrast.emit();
     }
 
     protected handleOnGrid() {
-        this.config.grid.update((value) => !value);
+        this.onShowGrid.emit();
     }
 
     protected handleOnCenter() {
         this.onCenter.emit();
     }
 
-    protected handleOnResetZoom() {
-        this.onResetZoom.emit();
+    protected handleOnZoomReset() {
+        this.onZoomReset.emit();
     }
 
     protected handleOnZoomIn() {
