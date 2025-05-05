@@ -127,6 +127,12 @@ export class FlowGenerator {
      * @param args Argumentos de la función.
      */
     public execute(fn: string, ...args: any[]): void {
-        if (this.library && this.library[fn]) this.library[fn](...args);
+        if (this.library && this.library[fn]) {
+            try {
+                this.library[fn](...args);
+            } catch (err) {
+                console.error(err);
+            }
+        }
     }
 }

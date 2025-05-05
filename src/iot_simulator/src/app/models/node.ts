@@ -208,7 +208,6 @@ export abstract class Node {
         };
 
         // Cargar biblioteca y obtener cambios
-        this.loadLibrary(LibraryService.instance.library);
         LibraryService.instance.library$.subscribe((library) =>
             this.loadLibrary(library),
         );

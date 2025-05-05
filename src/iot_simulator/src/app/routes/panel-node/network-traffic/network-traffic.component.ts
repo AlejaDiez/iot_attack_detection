@@ -127,7 +127,7 @@ export class NetworkTrafficComponent {
                 break;
             default:
                 this.node().generator.execute(
-                    command,
+                    command.id,
                     ...(Array.isArray(target) ? target : [target]),
                 );
                 break;

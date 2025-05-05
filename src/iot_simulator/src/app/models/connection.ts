@@ -77,16 +77,24 @@ export class Connection {
      * @param node1 Primer nodo de la conexión, suele ser un router.
      * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
      * @param latency Latencia de la conexión, si no se especifica, se asigna un valor aleatorio entre 0 y 1000 ms.
+     * @param latencyVariation Variación de la latencia de la conexión, si no se especifica, se asigna 0.
+     * @param cyberShield Protector de flujo de red, si no se especifica, se asigna uno por defecto.
      */
-    public constructor(node1: Node, node2: Node, latency?: number) {
+    public constructor(
+        node1: Node,
+        node2: Node,
+        latency?: number,
+        latencyVariation?: number,
+        cyberShield?: CyberShield,
+    ) {
         this._queue = [];
         this._processing = false;
         this.node1 = node1;
         this.node2 = node2;
         this._latency = latency ?? randomInt(0, 1000);
-        this._latencyVariation = 0;
+        this._latencyVariation = latencyVariation ?? 0;
         this._status = ConnectionStatus.IDLE;
-        this._cyberShield = new CyberShield();
+        this._cyberShield = cyberShield ?? new CyberShield();
     }
 
     /**
@@ -159,13 +167,12 @@ export class Connection {
         node2: Node,
         object: any,
     ): Connection {
-        const connection = new Connection(node1, node2, object.latency);
-
-        connection._latencyVariation = object.latencyVariation;
-        if (object.cyberShield)
-            connection._cyberShield = CyberShield.fromObject(
-                object.cyberShield,
-            );
-        return connection;
+        return new Connection(
+            node1,
+            node2,
+            object.latency,
+            object.latencyVariation,
+            CyberShield.fromObject(object.cyberShield),
+        );
     }
 }

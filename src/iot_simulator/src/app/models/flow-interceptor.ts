@@ -93,8 +93,14 @@ export class FlowInterceptor {
      * @param packet Paquete de red.
      */
     public intercept(packet: Packet): void {
-        if (this._externalInterceptor)
-            if (this._externalInterceptor({ ...packet }) !== undefined) return;
+        if (this._externalInterceptor) {
+            try {
+                if (this._externalInterceptor({ ...packet }) !== undefined)
+                    return;
+            } catch (err) {
+                console.error(err);
+            }
+        }
         this._intercept.next({ ...packet });
         switch (packet.transportProtocol) {
             case TransportProtocol.ICMP:

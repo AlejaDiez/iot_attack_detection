@@ -8,7 +8,6 @@
     }
 }
 
-
 .connection.animate {
     @apply stroke-primary stroke-2;
     stroke-dasharray: 10;
@@ -20,20 +19,23 @@
 }
 
 .cyber-shield {
-    @apply opacity-0;
-    @apply fill-blue-600 dark:fill-blue-400;
+    @apply opacity-100;
     @apply transition-[opacity,fill-color];
 }
 
-.cyber-shield.enabled {
-    @apply opacity-100;
+.cyber-shield.disabled {
+    @apply opacity-0;
 }
 
-.cyber-shield.correct {
+.cyber-shield.waiting {
+    @apply fill-blue-600 dark:fill-blue-400;
+}
+
+.cyber-shield.safe {
     @apply fill-green-600 dark:fill-green-400;
 }
 
-.cyber-shield.error {
+.cyber-shield.attack {
     @apply fill-red-600 dark:fill-red-400;
 }
 

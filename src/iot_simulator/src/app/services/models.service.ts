@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { TensorflowModels } from "@models/cyber-shield";
 import { ConfigService } from "@services/config.service";
 import { io, LayersModel, loadLayersModel } from "@tensorflow/tfjs";
+import { parseModelScript } from "@utils/parse_script";
+import { loadZip } from "@utils/zip";
 import { toast } from "ngx-sonner";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -24,7 +26,7 @@ export class ModelsService {
     >;
     /** Modelos cargados. */
     public get models(): TensorflowModels | undefined {
-        return this._models ? this._models : undefined;
+        return this._models;
     }
     /** Mostrar los modelos como un observable. */
     public get models$(): Observable<TensorflowModels | undefined> {
@@ -33,7 +35,32 @@ export class ModelsService {
 
     /** Constructor privado para evitar instanciación externa */
     private constructor(readonly config: ConfigService) {
-        // TODO: Cargar los modelos desde el localStorage
+        // Cargar los modelos desde el localStorage
+        const models = localStorage.getItem("models")?.split(",");
+
+        if (models && models.length > 0) {
+            Promise.all(
+                models.map((id) =>
+                    loadLayersModel(`localstorage://${id}_model`),
+                ),
+            ).then((tensorflowModels) => {
+                this._models = models.map((id, index) => {
+                    const model = tensorflowModels[index];
+
+                    // Cargar la función de analisis
+                    const scriptPlain = localStorage.getItem(`${id}_script`)!;
+                    const script = parseModelScript(scriptPlain);
+
+                    return {
+                        id,
+                        name: model.name,
+                        model,
+                        script,
+                    };
+                });
+                this._modelsSubject.next(this._models);
+            });
+        }
         this._modelsSubject = new BehaviorSubject<TensorflowModels | undefined>(
             this._models,
         );
@@ -53,24 +80,38 @@ export class ModelsService {
      *
      * @param files Lista de archivos a cargar.
      */
-    private async _load(files: File[]): Promise<TensorflowModels | undefined> {
+    private async _load(files: File[]): Promise<void> {
         const models: TensorflowModels = [];
-        const topologyiesFiles: File[] = files.filter((file) =>
-            file.name.endsWith(".json"),
-        );
-        const weightsFiles: File[] = files.filter((file) =>
-            file.name.endsWith(".bin"),
-        );
-        // Generar los modelos
-        for (const file of topologyiesFiles) {
+
+        for (const file of files) {
+            const [jsonFile, binFiles, scriptFile] = await loadZip(file);
+
+            // Creacion del modelo
             const model: LayersModel = await loadLayersModel(
-                io.browserFiles([file, ...weightsFiles]),
+                io.browserFiles([jsonFile, ...binFiles]),
             );
-            const id = file.name.replace(/\.json$/, "");
-            const name = id.replace(/_/g, " ");
-            models.push({ id, name, model });
+
+            // Cargar la función de analisis
+            const scriptPlain = await scriptFile.text();
+            const script = parseModelScript(scriptPlain);
+
+            // Metadatos del modelo
+            const id = model.name.toLowerCase().replace(/\s+/g, "_");
+            const name = model.name;
+
+            // Guardar el modelo
+            models.push({ id, name, model, script });
+
+            // Guardar en localStorage
+            model.save(`localstorage://${id}_model`);
+            localStorage.setItem(`${id}_script`, scriptPlain);
         }
-        return models.length > 0 ? models : undefined;
+
+        this._models = models;
+        // Notificar a los observadores que la biblioteca ha cambiado
+        this._modelsSubject.next(this._models);
+        // Guardar los id de los modelos en el localStorage
+        localStorage.setItem("models", models.map(({ id }) => id).join(","));
     }
 
     /**
@@ -78,16 +119,14 @@ export class ModelsService {
      */
     public loadFromFile(): void {
         toast.promise(
-            ConfigService.openFile(".json,.bin", true).then(this._load),
+            ConfigService.openFile(".zip", true).then((val) => this._load(val)),
             {
                 loading: this.config.translate.instant("MODELS_LOADING"),
-                success: (models?: TensorflowModels) => {
-                    this._models = models;
-                    this._modelsSubject.next(this._models);
-                    return this.config.translate.instant("MODELS_LOADED");
+                success: () => this.config.translate.instant("MODELS_LOADED"),
+                error: (err) => {
+                    console.error(err);
+                    return this.config.translate.instant("MODELS_NOT_LOADED");
                 },
-                error: (err) =>
-                    this.config.translate.instant("MODELS_NOT_LOADED"),
             },
         );
     }
@@ -96,7 +135,14 @@ export class ModelsService {
      * Elimina los modelos cargados.
      */
     public deleteFile(): void {
+        // Eliminar los modelos del localStorage
+        for (const model of this._models ?? []) {
+            io.removeModel(`localstorage://${model.id}_model`);
+            localStorage.removeItem(`${model.id}_script`);
+        }
+        localStorage.removeItem("models");
         this._models = undefined;
+        // Notificar a los observadores que la biblioteca se ha eliminado
         this._modelsSubject.next(this._models);
         toast.success(this.config.translate.instant("MODELS_DELETED"));
     }

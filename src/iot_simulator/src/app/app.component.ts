@@ -136,7 +136,7 @@ export class AppComponent implements AfterViewInit {
 
     protected onDeleteModels(event?: Event) {
         event?.preventDefault();
-        this.library.deleteFile();
+        this.model.deleteFile();
     }
 
     @HostListener("document:keydown.meta.s", ["$event"])
@@ -224,8 +224,6 @@ export class AppComponent implements AfterViewInit {
 
     @HostListener("document:keydown.meta.0", ["$event"])
     protected onZoomReset(event?: Event) {
-        console.log("reset zoom");
-
         event?.preventDefault();
         this.config.resetZoom();
     }

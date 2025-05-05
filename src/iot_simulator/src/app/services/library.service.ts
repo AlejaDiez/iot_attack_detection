@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ConfigService } from "@services/config.service";
-import { parseScript } from "@utils/parse_script";
+import { parseLibraryScript } from "@utils/parse_script";
 import { toast } from "ngx-sonner";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -33,7 +33,8 @@ export class LibraryService {
      * Constructor del gestor de bibliotecas.
      */
     private constructor(readonly config: ConfigService) {
-        const script = localStorage.getItem("script");
+        // Cargar la biblioteca desde el localStorage
+        const script = localStorage.getItem("library");
 
         if (script) this._load(script);
     }
@@ -52,32 +53,39 @@ export class LibraryService {
      *
      * @param script Contenido de la biblioteca a cargar.
      */
-    private _load(script: string) {
-        this._library = parseScript(script);
+    private _load(script: string): void {
+        this._library = parseLibraryScript(script);
+        // Notificar a los observadores que la biblioteca ha cambiado
         this._librarySubject.next(this._library);
-        localStorage.setItem("script", script);
+        // Guardar la biblioteca en el localStorage
+        localStorage.setItem("library", script);
     }
 
     /**
      * Carga una biblioteca externa desde un archivo.
      */
     public loadFromFile(): void {
-        toast.promise(ConfigService.openFile(".js"), {
-            loading: this.config.translate.instant("LIBRARY_LOADING"),
-            success: (script: string) => {
-                this._load(script);
-                return this.config.translate.instant("LIBRARY_LOADED");
+        toast.promise(
+            ConfigService.openFile(".js").then((val) => this._load(val)),
+            {
+                loading: this.config.translate.instant("LIBRARY_LOADING"),
+                success: () => this.config.translate.instant("LIBRARY_LOADED"),
+                error: (err) => {
+                    console.error(err);
+                    return this.config.translate.instant("LIBRARY_NOT_LOADED");
+                },
             },
-            error: () => this.config.translate.instant("LIBRARY_NOT_LOADED"),
-        });
+        );
     }
 
     /**
      * Elimina la biblioteca externa cargada.
      */
     public deleteFile(): void {
-        localStorage.removeItem("script");
+        // Eliminar la biblioteca del localStorage
+        localStorage.removeItem("library");
         this._library = undefined;
+        // Notificar a los observadores que la biblioteca se ha eliminado
         this._librarySubject.next(this._library);
         toast.success(this.config.translate.instant("LIBRARY_DELETED"));
     }

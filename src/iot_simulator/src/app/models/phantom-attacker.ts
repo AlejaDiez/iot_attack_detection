@@ -110,6 +110,6 @@ export class PhantomAttacker extends FlowGenerator {
      * @param args Argumentos de la función.
      */
     public attack(fn: string, ...args: any[]): void {
-        if (this.library && this.library[fn]) this.library[fn](...args);
+        this.execute(fn, ...args);
     }
 }

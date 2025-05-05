@@ -33,6 +33,7 @@
         "clsx": "^2.1.1",
         "embla-carousel-angular": "19.0.0",
         "js-yaml": "^4.1.0",
+        "jszip": "^3.10.1",
         "lodash": "^4.17.21",
         "ngx-scrollbar": ">=18.0.0",
         "ngx-sonner": "^3.1.0",

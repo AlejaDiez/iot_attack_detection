@@ -93,7 +93,7 @@ export class AttackComponent {
                 break;
             default:
                 (this.node().generator as PhantomAttacker).attack(
-                    attack,
+                    attack.id,
                     ...(Array.isArray(target) ? target : [target]),
                 );
                 break;

@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, InputSignal } from "@angular/core";
 import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
 import { Connection, ConnectionStatus } from "@models/connection";
+import { CyberShieldState } from "@models/cyber-shield";
 import { Position } from "@models/position";
 import { EditConnectionDialogComponent } from "@routes/dialogs/edit-connection-dialog.component";
 
