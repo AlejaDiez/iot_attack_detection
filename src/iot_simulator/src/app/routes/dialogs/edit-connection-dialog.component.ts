@@ -31,7 +31,7 @@ export interface EditConnectionContext {
         TranslateModule,
     ],
     template: `
-        <hlm-dialog-header class="w-96">
+        <hlm-dialog-header>
             <h3 hlmDialogTitle>{{ "MODIFY_CONNECTION" | translate }}</h3>
         </hlm-dialog-header>
         <div class="grid gap-4 py-4">
@@ -94,7 +94,7 @@ export interface EditConnectionContext {
             }
         </div>
     `,
-    host: { class: "flex flex-col gap-4" },
+    host: { class: "min-w-96 flex flex-col gap-4" },
 })
 export class EditConnectionDialogComponent {
     protected readonly context =

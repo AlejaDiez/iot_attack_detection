@@ -13,10 +13,12 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
+import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
 import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
 import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
 import { Device } from "@models/device";
 import { Node, NodeType } from "@models/node";
+import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
     lucideForward,
@@ -27,6 +29,7 @@ import {
     lucideUnplug,
 } from "@ng-icons/lucide";
 import { TranslateModule } from "@ngx-translate/core";
+import { ShowPacketDialogComponent } from "@routes/dialogs/show-packet-dialog.component";
 import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { BrnTableModule } from "@spartan-ng/brain/table";
@@ -66,6 +69,7 @@ import { map, tap } from "rxjs";
     host: { class: "flex flex-col gap-4" },
 })
 export class NetworkTrafficComponent {
+    public readonly dialog: HlmDialogService = inject(HlmDialogService);
     public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
     public readonly NodeType: typeof NodeType = NodeType;
@@ -113,6 +117,10 @@ export class NetworkTrafficComponent {
 
     protected connect() {
         (this.node() as Device).connect(this.network.router!);
+    }
+
+    protected viewPacket(packet: Packet) {
+        this.dialog.open(ShowPacketDialogComponent, { context: { packet } });
     }
 
     protected execute() {

@@ -5,7 +5,8 @@
             stickyHeader
             [dataSource]="node().traffic.slice(-50)"
             [displayedColumns]="displayedColumns()"
-            class="block max-h-[280px] overflow-auto rounded-md border border-border">
+            class="block max-h-[280px] overflow-auto rounded-md border border-border"
+            [onRowClick]="viewPacket.bind(this)">
             <brn-column-def name="icon" class="w-12">
                 <hlm-th *brnHeaderDef />
                 <hlm-td *brnCellDef="let item">

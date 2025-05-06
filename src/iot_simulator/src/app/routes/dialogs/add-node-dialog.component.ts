@@ -39,7 +39,7 @@ export interface AddNodeDialogContext {
         TranslateModule,
     ],
     template: `
-        <hlm-dialog-header class="w-96">
+        <hlm-dialog-header>
             <h3 hlmDialogTitle>{{ "ADD_NODE" | translate }}</h3>
         </hlm-dialog-header>
         <form [formGroup]="form" (submit)="submit()">
@@ -78,7 +78,7 @@ export interface AddNodeDialogContext {
             </hlm-dialog-footer>
         </form>
     `,
-    host: { class: "flex flex-col gap-4" },
+    host: { class: "min-w-96 flex flex-col gap-4" },
 })
 export class AddNodeDialogComponent implements OnInit {
     public readonly NodeType: typeof NodeType = NodeType;

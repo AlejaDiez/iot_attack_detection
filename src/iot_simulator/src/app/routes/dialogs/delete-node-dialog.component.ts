@@ -33,7 +33,7 @@ export interface DeleteNodeDialogContext {
         TranslateModule,
     ],
     template: `
-        <hlm-dialog-header class="w-96">
+        <hlm-dialog-header>
             <h3 hlmDialogTitle>
                 {{ "DELETE_NODE" | translate: { name: name() } }}
             </h3>
@@ -50,7 +50,7 @@ export interface DeleteNodeDialogContext {
             </button>
         </hlm-dialog-footer>
     `,
-    host: { class: "flex flex-col gap-4" },
+    host: { class: "min-w-96 flex flex-col gap-4" },
 })
 export class DeleteNodeDialogComponent {
     protected readonly ref: BrnDialogRef<DeleteNodeDialogContext> = inject(
