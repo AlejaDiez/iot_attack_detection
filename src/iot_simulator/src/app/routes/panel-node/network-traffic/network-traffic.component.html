@@ -1,158 +1,145 @@
-<div class="flex flex-col gap-4">
-    @if (isConnected) {
+@if (node().connected) {
+    @if (node().traffic.length > 0) {
         <brn-table
             hlm
             stickyHeader
-            [dataSource]="traffic"
-            [displayedColumns]="[
-                'icon',
-                'source',
-                'destination',
-                'size',
-                'data',
-            ]"
-            class="block max-h-[280px] overflow-auto rounded-md border border-border">
+            [dataSource]="node().traffic.slice(-50)"
+            [displayedColumns]="displayedColumns()"
+            class="block max-h-[280px] overflow-auto rounded-md border border-border"
+            [onRowClick]="viewPacket.bind(this)">
             <brn-column-def name="icon" class="w-12">
                 <hlm-th *brnHeaderDef />
                 <hlm-td *brnCellDef="let item">
-                    @if (ip === item.srcIP) {
-                        <ng-icon
-                            name="lucideReply"
-                            size="1rem"
-                            class="text-red-600 dark:text-red-400" />
-                    } @else if (ip === item.dstIP) {
-                        <ng-icon
-                            name="lucideForward"
-                            size="1rem"
-                            class="text-green-600 dark:text-green-400" />
-                    } @else {
-                        <ng-icon
-                            name="lucideRepeat"
-                            size="1rem"
-                            class="text-yellow-600 dark:text-yellow-400" />
+                    @switch (node().ip) {
+                        @case (item.srcIP) {
+                            <ng-icon
+                                name="lucideReply"
+                                size="1rem"
+                                class="text-red-600 dark:text-red-400" />
+                        }
+                        @case (item.dstIP) {
+                            <ng-icon
+                                name="lucideForward"
+                                size="1rem"
+                                class="text-green-600 dark:text-green-400" />
+                        }
+                        @default {
+                            <ng-icon
+                                name="lucideRepeat"
+                                size="1rem"
+                                class="text-yellow-600 dark:text-yellow-400" />
+                        }
                     }
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="source" class="w-28">
-                <hlm-th *brnHeaderDef>Origen</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "SOURCE" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.srcIP }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="destination" class="w-28">
-                <hlm-th *brnHeaderDef>Destino</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "DESTINATION" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.dstIP }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="size" class="w-[86px]">
-                <hlm-th *brnHeaderDef>Bytes</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "BYTES" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item" class="justify-center">
                     {{ item.totalBytes }}
                 </hlm-td>
             </brn-column-def>
             <brn-column-def name="data" class="w-56">
-                <hlm-th *brnHeaderDef>Dato</hlm-th>
+                <hlm-th *brnHeaderDef>{{ "DATA" | translate }}</hlm-th>
                 <hlm-td truncate *brnCellDef="let item">
                     {{ item.payload }}
                 </hlm-td>
             </brn-column-def>
         </brn-table>
-        <form
-            [formGroup]="form"
-            (submit)="execute()"
-            class="flex flex-row items-center justify-end gap-2">
-            <label hlmLabel class="w-40">
-                Comando
-                <brn-select
-                    class="!mt-2 inline-block w-full"
-                    placeholder="Comando a ejecutar"
-                    formControlName="command">
-                    <hlm-select-trigger class="w-full">
-                        <hlm-select-value />
-                    </hlm-select-trigger>
-                    <hlm-select-content>
-                        @if (
-                            internalCommands.length > 0 ||
-                            externalCommands.length > 0
-                        ) {
-                            @for (item of internalCommands; track $index) {
-                                <hlm-option [value]="item">{{
-                                    item.name
-                                }}</hlm-option>
-                            }
-                            @if (
-                                internalCommands.length > 0 &&
-                                externalCommands.length > 0
-                            ) {
-                                <hlm-menu-separator />
-                            }
-                            @for (item of externalCommands; track $index) {
-                                <hlm-option [value]="item">{{
-                                    item.name
-                                }}</hlm-option>
-                            }
+    } @else {
+        <ng-icon
+            name="lucideTrafficCone"
+            size="6rem"
+            class="mb-8 mt-4 self-center text-secondary" />
+        <p
+            class="mb-4 w-96 self-center text-center text-sm text-muted-foreground">
+            {{ "NO_TRAFFIC" | translate }}
+        </p>
+    }
+    <div class="flex w-[584px] flex-row items-center justify-end gap-2">
+        <label hlmLabel class="w-40">
+            {{ "COMMAND" | translate }}
+            <brn-select
+                [(ngModel)]="command"
+                [placeholder]="'SELECT_COMMAND' | translate"
+                class="!mt-2 inline-block w-full">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (item of commands; track $index) {
+                        @if (item === "---") {
+                            <hlm-menu-separator />
                         } @else {
-                            <hlm-option disabled class="px-2">
-                                No hay comandos disponibles
-                            </hlm-option>
-                        }
-                    </hlm-select-content>
-                </brn-select>
-            </label>
-            <label hlmLabel class="grow">
-                {{
-                    form.get("command")!.value?.multiple
-                        ? "Objetivos"
-                        : "Objetivo"
-                }}
-                <brn-select
-                    class="!mt-2 inline-block w-full"
-                    [placeholder]="
-                        form.get('command')!.value?.multiple
-                            ? 'IPs objetivo'
-                            : 'IP objetivo'
-                    "
-                    formControlName="target"
-                    [multiple]="form.get('command')!.value?.multiple">
-                    <hlm-select-trigger class="w-full">
-                        <hlm-select-value />
-                    </hlm-select-trigger>
-                    <hlm-select-content>
-                        @for (item of connectedNodes; track $index) {
-                            <hlm-option [value]="item.ip">{{
-                                item.ip
+                            <hlm-option [value]="item">{{
+                                item.name
                             }}</hlm-option>
                         }
-                    </hlm-select-content>
-                </brn-select>
-            </label>
-            <button hlmBtn [disabled]="form.invalid" class="self-end">
-                Ejecutar
-            </button>
-        </form>
+                    } @empty {
+                        <hlm-option disabled class="px-2">
+                            {{ "NO_COMMANDS" | translate }}
+                        </hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </label>
+        <label hlmLabel class="grow">
+            {{ (multipleTargets() ? "TARGETS" : "TARGET") | translate }}
+            <brn-select
+                [(ngModel)]="target"
+                [placeholder]="
+                    (multipleTargets() ? 'TARGETS_IP' : 'TARGET_IP') | translate
+                "
+                [multiple]="multipleTargets()"
+                class="!mt-2 inline-block w-full">
+                <hlm-select-trigger class="w-full">
+                    <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (item of connectedNodes; track $index) {
+                        <hlm-option [value]="item.ip">{{ item.ip }}</hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </label>
+        <button
+            hlmBtn
+            [disabled]="!(command() && target())"
+            (click)="execute()"
+            class="self-end">
+            {{ "LAUNCH_COMMAND" | translate }}
+        </button>
+    </div>
+} @else {
+    @if (NodeType.RouterTypes.includes(this.node().type)) {
+        <ng-icon
+            name="lucideHourglass"
+            size="6rem"
+            class="mb-8 mt-4 self-center text-secondary" />
+        <p class="w-96 self-center text-center text-sm text-muted-foreground">
+            {{ "NO_CONNECTED_DEVICES" | translate }}
+        </p>
     } @else {
-        @if (type === "router") {
-            <ng-icon
-                name="lucideHourglass"
-                size="6rem"
-                class="mb-8 mt-4 self-center text-secondary" />
-            <p class="w-96 text-center text-sm text-muted-foreground">
-                No tienes dispositivos conectados. Espera a que algún
-                dispositivo se conecte para poder enviar y recibir datos.
-            </p>
-        } @else {
-            <ng-icon
-                name="lucideUnplug"
-                size="6rem"
-                class="mb-8 mt-4 self-center text-secondary" />
-            <p class="w-96 text-center text-sm text-muted-foreground">
-                No estas conectado a ningún router. Para poder enviar y recibir
-                datos, debes estar conectado a un router.
-            </p>
-            <button hlmBtn (click)="connect()" [disabled]="!canConnect">
-                Conectar
-            </button>
-        }
+        <ng-icon
+            name="lucideUnplug"
+            size="6rem"
+            class="mb-8 mt-4 self-center text-secondary" />
+        <p class="w-96 self-center text-center text-sm text-muted-foreground">
+            {{ "NO_ROUTER" | translate }}
+        </p>
+        <button hlmBtn (click)="connect()" [disabled]="!canConnect">
+            {{ "CONNECT" | translate }}
+        </button>
     }
-</div>
+}

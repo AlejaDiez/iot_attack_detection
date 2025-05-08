@@ -1,15 +1,21 @@
-import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    InputSignal,
+    model,
+    ModelSignal,
+    Signal,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
 import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
 import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
 import { Device } from "@models/device";
-import { Commands } from "@models/flow-generator";
+import { Command } from "@models/flow-generator";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -18,9 +24,12 @@ import {
     lucideHourglass,
     lucideRepeat,
     lucideReply,
+    lucideTrafficCone,
     lucideUnplug,
 } from "@ng-icons/lucide";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { ShowPacketDialogComponent } from "@routes/dialogs/show-packet-dialog.component";
+import { NetworkService } from "@services/network.service";
 import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { BrnTableModule } from "@spartan-ng/brain/table";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
@@ -28,11 +37,12 @@ import { HlmInputModule } from "@spartan-ng/ui-input-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { HlmTableModule } from "@spartan-ng/ui-table-helm";
 import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
-import { map } from "rxjs";
 
 @Component({
     imports: [
-        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
         BrnSelectModule,
         BrnTableModule,
         HlmButtonModule,
@@ -51,73 +61,90 @@ import { map } from "rxjs";
             lucideUnplug,
             lucideRepeat,
             lucideReply,
+            lucideTrafficCone,
         }),
     ],
     templateUrl: "network-traffic.component.html",
+    host: { class: "flex flex-col gap-4" },
 })
-export class NetworkTrafficComponent implements OnInit {
-    private _node!: Node;
-    protected get ip(): string | undefined {
-        return this._node.ip;
-    }
-    protected get type(): NodeType {
-        return this._node.type;
-    }
-    protected get traffic(): Packet[] {
-        return [...this._node.traffic.slice(-50)];
-    }
-    protected get isConnected(): boolean {
-        return this._node.connected;
-    }
+export class NetworkTrafficComponent {
+    public readonly dialog: HlmDialogService = inject(HlmDialogService);
+    public readonly network: NetworkService = inject(NetworkService);
+    protected readonly node: InputSignal<Node> = input.required<Node>();
+    public readonly NodeType: typeof NodeType = NodeType;
+    protected readonly displayedColumns: Signal<string[]> = computed(() => [
+        "icon",
+        "source",
+        "destination",
+        "size",
+        "data",
+    ]);
+    protected readonly command: ModelSignal<Command | null> =
+        model<Command | null>(null);
+    protected readonly target: ModelSignal<string | string[] | null> = model<
+        string | string[] | null
+    >(null);
+    protected readonly multipleTargets: Signal<boolean> = computed(
+        () => this.command()?.multiple ?? false,
+    );
     protected get canConnect(): boolean {
-        return this._networkManager.router !== undefined;
+        return this.network.router !== undefined;
     }
-    protected get internalCommands(): Commands {
-        return this._node.generator.internalCommands;
-    }
-    protected get externalCommands(): Commands {
-        return this._node.generator.externalCommands;
+    protected get commands(): any[] {
+        const internalCommands = this.node().generator.internalCommands;
+        const externalCommands = this.node().generator.externalCommands;
+
+        if (internalCommands.length > 0 && externalCommands.length > 0)
+            return [...internalCommands, "---", ...externalCommands];
+        return [...internalCommands, ...externalCommands];
     }
     protected get connectedNodes(): Node[] {
-        return this._networkManager
-            .getConnectedNodes()
-            .filter((node) => node.mac !== this._node.mac);
+        return this.network.getConnectedNodes(this.node().mac);
     }
-    protected readonly form: FormGroup = new FormGroup({
-        command: new FormControl(null, [Validators.required]),
-        target: new FormControl(null, [Validators.required]),
-    });
 
-    public constructor(
-        private readonly _route: ActivatedRoute,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
-
-    public ngOnInit(): void {
-        this._route
-            .parent!.params.pipe(
-                map(({ mac }) => this._networkManager.findByMac(mac)),
-            )
-            .subscribe((node) => (this._node = node));
+    public constructor() {
+        effect(() => {
+            if (this.multipleTargets())
+                this.target.update((value) => {
+                    if (value && !Array.isArray(value))
+                        return [value as string];
+                    return value;
+                });
+            else
+                this.target.update((value) => {
+                    if (value && Array.isArray(value)) return value[0];
+                    return value;
+                });
+        });
     }
 
     protected connect() {
-        if (this.canConnect && this._node instanceof Device) {
-            this._node.connect(this._networkManager.router!);
-        }
+        (this.node() as Device).connect(this.network.router!);
+    }
+
+    protected viewPacket(packet: Packet) {
+        this.dialog.open(ShowPacketDialogComponent, { context: { packet } });
     }
 
     protected execute() {
-        const { command, target } = this.form.value;
-
-        switch (command.id) {
+        switch (this.command()!.id) {
             case "ping":
-                this._node.generator.ping(target);
+                this.node().generator.ping(this.target() as string);
+                break;
+            case "threeWayHandshake":
+                this.node().generator.threeWayHandshake(
+                    this.target() as string,
+                    80,
+                    80,
+                );
                 break;
             default:
-                if (typeof target === "string")
-                    this._node.generator.execute(command, target);
-                else this._node.generator.execute(command, ...target);
+                this.node().generator.execute(
+                    this.command()!.id,
+                    ...(Array.isArray(this.target()!)
+                        ? this.target()!
+                        : [this.target()!]),
+                );
                 break;
         }
     }

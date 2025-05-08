@@ -1,47 +1,94 @@
 <hlm-menu-bar class="w-fit">
-    <button hlmMenuBarItem [brnMenuTriggerFor]="file">Archivo</button>
-    <button hlmMenuBarItem [brnMenuTriggerFor]="edit">Edición</button>
-    <button hlmMenuBarItem [brnMenuTriggerFor]="insert">Insertar</button>
-    <button hlmMenuBarItem [brnMenuTriggerFor]="view">Ver</button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="file">
+        {{ "FILE" | translate }}
+    </button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="edit">
+        {{ "EDIT" | translate }}
+    </button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="insert">
+        {{ "INSERT" | translate }}
+    </button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="view">
+        {{ "VIEW" | translate }}
+    </button>
 </hlm-menu-bar>
 
 <ng-template #file>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
             <button hlmMenuItem (click)="handleOnNewFile()">
-                Nuevo archivo
+                {{ "NEW_FILE" | translate }}
                 <hlm-menu-shortcut>⌘N</hlm-menu-shortcut>
             </button>
             <button hlmMenuItem (click)="handleOnOpenFile()">
-                Abrir archivo
+                {{ "OPEN" | translate }}
                 <hlm-menu-shortcut>⌘O</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
-                Importar biblioteca externa
-            </button>
+            @if (externalLibrary()) {
+                <button hlmMenuItem [brnMenuTriggerFor]="librarySubmenu">
+                    {{ "EXTERNAL_LIBRARY" | translate }}
+                    <hlm-menu-item-sub-indicator />
+                </button>
+            } @else {
+                <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
+                    {{ "IMPORT_EXTERNAL_LIBRARY" | translate }}
+                </button>
+            }
+            @if (models()) {
+                <button hlmMenuItem [brnMenuTriggerFor]="modelsSubmenu">
+                    {{ "MODELS" | translate }}
+                    <hlm-menu-item-sub-indicator />
+                </button>
+            } @else {
+                <button hlmMenuItem (click)="handleOnLoadModels()">
+                    {{ "IMPORT_MODELS" | translate }}
+                </button>
+            }
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
             <button hlmMenuItem (click)="handleOnSaveFile()">
-                Guardar
+                {{ "SAVE" | translate }}
                 <hlm-menu-shortcut>⌘S</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
 </ng-template>
 
+<ng-template #librarySubmenu>
+    <hlm-sub-menu>
+        <button hlmMenuItem (click)="handleOnLoadExternalLibrary()">
+            {{ "IMPORT_EXTERNAL_LIBRARY" | translate }}
+        </button>
+        <button hlmMenuItem (click)="handleOnDeleteExternalLibrary()">
+            {{ "DELETE_EXTERNAL_LIBRARY" | translate }}
+        </button>
+    </hlm-sub-menu>
+</ng-template>
+
+<ng-template #modelsSubmenu>
+    <hlm-sub-menu>
+        <button hlmMenuItem (click)="handleOnLoadModels()">
+            {{ "IMPORT_MODELS" | translate }}
+        </button>
+        <button hlmMenuItem (click)="handleOnDeleteModels()">
+            {{ "DELETE_MODELS" | translate }}
+        </button>
+    </hlm-sub-menu>
+</ng-template>
+
 <ng-template #edit>
     <hlm-menu variant="menubar" class="w-48">
         <hlm-menu-group>
             <button hlmMenuItem [disabled]="!canUndo" (click)="handleOnUndo()">
-                Deshacer
+                {{ "UNDO" | translate }}
                 <hlm-menu-shortcut>⌘Z</hlm-menu-shortcut>
             </button>
             <button hlmMenuItem [disabled]="!canRedo" (click)="handleOnRedo()">
-                Rehacer
+                {{ "REDO" | translate }}
                 <hlm-menu-shortcut>⇧⌘Z</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
@@ -55,11 +102,11 @@
                 hlmMenuItem
                 (click)="handleOnInsertRouter()"
                 [disabled]="!canInsertRouter">
-                Router
+                {{ "ROUTER" | translate }}
                 <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
             </button>
             <button hlmMenuItem (click)="handleOnInsertDevice()">
-                Dispositivo
+                {{ "DEVICE" | translate }}
                 <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
@@ -68,37 +115,93 @@
 
 <ng-template #view>
     <hlm-menu variant="menubar" class="w-48">
+        <button inset hlmMenuItem [brnMenuTriggerFor]="languageSubmenu">
+            {{ "LANGUAGE" | translate }}
+            <hlm-menu-item-sub-indicator />
+        </button>
+        <hlm-menu-separator />
         <hlm-menu-group>
-            <button hlmMenuItemCheckbox>
+            <button
+                hlmMenuItemCheckbox
+                [checked]="highContrast()"
+                (click)="handleOnHighContrast()">
                 <hlm-menu-item-check />
-                Alto contraste
+                {{ "HIGH_CONTRAST" | translate }}
             </button>
-            <button hlmMenuItemCheckbox checked>
+            <button
+                hlmMenuItemCheckbox
+                [checked]="showGrid()"
+                (click)="handleOnGrid()">
                 <hlm-menu-item-check />
-                Mostrar cuadrícula
+                {{ "SHOW_GRID" | translate }}
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
-        <hlm-menu-group>
-            <button inset hlmMenuItem>
-                Centrar
-                <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
-            </button>
-        </hlm-menu-group>
+        <button inset hlmMenuItem (click)="handleOnCenter()">
+            {{ "CENTER" | translate }}
+            <hlm-menu-shortcut>⌥0</hlm-menu-shortcut>
+        </button>
         <hlm-menu-separator />
         <hlm-menu-group>
-            <button inset hlmMenuItem>
-                Tamaño original
+            <button inset hlmMenuItem (click)="handleOnZoomReset()">
+                {{ "ORIGINAL_ZOOM" | translate }}
                 <hlm-menu-shortcut>⌘0</hlm-menu-shortcut>
             </button>
-            <button inset hlmMenuItem>
-                Maximizar
+            <button inset hlmMenuItem (click)="handleOnZoomIn()">
+                {{ "ZOOM_IN" | translate }}
                 <hlm-menu-shortcut>⌘+</hlm-menu-shortcut>
             </button>
-            <button inset hlmMenuItem>
-                Minimizar
+            <button inset hlmMenuItem (click)="handleOnZoomOut()">
+                {{ "ZOOM_OUT" | translate }}
                 <hlm-menu-shortcut>⌘-</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
+</ng-template>
+
+<ng-template #languageSubmenu>
+    <hlm-sub-menu>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'de'"
+            (click)="handleOnLanguage('de')">
+            <hlm-menu-item-check />
+            Deutsch
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'en'"
+            (click)="handleOnLanguage('en')">
+            <hlm-menu-item-check />
+            English
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'es'"
+            (click)="handleOnLanguage('es')">
+            <hlm-menu-item-check />
+            Español
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'fr'"
+            (click)="handleOnLanguage('fr')">
+            <hlm-menu-item-check />
+            Français
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'it'"
+            (click)="handleOnLanguage('it')">
+            <hlm-menu-item-check />
+            Italiano
+        </button>
+        <button
+            hlmMenuItemCheckbox
+            [checked]="language() === 'pt'"
+            (click)="handleOnLanguage('pt')">
+            <hlm-menu-item-check />
+            Português
+        </button>
+    </hlm-sub-menu>
 </ng-template>

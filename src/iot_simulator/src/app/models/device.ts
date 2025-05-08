@@ -4,9 +4,6 @@ import { Packet } from "@models/packet";
 import { Position } from "@models/position";
 import { Router } from "@models/router";
 
-/** Tipo de dispositivo */
-export type DeviceType = NodeType.COMPUTER | NodeType.IOT;
-
 /**
  * Clase que representa un dispositivo en la red.
  */
@@ -30,7 +27,11 @@ export class Device extends Node {
      * @param type Tipo del dispositivo.
      * @param position Posición inicial del dispositivo.
      */
-    public constructor(name: string, type: DeviceType, position?: Position) {
+    public constructor(
+        name: string,
+        type: NodeType.COMPUTER | NodeType.IOT,
+        position?: Position,
+    ) {
         super(name, type, position);
     }
 
@@ -38,16 +39,17 @@ export class Device extends Node {
      * Conectar el dispositivo a un router.
      *
      * @param router Router al que se conectará el dispositivo.
-     * @param latency Latencia de la conexión.
+     * @param connection Conexión a establecer.
      */
-    public connect(router: Router, latency?: number): void {
-        [this.ip, this._connection] = router.acceptConnection(
-            this,
-            latency,
-        ) ?? [undefined, undefined];
+    public connect(router: Router, connection?: Connection): void {
+        const result = router.acceptConnection(this, connection);
 
-        if (this._connection === undefined)
-            throw new Error(`${this.mac} could not connect to router`);
+        if (!result) throw new Error(`${this.mac} could not connect to router`);
+
+        const [ip, newConnection] = result;
+
+        if (this.ip !== ip) this.ip = ip;
+        this._connection = newConnection;
     }
 
     /**

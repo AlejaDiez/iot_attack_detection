@@ -1,39 +1,40 @@
 <div
     hlmCard
     class="node"
-    [ngClass]="{ focused, dragging, communicating }"
+    [ngClass]="{
+        focused: focused(),
+        dragging,
+        communicating: node().communicating,
+    }"
     [ngStyle]="{
-        left: 'calc(50% + ' + position.x + 'px)',
-        top: 'calc(50% - ' + position.y + 'px)',
+        left: 'calc(50% + ' + node().position.x + 'px)',
+        top: 'calc(50% - ' + node().position.y + 'px)',
     }">
-    @switch (type) {
-        @case ("router") {
+    @switch (node().type) {
+        @case (NodeType.ROUTER) {
             <ng-icon name="lucideRouter" size="24" />
-            @if (cyberShieldActive) {
-                <ng-icon name="lucideShield" size="1rem" class="cyber-shield" />
-            }
         }
-        @case ("iot") {
+        @case (NodeType.IOT) {
             <ng-icon name="lucideCpu" size="24" />
         }
-        @case ("computer") {
+        @case (NodeType.COMPUTER) {
             <ng-icon name="lucideLaptop" size="24" />
-            @if (phantomAttackerActive) {
-                <ng-icon
-                    name="lucideGhost"
-                    size="1rem"
-                    class="phantom-attacker" />
-            }
+            <ng-icon name="lucideGhost" size="1rem" class="phantom-attacker" />
         }
     }
 </div>
 <div
     class="node-info"
-    [ngClass]="{ dragging, communicating }"
+    [ngClass]="{
+        dragging,
+        communicating: node().communicating,
+    }"
     [ngStyle]="{
-        left: 'calc(50% + ' + position.x + 'px)',
-        top: 'calc(50% - ' + position.y + 'px)',
+        left: 'calc(50% + ' + node().position.x + 'px)',
+        top: 'calc(50% - ' + node().position.y + 'px)',
     }">
-    <span class="text-lg font-bold">{{ name }}</span>
-    <span class="text-sm text-muted-foreground opacity-60">{{ ip }}</span>
+    <span class="name text-lg font-bold">{{ node().name }}</span>
+    <span class="ip text-sm text-muted-foreground opacity-60">{{
+        node().ip
+    }}</span>
 </div>

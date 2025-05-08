@@ -1,65 +1,45 @@
-<form [formGroup]="form" class="flex flex-col gap-4">
-    <label hlmLabel>
-        Nombre
-        <input
-            hlmInput
-            type="text"
-            formControlName="name"
-            placeholder="Nombre del dispositivo"
-            class="!mt-2 w-full" />
-    </label>
-    <label hlmLabel>
-        IP
-        <input
-            hlmInput
-            type="text"
-            formControlName="ip"
-            placeholder="IP del dispositivo"
-            class="!mt-2 w-full" />
-    </label>
-    <label hlmLabel>
-        Tipo
-        <brn-select
-            formControlName="type"
-            placeholder="Selecciona un tipo"
-            class="!mt-2 inline-block w-full">
-            <hlm-select-trigger class="w-full">
-                <hlm-select-value />
-            </hlm-select-trigger>
-            <hlm-select-content>
-                @for (item of nodeTypes; track $index) {
-                    <hlm-option [value]="item">{{
-                        typeToString(item)
-                    }}</hlm-option>
-                }
-            </hlm-select-content>
-        </brn-select>
-    </label>
-    @if (type === "router") {
-        <div class="flex flex-col gap-2">
-            <label hlmLabel class="flex items-center justify-between">
-                <div class="inline-flex flex-row items-center gap-1">
-                    <ng-icon name="lucideShield" size="1rem" />
-                    Cyber Shield
-                </div>
-                <hlm-switch formControlName="cyberShield" />
-            </label>
-            <brn-select
-                formControlName="cyberShieldModel"
-                placeholder="Selecciona un modelo"
-                class="inline-block w-full">
-                <hlm-select-trigger class="w-full">
-                    <hlm-select-value />
-                </hlm-select-trigger>
-                <hlm-select-content>
-                    @for (item of cyberShieldModels; track $index) {
-                        <hlm-option [value]="item">{{
-                            cyberShieldModelToString(item)
-                        }}</hlm-option>
-                    }
-                </hlm-select-content>
-            </brn-select>
-        </div>
-    }
-    <button hlmBtn variant="destructive" (click)="delete()">Eliminar</button>
-</form>
+<label hlmLabel>
+    {{ "NAME" | translate }}
+    <input
+        hlmInput
+        type="text"
+        [(ngModel)]="node().name"
+        [placeholder]="'DEVICE_NAME' | translate"
+        class="!mt-2 w-full" />
+</label>
+<label hlmLabel>
+    {{ "IP" | translate }}
+    <input
+        hlmInput
+        type="text"
+        [ngModel]="node().ip"
+        [placeholder]="'DEVICE_IP' | translate"
+        disabled
+        class="!mt-2 w-full" />
+</label>
+<label hlmLabel>
+    {{ "TYPE" | translate }}
+    <brn-select
+        [(ngModel)]="node().type"
+        [placeholder]="'SELECT_DEVICE_TYPE' | translate"
+        [disabled]="NodeType.getTypes(node().type).length <= 1"
+        class="!mt-2 inline-block w-full">
+        <hlm-select-trigger class="w-full">
+            <hlm-select-value>
+                <ng-container *brnSelectValue="let item">
+                    {{ NodeType.toString(item) | translate }}
+                </ng-container>
+            </hlm-select-value>
+        </hlm-select-trigger>
+        <hlm-select-content>
+            @for (item of NodeType.getTypes(node().type); track $index) {
+                <hlm-option [value]="item">
+                    {{ config.translate.instant(NodeType.toString(item)) }}
+                </hlm-option>
+            }
+        </hlm-select-content>
+    </brn-select>
+</label>
+<button hlmBtn variant="destructive" (click)="delete()">
+    {{ "DELETE" | translate }}
+</button>

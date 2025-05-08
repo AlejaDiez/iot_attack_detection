@@ -1,11 +1,11 @@
-import { DeviceType } from "@models/device";
 import { FlowGenerator } from "@models/flow-generator";
 import { FlowInterceptor } from "@models/flow-interceptor";
 import { Packet } from "@models/packet";
 import { PhantomAttacker } from "@models/phantom-attacker";
 import { Position } from "@models/position";
-import { RouterType } from "@models/router";
-import { Observable, ReplaySubject } from "rxjs";
+import { CANVAS_SIZE } from "@services/config.service";
+import { LibraryService } from "@services/library.service";
+import { StateService } from "@services/state.service";
 
 /* Expresión regular para validar una dirección MAC */
 const MAC_REGEX: RegExp = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/;
@@ -34,12 +34,12 @@ export namespace NodeType {
     /**
      * Lista de tipos de nodos que pueden ser routers.
      */
-    export const RouterTypes: ReadonlyArray<RouterType> = [NodeType.ROUTER];
+    export const RouterTypes: ReadonlyArray<NodeType> = [NodeType.ROUTER];
 
     /**
      * Lista de tipos de nodos que pueden ser dispositivos.
      */
-    export const DeviceTypes: ReadonlyArray<DeviceType> = [
+    export const DeviceTypes: ReadonlyArray<NodeType> = [
         NodeType.COMPUTER,
         NodeType.IOT,
     ];
@@ -50,6 +50,24 @@ export namespace NodeType {
     export const AttackerTypes: ReadonlyArray<NodeType> = [NodeType.COMPUTER];
 
     /**
+     * Devuelve una lista de tipos de nodos según el tipo de nodo proporcionado.
+     *
+     * @param type Tipo de nodo.
+     * @returns Lista de tipos de nodos.
+     */
+    export const getTypes = (type?: NodeType): ReadonlyArray<NodeType> => {
+        switch (type) {
+            case NodeType.ROUTER:
+                return RouterTypes;
+            case NodeType.COMPUTER:
+            case NodeType.IOT:
+                return DeviceTypes;
+            default:
+                return Types;
+        }
+    };
+
+    /**
      * Convierte un string a un tipo de nodo.
      *
      * @param type String que representa un tipo de nodo.
@@ -58,11 +76,11 @@ export namespace NodeType {
     export const toString = (type: NodeType): string => {
         switch (type) {
             case NodeType.ROUTER:
-                return "Router";
+                return "ROUTER";
             case NodeType.COMPUTER:
-                return "Ordenador";
+                return "COMPUTER";
             case NodeType.IOT:
-                return "Dispositivo IoT";
+                return "IOT_DEVICE";
         }
     };
 }
@@ -84,8 +102,8 @@ export abstract class Node {
         return this._ip;
     }
     /** Dirección IP del nodo */
+    @StateService.SetState
     protected set ip(value: any) {
-        if (this._ip === value) return;
         if (
             value !== undefined &&
             (typeof value !== "string" || !IP_REGEX.test(value))
@@ -93,7 +111,6 @@ export abstract class Node {
             throw new Error("Invalid IP address");
 
         this._ip = value;
-        this.state.next();
     }
     /** Nombre del nodo */
     private _name: string;
@@ -102,11 +119,11 @@ export abstract class Node {
         return this._name;
     }
     /** Nombre del nodo */
+    @StateService.SetState
     public set name(value: string) {
         if (this._name === value) return;
 
         this._name = value;
-        this.state.next();
     }
     /** Tipo de nodo */
     private _type: NodeType;
@@ -115,6 +132,7 @@ export abstract class Node {
         return this._type;
     }
     /** Tipo de nodo */
+    @StateService.SetState
     public set type(value: any) {
         if (this._type === value) return;
         if (!NodeType.Types.includes(value))
@@ -124,15 +142,14 @@ export abstract class Node {
         if (this._type !== NodeType.ROUTER && value === NodeType.ROUTER)
             throw new Error("Cannot change the type of a device to a router");
         if (NodeType.AttackerTypes.includes(value))
-            this._generator = new PhantomAttacker(this);
+            this._generator = new PhantomAttacker(this, this.interceptor);
         else if (this._generator instanceof PhantomAttacker)
-            this._generator = new FlowGenerator(this);
+            this._generator = new FlowGenerator(this, this.interceptor);
         this._generator.loadLibrary(this._library);
         this._type = value;
-        this.state.next();
     }
     /** Biblioteca externa */
-    private _library?: any;
+    private _library?: Function;
     /** Interceptor de flujo de red */
     protected readonly interceptor: FlowInterceptor;
     /** Generador de flujos de red */
@@ -157,15 +174,13 @@ export abstract class Node {
     public abstract get connected(): boolean;
     /** Indica si el nodo está comunicando */
     public abstract get communicating(): boolean;
-    /** Event emitter para el cambio de estado del nodo */
-    protected readonly state: ReplaySubject<void>;
-    /** Event emitter para el cambio de estado del nodo */
-    public get state$(): Observable<void> {
-        return this.state;
-    }
 
     /**
      * Crea una instancia de la clase Node.
+     *
+     * @param name Nombre del nodo.
+     * @param type Tipo de nodo.
+     * @param position Posición del nodo.
      */
     protected constructor(
         name: string,
@@ -178,11 +193,24 @@ export abstract class Node {
         this._type = type;
         this.interceptor = new FlowInterceptor(this);
         this._generator = NodeType.AttackerTypes.includes(type)
-            ? new PhantomAttacker(this)
-            : new FlowGenerator(this);
+            ? new PhantomAttacker(this, this.interceptor)
+            : new FlowGenerator(this, this.interceptor);
         this._traffic = [];
-        this._position = { ...position };
-        this.state = new ReplaySubject<void>(1);
+        this._position = {
+            x: Math.min(
+                Math.max(position.x, -CANVAS_SIZE / 2),
+                CANVAS_SIZE / 2,
+            ),
+            y: Math.min(
+                Math.max(position.y, -CANVAS_SIZE / 2),
+                CANVAS_SIZE / 2,
+            ),
+        };
+
+        // Cargar biblioteca y obtener cambios
+        LibraryService.instance.library$.subscribe((library) =>
+            this.loadLibrary(library),
+        );
     }
 
     /**
@@ -261,15 +289,19 @@ export abstract class Node {
      * @param y Coordenada Y de la nueva posición.
      * @param relative Indica si el movimiento es relativo a la posición actual, por defecto es falso.
      */
+    @StateService.SetState
     public move(x: number, y: number, relative: boolean = false): void {
         if (!relative && this._position.x === x && this._position.y === y)
             return;
 
         if (relative) {
-            this._position.x += x;
-            this._position.y += y;
-        } else this._position = { x, y };
-        this.state.next();
+            x = this._position.x + x;
+            y = this._position.y + y;
+        }
+        this._position = {
+            x: Math.min(Math.max(x, -CANVAS_SIZE / 2), CANVAS_SIZE / 2),
+            y: Math.min(Math.max(y, -CANVAS_SIZE / 2), CANVAS_SIZE / 2),
+        };
     }
 
     /**

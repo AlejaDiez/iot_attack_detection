@@ -1,20 +1,62 @@
-:host {
-    display: contents;
-}
-
 .connection {
     @apply stroke-border stroke-1;
+    @apply transition-[stroke-width,stroke-color];
     stroke-linecap: round;
+
+    ::ng-deep .high-contrast & {
+        @apply !stroke-primary;
+    }
 }
 
 .connection.animate {
     @apply stroke-primary stroke-2;
     stroke-dasharray: 10;
-    animation: dash 5s linear 0ms infinite normal forwards;
+    animation: 5s linear 0ms infinite forwards normal dash;
 }
 
 .connection.animate.reverse {
     animation-direction: reverse;
+}
+
+.cyber-shield {
+    @apply fill-transparent opacity-0;
+    @apply transition-[opacity,fill-color];
+}
+
+.cyber-shield.waiting {
+    @apply fill-blue-600 opacity-100 dark:fill-blue-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-blue-700 dark:fill-blue-500;
+    }
+}
+
+.cyber-shield.safe {
+    @apply fill-green-600 opacity-100 dark:fill-green-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-green-700 dark:fill-green-500;
+    }
+}
+
+.cyber-shield.attack {
+    @apply fill-red-600 opacity-100 dark:fill-red-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-red-700 dark:fill-red-500;
+    }
+}
+
+.cyber-shield.animate {
+    animation: 800ms ease-in-out 0ms infinite alternate pulse;
+}
+
+.pseudo-connection {
+    @apply pointer-events-auto cursor-pointer stroke-transparent stroke-[20];
+}
+
+.pseudo-connection:hover ~ .connection {
+    @apply stroke-[4];
 }
 
 @keyframes dash {
@@ -24,5 +66,14 @@
 
     to {
         stroke-dashoffset: 0%;
+    }
+}
+
+@keyframes pulse {
+    from {
+        r: 5;
+    }
+    to {
+        r: 7;
     }
 }

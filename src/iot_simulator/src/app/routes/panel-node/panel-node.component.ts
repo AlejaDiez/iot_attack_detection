@@ -1,45 +1,54 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    input,
+    InputSignal,
+} from "@angular/core";
+import { RouterModule, RouterOutlet } from "@angular/router";
+import { HlmDialogCloseDirective } from "@components/ui/ui-dialog-helm/src";
 import { Node, NodeType } from "@models/node";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideGhost, lucideX } from "@ng-icons/lucide";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { TranslateModule } from "@ngx-translate/core";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmCardDirective, HlmCardModule } from "@spartan-ng/ui-card-helm";
-import { map } from "rxjs";
+import { fadeAnimation } from "../../app.routes.transition";
 
 @Component({
     selector: "app-panel-node",
-    imports: [HlmButtonModule, HlmCardModule, NgIcon, RouterModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        HlmButtonModule,
+        HlmCardModule,
+        HlmDialogCloseDirective,
+        NgIcon,
+    ],
     providers: [provideIcons({ lucideGhost, lucideX })],
+    templateUrl: "panel-node.component.html",
     host: {
-        class: "fixed right-5 top-1/2 flex flex-col max-h-[calc(100%-2.5rem)] min-w-[400px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl overflow-hidden",
+        class: "fixed right-5 top-1/2 flex flex-col max-h-[calc(100%-2.5rem)] min-w-[512px] max-w-[calc(100%-2.5rem)] -translate-y-1/2 rounded-xl overflow-hidden",
     },
     hostDirectives: [HlmCardDirective],
-    templateUrl: "panel-node.component.html",
+    animations: [fadeAnimation],
 })
-export class PanelNodeComponent implements OnInit {
-    private _node!: Node;
-    protected get ip(): string | undefined {
-        return this._node.ip;
-    }
-    protected get name(): string {
-        return this._node.name;
-    }
-    protected get attacker(): boolean {
-        return NodeType.AttackerTypes.includes(this._node.type);
+export class PanelNodeComponent implements AfterViewInit {
+    protected readonly node: InputSignal<Node> = input.required<Node>();
+    protected readonly NodeType: typeof NodeType = NodeType;
+    private _loaded: boolean = false;
+
+    constructor(private readonly cdr: ChangeDetectorRef) {}
+
+    public ngAfterViewInit(): void {
+        this._loaded = true;
+        this.cdr.detectChanges();
     }
 
-    public constructor(
-        private readonly _route: ActivatedRoute,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
-
-    public ngOnInit(): void {
-        this._route
-            .parent!.params.pipe(
-                map(({ mac }) => this._networkManager.findByMac(mac)),
-            )
-            .subscribe((node) => (this._node = node));
+    protected getAnimationData(outlet: RouterOutlet) {
+        if ((outlet && !outlet.isActivated) || !this._loaded) return "_";
+        return outlet.activatedRoute.snapshot.url[0]?.path ?? "_";
     }
 }

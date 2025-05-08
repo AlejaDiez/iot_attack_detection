@@ -1,25 +1,43 @@
 <app-menu-bar
     (onNewFile)="onNewFile()"
     (onOpenFile)="onOpenFile()"
+    [externalLibrary]="library.library !== undefined"
     (onLoadExternalLibrary)="onLoadExternalLibrary()"
+    (onDeleteExternalLibrary)="onDeleteExternalLibrary()"
+    [models]="model.models !== undefined"
+    (onLoadModels)="onLoadModels()"
+    (onDeleteModels)="onDeleteModels()"
     (onSaveFile)="onSaveFile()"
     (onUndo)="onUndo()"
     (onRedo)="onRedo()"
-    (onInsertRouter)="onInsertNode('router')"
-    (onInsertDevice)="onInsertNode()"
+    (onInsertRouter)="onInsertNode(NodeType.RouterTypes)"
+    (onInsertDevice)="onInsertNode(NodeType.DeviceTypes)"
+    [language]="config.language()"
+    (onChangeLanguage)="onChangeLanguage($event)"
+    [highContrast]="config.highContrast()"
+    (onHighContrast)="onHighContrast()"
+    [showGrid]="config.grid()"
+    (onShowGrid)="onShowGrid()"
+    (onCenter)="onCenter('smooth')"
+    (onZoomReset)="onZoomReset()"
+    (onZoomIn)="onZoomIn()"
+    (onZoomOut)="onZoomOut()"
     class="fixed left-5 top-5 z-inf" />
 <div [@floatAnimation]="getAnimationData(outlet)" class="relative z-inf">
     <router-outlet #outlet="outlet" />
 </div>
 <hlm-toaster richColors theme="system" />
-<app-canvas [brnCtxMenuTriggerFor]="canvasContextMenu">
+<app-canvas #canvas [brnCtxMenuTriggerFor]="canvasContextMenu">
     @for (node of nodes; track node.mac) {
         <app-node
             [node]="node"
             [brnCtxMenuTriggerFor]="nodeContextMenu"
             [brnCtxMenuTriggerData]="{ $implicit: node }" />
     }
-    @for (connection of connections; track `${connection.node1.mac}-${connection.node2.mac}`) {
+    @for (
+        connection of connections;
+        track `${connection.node1.mac}::${connection.node2.mac}`
+    ) {
         <app-connection [connection]="connection" />
     }
 </app-canvas>
@@ -30,44 +48,46 @@
             <button
                 hlmMenuItem
                 [disabled]="router"
-                (click)="onInsertNode('router', $event)">
-                Insertar router
+                (click)="onInsertNode(NodeType.RouterTypes, $event)">
+                {{ "INSERT_ROUTER" | translate }}
                 <hlm-menu-shortcut>⌘⇧R</hlm-menu-shortcut>
             </button>
-            <button hlmMenuItem (click)="onInsertNode(undefined, $event)">
-                Insertar dispositivo
+            <button
+                hlmMenuItem
+                (click)="onInsertNode(NodeType.DeviceTypes, $event)">
+                {{ "INSERT_DEVICE" | translate }}
                 <hlm-menu-shortcut>⌘⇧D</hlm-menu-shortcut>
             </button>
         </hlm-menu-group>
     </hlm-menu>
 </ng-template>
 
-<ng-template #nodeContextMenu let-node>
+<ng-template #nodeContextMenu let-item>
     <hlm-menu class="w-64">
         <hlm-menu-group>
-            <button hlmMenuItem (click)="onNodeTraffic(node.mac, $event)">
+            <button hlmMenuItem (click)="onNodeTraffic(item.mac, $event)">
                 <ng-icon hlmMenuIcon name="lucideChevronsLeftRightEllipsis" />
-                Tráfico de red
+                {{ "NETWORK_TRAFFIC" | translate }}
             </button>
-            @if (node.type === "computer") {
-                <button hlmMenuItem (click)="onNodeAttack(node.mac, $event)">
+            @if (NodeType.AttackerTypes.includes(item.type)) {
+                <button hlmMenuItem (click)="onNodeAttack(item.mac, $event)">
                     <ng-icon hlmMenuIcon name="lucideGhost" />
-                    Phantom Attacker
+                    {{ "PHANTOM_ATTACKER" | translate }}
                 </button>
             }
-            <button hlmMenuItem (click)="onNodeConfig(node.mac, $event)">
+            <button hlmMenuItem (click)="onNodeConfig(item.mac, $event)">
                 <ng-icon hlmMenuIcon name="lucideSettings" />
-                Configurar
+                {{ "CONFIGURATION" | translate }}
             </button>
         </hlm-menu-group>
         <hlm-menu-separator />
         <hlm-menu-group>
             <button
                 hlmMenuItem
-                (click)="onDeleteNode(node.mac, $event)"
+                (click)="onDeleteNode(item.mac, $event)"
                 class="text-red-500 hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-950 dark:hover:text-red-300">
                 <ng-icon hlmMenuIcon name="lucideTrash" />
-                Eliminar
+                {{ "DELETE" | translate }}
             </button>
         </hlm-menu-group>
     </hlm-menu>

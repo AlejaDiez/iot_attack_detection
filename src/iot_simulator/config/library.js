@@ -41,11 +41,13 @@ function hiddenFunction(...args) {
  * @param {number} packet.identifier - ICMP message identifier
  * @param {number} packet.sequence - ICMP message sequence number
  * @param {number} packet.tcpFlags - TCP flags (FIN = 1, SYN = 2, RST = 4, PSH = 8, ACK = 16, URG = 32)
- * @return {void}
+ * @return {void} - If you don't want to run the default interceptor of the simulator, return null or other value
  */
 function intcp(self, packet) {
     // Hey there is a packet here!
     // You can modify or log the packet before sending it to the target
+    // If you don't want to run the default interceptor of the simulator, you can return null or other value
+    // return null;
 }
 
 /**
@@ -62,6 +64,25 @@ function intcp(self, packet) {
  */
 function cmd_ping(self, target) {
     // Program your command here...
+    const headerSize = 8;
+    const payload = "Ping request from external library";
+    const payloadSize = new TextEncoder().encode(payload).length;
+
+    self.send({
+        srcIP: self.ip,
+        dstIP: target,
+        transportProtocol: 1,
+        payload,
+        totalBytes: headerSize + payloadSize,
+        headerSize,
+        payloadSize,
+        timestamp: new Date(),
+        ttl: 64,
+        type: 8,
+        code: 0,
+        identifier: Math.floor(Math.random() * 65535),
+        sequence: Math.floor(Math.random() * 65535),
+    });
 }
 
 /**

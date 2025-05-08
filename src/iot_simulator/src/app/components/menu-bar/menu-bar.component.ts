@@ -1,6 +1,16 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+    Component,
+    inject,
+    input,
+    InputSignal,
+    output,
+    OutputEmitterRef,
+} from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
-import { NetworkManagerService } from "@services/network-manager.service";
+import { NetworkService } from "@services/network.service";
+import { StateService } from "@services/state.service";
 import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
 import {
     HlmMenuBarComponent,
@@ -10,17 +20,23 @@ import {
     HlmMenuItemCheckboxDirective,
     HlmMenuItemCheckComponent,
     HlmMenuItemDirective,
+    HlmMenuItemSubIndicatorComponent,
     HlmMenuSeparatorComponent,
     HlmMenuShortcutComponent,
+    HlmSubMenuComponent,
 } from "@spartan-ng/ui-menu-helm";
 
 @Component({
     selector: "app-menu-bar",
     imports: [
+        CommonModule,
+        TranslateModule,
         BrnMenuTriggerDirective,
         HlmMenuComponent,
         HlmMenuBarComponent,
+        HlmSubMenuComponent,
         HlmMenuItemDirective,
+        HlmMenuItemSubIndicatorComponent,
         HlmMenuShortcutComponent,
         HlmMenuSeparatorComponent,
         HlmMenuBarItemDirective,
@@ -31,36 +47,48 @@ import {
     templateUrl: "menu-bar.component.html",
 })
 export class MenuBarComponent {
-    @Output()
-    public onNewFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onOpenFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onLoadExternalLibrary: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onSaveFile: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onUndo: EventEmitter<void> = new EventEmitter<void>();
+    public readonly config: ConfigService = inject(ConfigService);
+    public readonly state: StateService = inject(StateService);
+    public readonly network: NetworkService = inject(NetworkService);
+    protected readonly onNewFile: OutputEmitterRef<void> = output();
+    protected readonly onOpenFile: OutputEmitterRef<void> = output();
+    public readonly externalLibrary: InputSignal<boolean> = input.required();
+    protected readonly onLoadExternalLibrary: OutputEmitterRef<void> = output();
+    protected readonly onDeleteExternalLibrary: OutputEmitterRef<void> =
+        output();
+    public readonly models: InputSignal<boolean> = input.required();
+    protected readonly onLoadModels: OutputEmitterRef<void> = output();
+    protected readonly onDeleteModels: OutputEmitterRef<void> = output();
+    protected readonly onSaveFile: OutputEmitterRef<void> = output();
+    protected readonly onUndo: OutputEmitterRef<void> = output();
     protected get canUndo(): boolean {
-        return this._config.stateManager.canUndo;
+        return this.state.canUndo;
     }
-    @Output()
-    public onRedo: EventEmitter<void> = new EventEmitter<void>();
+    protected readonly onRedo: OutputEmitterRef<void> = output();
     protected get canRedo(): boolean {
-        return this._config.stateManager.canRedo;
+        return this.state.canRedo;
     }
-    @Output()
-    public onInsertRouter: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    public onInsertDevice: EventEmitter<void> = new EventEmitter<void>();
+    protected readonly onInsertRouter: OutputEmitterRef<void> = output();
+    protected readonly onInsertDevice: OutputEmitterRef<void> = output();
     protected get canInsertRouter(): boolean {
-        return !this._networkManager.router;
+        return !this.network.router;
     }
-
-    public constructor(
-        private readonly _config: ConfigService,
-        private readonly _networkManager: NetworkManagerService,
-    ) {}
+    public readonly language: InputSignal<string> = input.required();
+    protected readonly onChangeLanguage: OutputEmitterRef<string> = output();
+    public readonly highContrast: InputSignal<boolean> = input.required();
+    protected onHighContrast: OutputEmitterRef<void> = output();
+    public readonly showGrid: InputSignal<boolean> = input.required();
+    protected readonly onShowGrid: OutputEmitterRef<void> = output();
+    protected readonly onCenter: OutputEmitterRef<void> = output();
+    protected readonly onZoomReset: OutputEmitterRef<void> = output();
+    protected readonly onZoomIn: OutputEmitterRef<void> = output();
+    protected get canZoomIn(): boolean {
+        return this.config.zoom() < 2;
+    }
+    protected readonly onZoomOut: OutputEmitterRef<void> = output();
+    protected get canZoomOut(): boolean {
+        return this.config.zoom() > 0.5;
+    }
 
     protected handleOnNewFile() {
         this.onNewFile.emit();
@@ -72,6 +100,18 @@ export class MenuBarComponent {
 
     protected handleOnLoadExternalLibrary() {
         this.onLoadExternalLibrary.emit();
+    }
+
+    protected handleOnDeleteExternalLibrary() {
+        this.onDeleteExternalLibrary.emit();
+    }
+
+    protected handleOnLoadModels() {
+        this.onLoadModels.emit();
+    }
+
+    protected handleOnDeleteModels() {
+        this.onDeleteModels.emit();
     }
 
     protected handleOnSaveFile() {
@@ -92,5 +132,33 @@ export class MenuBarComponent {
 
     protected handleOnInsertDevice() {
         this.onInsertDevice.emit();
+    }
+
+    protected handleOnLanguage(language: string) {
+        this.onChangeLanguage.emit(language);
+    }
+
+    protected handleOnHighContrast() {
+        this.onHighContrast.emit();
+    }
+
+    protected handleOnGrid() {
+        this.onShowGrid.emit();
+    }
+
+    protected handleOnCenter() {
+        this.onCenter.emit();
+    }
+
+    protected handleOnZoomReset() {
+        this.onZoomReset.emit();
+    }
+
+    protected handleOnZoomIn() {
+        this.onZoomIn.emit();
+    }
+
+    protected handleOnZoomOut() {
+        this.onZoomOut.emit();
     }
 }

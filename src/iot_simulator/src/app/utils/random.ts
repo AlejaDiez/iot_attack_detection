@@ -23,3 +23,16 @@ export const randomString = (size: number): string => {
         result += chars[randomInt(0, chars.length - 1)];
     return result;
 };
+
+/**
+ * Función para obtener un número aleatorio con una media y una desviación estándar.
+ *
+ * @param mean Media del número.
+ * @param stddev Desviación estándar del número.
+ * @returns Número aleatorio con una media y una desviación estándar.
+ */
+export const randomMeanStd = (mean: number, stddev: number): number => {
+    const rand = Math.random() + Math.random() + Math.random();
+
+    return Math.max(1, Math.floor(mean + stddev * (rand - 1.5)));
+};
