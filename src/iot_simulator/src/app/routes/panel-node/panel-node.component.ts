@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -18,12 +19,13 @@ import { fadeAnimation } from "../../app.routes.transition";
 @Component({
     selector: "app-panel-node",
     imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
         HlmButtonModule,
         HlmCardModule,
         HlmDialogCloseDirective,
         NgIcon,
-        RouterModule,
-        TranslateModule,
     ],
     providers: [provideIcons({ lucideGhost, lucideX })],
     templateUrl: "panel-node.component.html",

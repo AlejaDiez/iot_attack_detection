@@ -1,14 +1,19 @@
-import { Component, inject, input, InputSignal, Signal } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { CommonModule } from "@angular/common";
 import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    InputSignal,
+    model,
+    ModelSignal,
+    Signal,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Device } from "@models/device";
 import { Node } from "@models/node";
-import { PhantomAttacker } from "@models/phantom-attacker";
+import { Attack, PhantomAttacker } from "@models/phantom-attacker";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideUnplug } from "@ng-icons/lucide";
 import { TranslateModule } from "@ngx-translate/core";
@@ -17,12 +22,13 @@ import { BrnSelectModule } from "@spartan-ng/brain/select";
 import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
 import { HlmLabelModule } from "@spartan-ng/ui-label-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
-import { map, tap } from "rxjs";
 import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/src/lib/hlm-menu-separator.component";
 
 @Component({
     imports: [
-        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
         BrnSelectModule,
         HlmButtonModule,
         HlmLabelModule,
@@ -30,7 +36,6 @@ import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/s
         HlmSelectModule,
         NgIcon,
         HlmMenuSeparatorComponent,
-        TranslateModule,
     ],
     providers: [provideIcons({ lucideUnplug })],
     templateUrl: "attack.component.html",
@@ -39,24 +44,13 @@ import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/s
 export class AttackComponent {
     public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
-    protected readonly form: FormGroup = new FormGroup({
-        attack: new FormControl(null, [Validators.required]),
-        target: new FormControl(null, [Validators.required]),
-    });
-    protected readonly multiple: Signal<boolean> = toSignal(
-        this.form.get("attack")!.valueChanges.pipe(
-            tap(({ multiple }) => {
-                const value = this.form.get("target")!.value;
-
-                if (value) {
-                    if (multiple && !Array.isArray(value))
-                        this.form.get("target")!.setValue([value]);
-                    else if (!multiple && Array.isArray(value))
-                        this.form.get("target")!.setValue(value[0]);
-                }
-            }),
-            map(({ multiple }) => multiple),
-        ),
+    protected readonly attack: ModelSignal<Attack | null> =
+        model<Attack | null>(null);
+    protected readonly target: ModelSignal<string | string[] | null> = model<
+        string | string[] | null
+    >(null);
+    protected readonly multipleTargets: Signal<boolean> = computed(
+        () => this.attack()?.multiple ?? false,
     );
     protected get canConnect(): boolean {
         return this.network.router !== undefined;
@@ -75,17 +69,31 @@ export class AttackComponent {
         return this.network.getConnectedNodes(this.node().mac);
     }
 
+    public constructor() {
+        effect(() => {
+            if (this.multipleTargets())
+                this.target.update((value) => {
+                    if (value && !Array.isArray(value))
+                        return [value as string];
+                    return value;
+                });
+            else
+                this.target.update((value) => {
+                    if (value && Array.isArray(value)) return value[0];
+                    return value;
+                });
+        });
+    }
+
     protected connect() {
         (this.node() as Device).connect(this.network.router!);
     }
 
-    protected attack() {
-        const { attack, target } = this.form.value;
-
-        switch (attack.id) {
+    protected execute() {
+        switch (this.attack()!.id) {
             case "dos":
                 (this.node().generator as PhantomAttacker).dos(
-                    target,
+                    this.target() as string,
                     53,
                     [32, 128],
                     200,
@@ -93,8 +101,10 @@ export class AttackComponent {
                 break;
             default:
                 (this.node().generator as PhantomAttacker).attack(
-                    attack.id,
-                    ...(Array.isArray(target) ? target : [target]),
+                    this.attack()!.id,
+                    ...(Array.isArray(this.target()!)
+                        ? this.target()!
+                        : [this.target()!]),
                 );
                 break;
         }

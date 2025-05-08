@@ -75,6 +75,10 @@
     pointer-events: none;
     @apply select-none;
 
+    ::ng-deep .high-contrast & {
+        @apply !rounded-md !bg-card !px-2 !py-1;
+    }
+
     ::ng-deep .high-contrast & .ip {
         @apply !text-primary !opacity-100;
     }

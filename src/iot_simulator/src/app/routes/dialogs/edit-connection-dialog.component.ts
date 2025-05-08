@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HlmSwitchModule } from "@components/ui/ui-switch-helm/src";
@@ -20,7 +21,9 @@ export interface EditConnectionContext {
 @Component({
     selector: "app-edit-connection-dialog",
     imports: [
+        CommonModule,
         FormsModule,
+        TranslateModule,
         BrnSelectModule,
         HlmDialogHeaderComponent,
         HlmDialogTitleDirective,
@@ -28,7 +31,6 @@ export interface EditConnectionContext {
         HlmLabelDirective,
         HlmSelectModule,
         HlmSwitchModule,
-        TranslateModule,
     ],
     template: `
         <hlm-dialog-header>
@@ -42,7 +44,8 @@ export interface EditConnectionContext {
                 <input
                     hlmInput
                     type="number"
-                    [(ngModel)]="connection.latency"
+                    [ngModel]="connection.latency"
+                    (ngModelChange)="connection.latency = Math.max($event, 0)"
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
@@ -52,7 +55,10 @@ export interface EditConnectionContext {
                 <input
                     hlmInput
                     type="number"
-                    [(ngModel)]="connection.latencyVariation"
+                    [ngModel]="connection.latencyVariation"
+                    (ngModelChange)="
+                        connection.latencyVariation = Math.max($event, 0)
+                    "
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
@@ -74,6 +80,7 @@ export interface EditConnectionContext {
                     }}</label>
                     <brn-select
                         [(ngModel)]="connection.cyberShield.model"
+                        [disabled]="connection.cyberShield.models.length === 0"
                         [placeholder]="'SELECT_MODEL' | translate"
                         class="col-span-3 inline-block w-full">
                         <hlm-select-trigger class="w-full">
@@ -97,6 +104,7 @@ export interface EditConnectionContext {
     host: { class: "min-w-96 flex flex-col gap-4" },
 })
 export class EditConnectionDialogComponent {
+    public readonly Math: typeof Math = Math;
     protected readonly context =
         injectBrnDialogContext<EditConnectionContext>();
     protected readonly connection = this.context.connection;

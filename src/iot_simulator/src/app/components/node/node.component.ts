@@ -24,7 +24,7 @@ import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 
 @Component({
     selector: "app-node",
-    imports: [CommonModule, HlmCardModule, NgIcon, RouterModule],
+    imports: [RouterModule, CommonModule, HlmCardModule, NgIcon],
     providers: [
         provideIcons({
             lucideCpu,

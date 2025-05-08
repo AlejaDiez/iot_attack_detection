@@ -19,24 +19,32 @@
 }
 
 .cyber-shield {
-    @apply opacity-100;
+    @apply fill-transparent opacity-0;
     @apply transition-[opacity,fill-color];
 }
 
-.cyber-shield.disabled {
-    @apply opacity-0;
-}
-
 .cyber-shield.waiting {
-    @apply fill-blue-600 dark:fill-blue-400;
+    @apply fill-blue-600 opacity-100 dark:fill-blue-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-blue-700 dark:fill-blue-500;
+    }
 }
 
 .cyber-shield.safe {
-    @apply fill-green-600 dark:fill-green-400;
+    @apply fill-green-600 opacity-100 dark:fill-green-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-green-700 dark:fill-green-500;
+    }
 }
 
 .cyber-shield.attack {
-    @apply fill-red-600 dark:fill-red-400;
+    @apply fill-red-600 opacity-100 dark:fill-red-400;
+
+    ::ng-deep .high-contrast & {
+        @apply fill-red-700 dark:fill-red-500;
+    }
 }
 
 .cyber-shield.animate {

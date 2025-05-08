@@ -48,10 +48,6 @@ export class Connection {
     public set latencyVariation(value: number) {
         if (value < 0)
             throw new Error("The latency variation cannot be negative");
-        if (this.latency < value)
-            throw new Error(
-                "The latency variation cannot be greater than the latency",
-            );
         this._latencyVariation = value;
     }
     /**

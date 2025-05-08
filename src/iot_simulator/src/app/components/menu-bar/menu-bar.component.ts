@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import {
     Component,
     inject,
@@ -28,6 +29,7 @@ import {
 @Component({
     selector: "app-menu-bar",
     imports: [
+        CommonModule,
         TranslateModule,
         BrnMenuTriggerDirective,
         HlmMenuComponent,

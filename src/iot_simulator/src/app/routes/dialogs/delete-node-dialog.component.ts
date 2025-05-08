@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, Signal } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
 import { Node } from "@models/node";
 import { TranslateModule } from "@ngx-translate/core";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
@@ -21,16 +20,15 @@ export interface DeleteNodeDialogContext {
 @Component({
     selector: "app-delete-node-dialog",
     imports: [
-        BrnSelectImports,
         CommonModule,
-        ReactiveFormsModule,
+        TranslateModule,
+        BrnSelectImports,
         HlmButtonDirective,
         HlmDialogDescriptionDirective,
         HlmDialogHeaderComponent,
         HlmDialogTitleDirective,
         HlmDialogFooterComponent,
         HlmSelectModule,
-        TranslateModule,
     ],
     template: `
         <hlm-dialog-header>

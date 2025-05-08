@@ -1,7 +1,7 @@
+import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { NodeType } from "@models/node";
 import { TranslateModule } from "@ngx-translate/core";
+import { ConfigService } from "@services/config.service";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
 import {
@@ -17,12 +17,12 @@ export interface ShowPacketDialogContext {
 @Component({
     selector: "app-show-packet-dialog",
     imports: [
+        CommonModule,
+        TranslateModule,
         BrnSelectImports,
-        ReactiveFormsModule,
         HlmDialogHeaderComponent,
         HlmDialogTitleDirective,
         HlmSelectModule,
-        TranslateModule,
     ],
     template: `
         <hlm-dialog-header>
@@ -43,7 +43,7 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_DST_IP" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.srcPort }}</span>
+                <span class="col-span-3">{{ context.packet.dstIP }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -51,7 +51,7 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_SRC_PORT" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.dstIP }}</span>
+                <span class="col-span-3">{{ context.packet.srcPort }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -119,7 +119,10 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_TIMESTAMP" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.timestamp }}</span>
+                <span class="col-span-3">{{
+                    context.packet.timestamp
+                        | date: "medium" : undefined : config.language()
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -200,7 +203,7 @@ export interface ShowPacketDialogContext {
     host: { class: "min-w-96 flex flex-col gap-4" },
 })
 export class ShowPacketDialogComponent {
-    public readonly NodeType: typeof NodeType = NodeType;
+    public readonly config = inject(ConfigService);
     protected readonly ref: BrnDialogRef<ShowPacketDialogComponent> = inject(
         BrnDialogRef<ShowPacketDialogComponent>,
     );

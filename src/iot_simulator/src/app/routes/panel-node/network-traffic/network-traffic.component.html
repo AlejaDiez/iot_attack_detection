@@ -67,16 +67,13 @@
             {{ "NO_TRAFFIC" | translate }}
         </p>
     }
-    <form
-        [formGroup]="form"
-        (submit)="execute()"
-        class="flex w-[584px] flex-row items-center justify-end gap-2">
+    <div class="flex w-[584px] flex-row items-center justify-end gap-2">
         <label hlmLabel class="w-40">
             {{ "COMMAND" | translate }}
             <brn-select
-                class="!mt-2 inline-block w-full"
+                [(ngModel)]="command"
                 [placeholder]="'SELECT_COMMAND' | translate"
-                formControlName="command">
+                class="!mt-2 inline-block w-full">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>
@@ -98,14 +95,14 @@
             </brn-select>
         </label>
         <label hlmLabel class="grow">
-            {{ (multiple() ? "TARGETS" : "TARGET") | translate }}
+            {{ (multipleTargets() ? "TARGETS" : "TARGET") | translate }}
             <brn-select
-                class="!mt-2 inline-block w-full"
+                [(ngModel)]="target"
                 [placeholder]="
-                    (multiple() ? 'TARGETS_IP' : 'TARGET_IP') | translate
+                    (multipleTargets() ? 'TARGETS_IP' : 'TARGET_IP') | translate
                 "
-                formControlName="target"
-                [multiple]="multiple()">
+                [multiple]="multipleTargets()"
+                class="!mt-2 inline-block w-full">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>
@@ -116,10 +113,14 @@
                 </hlm-select-content>
             </brn-select>
         </label>
-        <button hlmBtn [disabled]="form.invalid" class="self-end">
+        <button
+            hlmBtn
+            [disabled]="!(command() && target())"
+            (click)="execute()"
+            class="self-end">
             {{ "LAUNCH_COMMAND" | translate }}
         </button>
-    </form>
+    </div>
 } @else {
     @if (NodeType.RouterTypes.includes(this.node().type)) {
         <ng-icon

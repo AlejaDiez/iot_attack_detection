@@ -10,10 +10,11 @@ import { ConfigService } from "@services/config.service";
 
 @Component({
     selector: "app-canvas",
+    imports: [CommonModule],
     template: `
         <div
             #frame
-            class="fixed left-0 top-0 h-screen w-screen cursor-default overflow-scroll">
+            class="frame fixed left-0 top-0 h-screen w-screen cursor-default overflow-scroll">
             <div
                 [ngStyle]="{
                     width: config.size() * config.zoom() + 'px',
@@ -36,6 +37,14 @@ import { ConfigService } from "@services/config.service";
         </div>
     `,
     styles: `
+        .frame {
+            @apply bg-background;
+
+            ::ng-deep .high-contrast & {
+                @apply !bg-border;
+            }
+        }
+
         .grid-view {
             background-image: radial-gradient(
                 circle,
@@ -45,11 +54,14 @@ import { ConfigService } from "@services/config.service";
             background-size: 20px 20px;
 
             ::ng-deep .high-contrast & {
-                @apply !bg-border;
+                background-image: radial-gradient(
+                    circle,
+                    hsl(var(--muted-foreground)) 1.5px,
+                    transparent 1.5px
+                );
             }
         }
     `,
-    imports: [CommonModule],
 })
 export class CanvasComponent {
     public readonly config: ConfigService = inject(ConfigService);

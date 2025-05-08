@@ -1,22 +1,21 @@
+import { CommonModule } from "@angular/common";
 import {
     Component,
     computed,
+    effect,
     inject,
     input,
     InputSignal,
+    model,
+    ModelSignal,
     Signal,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
-import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
 import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
 import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
 import { Device } from "@models/device";
+import { Command } from "@models/flow-generator";
 import { Node, NodeType } from "@models/node";
 import { Packet } from "@models/packet";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -38,11 +37,12 @@ import { HlmInputModule } from "@spartan-ng/ui-input-helm";
 import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 import { HlmTableModule } from "@spartan-ng/ui-table-helm";
 import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
-import { map, tap } from "rxjs";
 
 @Component({
     imports: [
-        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
         BrnSelectModule,
         BrnTableModule,
         HlmButtonModule,
@@ -53,7 +53,6 @@ import { map, tap } from "rxjs";
         HlmTableModule,
         HlmTabsModule,
         NgIcon,
-        TranslateModule,
     ],
     providers: [
         provideIcons({
@@ -80,25 +79,13 @@ export class NetworkTrafficComponent {
         "size",
         "data",
     ]);
-    protected readonly form: FormGroup = new FormGroup({
-        command: new FormControl(null, [Validators.required]),
-        target: new FormControl(null, [Validators.required]),
-    });
-    protected readonly multiple: Signal<boolean> = toSignal(
-        this.form.get("command")!.valueChanges.pipe(
-            tap(({ multiple }) => {
-                const value = this.form.get("target")!.value;
-
-                if (value) {
-                    if (multiple && !Array.isArray(value))
-                        this.form.get("target")!.setValue([value]);
-                    else if (!multiple && Array.isArray(value))
-                        this.form.get("target")!.setValue(value[0]);
-                }
-            }),
-            map((e) => e.multiple),
-        ),
-        { initialValue: false },
+    protected readonly command: ModelSignal<Command | null> =
+        model<Command | null>(null);
+    protected readonly target: ModelSignal<string | string[] | null> = model<
+        string | string[] | null
+    >(null);
+    protected readonly multipleTargets: Signal<boolean> = computed(
+        () => this.command()?.multiple ?? false,
     );
     protected get canConnect(): boolean {
         return this.network.router !== undefined;
@@ -115,6 +102,22 @@ export class NetworkTrafficComponent {
         return this.network.getConnectedNodes(this.node().mac);
     }
 
+    public constructor() {
+        effect(() => {
+            if (this.multipleTargets())
+                this.target.update((value) => {
+                    if (value && !Array.isArray(value))
+                        return [value as string];
+                    return value;
+                });
+            else
+                this.target.update((value) => {
+                    if (value && Array.isArray(value)) return value[0];
+                    return value;
+                });
+        });
+    }
+
     protected connect() {
         (this.node() as Device).connect(this.network.router!);
     }
@@ -124,19 +127,23 @@ export class NetworkTrafficComponent {
     }
 
     protected execute() {
-        const { command, target } = this.form.value;
-
-        switch (command.id) {
+        switch (this.command()!.id) {
             case "ping":
-                this.node().generator.ping(target);
+                this.node().generator.ping(this.target() as string);
                 break;
             case "threeWayHandshake":
-                this.node().generator.threeWayHandshake(target, 80, 80);
+                this.node().generator.threeWayHandshake(
+                    this.target() as string,
+                    80,
+                    80,
+                );
                 break;
             default:
                 this.node().generator.execute(
-                    command.id,
-                    ...(Array.isArray(target) ? target : [target]),
+                    this.command()!.id,
+                    ...(Array.isArray(this.target()!)
+                        ? this.target()!
+                        : [this.target()!]),
                 );
                 break;
         }
