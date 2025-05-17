@@ -9,6 +9,7 @@ Versión: 1.0
 
 import logging
 from utils.args import parse_args
+from utils.metrics import metrics_to_csv, metrics_to_graph
 
 
 def main(args):
@@ -23,6 +24,19 @@ def main(args):
 
     # Cargar el modelo
     model = load_model(args.model)
+
+    # Convertir las metricas a CSV y gráficas
+    if args.metrics:
+        metrics_to_csv(args.metrics, output=args.output)
+        metrics_to_graph(
+            args.metrics,
+            output=args.output,
+            model=model,
+            test_data=load_dataset(*args.test)
+        )
+        return
+
+    # Mostrar el resumen del modelo
     model.summary()
 
     # Crear el servidor

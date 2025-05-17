@@ -15,6 +15,7 @@ def parse_args():
         *get_path("../data/x_test.csv", "../data/y_test.csv")
     )
     default_output_path = get_rel_path(get_path("../data/output"))
+    default_metrics_path = f"{default_output_path}/model_metrics.json"
 
     # Crear el parser de argumentos
     parser = ArgumentParser(
@@ -58,9 +59,19 @@ def parse_args():
         metavar="NUM_FILES",
     )
 
+    # Argumento para convertir las metricas a CSV
+    config.add_argument(
+        "-m",
+        "--metrics",
+        type=str,
+        const=default_metrics_path,
+        nargs="?",
+        help=f"Convierte las metricas en archivos csv y genera gráficas de estas (default: {default_metrics_path})",
+        metavar="METRICS",
+    )
+
     # Argumento para la ruta del modelo
     parser.add_argument(
-        "-m",
         "--model",
         default=default_model_path,
         type=str,
@@ -70,7 +81,6 @@ def parse_args():
 
     # Argumento para la ruta del dataset
     parser.add_argument(
-        "-t",
         "--train",
         nargs=2,
         default=default_train_path,
@@ -79,7 +89,6 @@ def parse_args():
         metavar=("X_TRAIN", "Y_TRAIN"),
     )
     parser.add_argument(
-        "-T",
         "--test",
         nargs=2,
         default=default_test_path,
@@ -90,7 +99,6 @@ def parse_args():
 
     # Argumento para la ruta de salida
     parser.add_argument(
-        "-o",
         "--output",
         default=default_output_path,
         type=str,
