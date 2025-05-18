@@ -1,6 +1,7 @@
 \capitulo{1}{Introducción}
 
 \section{Contexto}
+\label{sec:Contexto}
 En la actualidad, el Internet de las Cosas (IoT) ha experimentado un crecimiento significativo, convirtiéndose en una parte fundamental de nuestras vidas. Los dispositivos IoT están presentes en una amplia gama de sectores, desde los hogares hasta los sistemas industriales, lo que ha incrementado las oportunidades de interconexión y automatización. Sin embargo, este aumento en la cantidad de dispositivos conectados también ha generado un mayor interés por parte de los atacantes en buscar nuevas formas de realizar dichos ataques.
 
 La detención de estos ataques se enfrenta a  grandes desafíos debido a la heterogeneidad de los sistemas. Detectar ataques en tiempo real sin comprometer la eficiencia o la privacidad de los datos se ha convertido en una prioridad. En este contexto, la inteligencia artificial (IA) ha destacado como una herramienta poderosa para mejorar esta detección de intrusos, permitiendo analizar grandes cantidades de datos y detectar patrones de comportamiento diferentes que pudieran señalar un ataque.
@@ -10,6 +11,7 @@ El aprendizaje federado es una técnica relativamente novedosa que permite entre
 Este proyecto se centra en el desarrollo de una herramienta que permita la generación de topologías de red compuestas por dispositivos IoT, así como la simulación de tráfico y la emulación de diferentes tipos de ataques. El objetivo es disponer de un entorno de pruebas en el que se puedan integrar y evaluar distintos modelos de inteligencia artificial para la detección de ataques cibernéticos. Como parte del trabajo, se entrenará un modelo de detección basado en aprendizaje federado, el cual será comparado con su equivalente entrenado mediante un entrenamiento centralizado. Ambos modelos serán entrenados utilizando un conjunto de datos etiquetado que incluye tanto trazas de red benignas como aquellas correspondientes a distintos tipos de ataques.
 
 \section{Motivación}
+\label{sec:Motivacion}
 La realización de este proyecto surge a partir de mi colaboración con el Grupo de Inteligencia Computacional Aplicada (GICAP)~\cite{gicap} de la Universidad de Burgos, donde, durante el último curso del grado, he investigado las posibles ventajas e implementaciones de una técnica relativamente novedosa para el entrenamiento de modelos de inteligencia artificial: el aprendizaje federado. Esta técnica permite entrenar modelos de manera segura y eficaz, priorizando la privacidad y el confinamiento de los datos.
 
 Durante esta etapa, se me propusieron varias líneas de trabajo que me sirvieron de guía para obtener conclusiones y desarrollar una implementación práctica del modelo. Como demostración del trabajo realizado, se planteó la creación de un simulador de red que permitiera visualizar cómo un modelo de inteligencia artificial es capaz de detectar ataques, sin necesidad de desplegar una infraestructura compleja.
@@ -17,6 +19,7 @@ Durante esta etapa, se me propusieron varias líneas de trabajo que me sirvieron
 La oportunidad de participar en un proyecto tan ambicioso ha sido una gran motivación para el desarrollo de este Trabajo Fin de Grado. Confío en que, en un futuro próximo, esta solución pueda ser aplicada en entornos reales, ya que la seguridad y la protección frente a ataques son aspectos fundamentales en nuestra sociedad tecnológicamente avanzada.
 
 \section{Solución}
+\label{sec:Solucion}
 La solución propuesta consiste en el desarrollo de un entorno de simulación capaz de generar trazas de red entre dispositivos conectados, así como en el entrenamiento de un modelo de inteligencia artificial mediante aprendizaje federado. Este modelo será entrenado a partir de un conjunto de datos que contiene diversas trazas de red, etiquetadas según el tipo de ataque al que corresponden.
 
 Para el desarrollo del simulador se emplearán tecnologías como TypeScript y el framework Angular. Por otro lado, el entrenamiento del modelo se llevará a cabo utilizando Python, el framework Flower y la biblioteca TensorFlow, bajo el paradigma del aprendizaje federado.
@@ -26,10 +29,11 @@ Para el entrenamiento y validación del modelo se utilizará el conjunto de dato
 \url{https://www.kaggle.com/datasets/dhoogla/nftoniot?select=NF-ToN-IoT.parquet}
 
 \section{Estructura de la memoria}
+\label{sec:Estructura}
 La memoria se organiza en los siguientes apartados:
 \begin{itemize}
     \item \textbf{Introducción}: contexto del proyecto, la motivación, la solución propuesta y la estructura de la memoria. También se incluirá información sobre el repositorio del proyecto.
-    \item Objetivos: definición de los objetivos generales, técnicos y personales que guían el desarrollo del proyecto.
+    \item \textbf{Objetivos}: definición de los objetivos generales, técnicos y personales que guían el desarrollo del proyecto.
     \item \textbf{Conceptos teóricos}: descripción detallada de los fundamentos teóricos y conceptos clave relacionados con el desarrollo del proyecto.
     \item \textbf{Técnicas y herramientas}: explicación de las metodologías y tecnologías utilizadas en el desarrollo del proyecto.
     \item \textbf{Desarrollo del proyecto}: explicación de las diferentes etapas de desarrollo del proyecto, incluyendo el proceso de entrenamiento federado, la implementación y las pruebas del modelo, así como la experimentación y los resultados obtenidos.
@@ -38,6 +42,7 @@ La memoria se organiza en los siguientes apartados:
 \end{itemize}
 
 \section{Repositorio}
+\label{sec:Repositorio}
 El código fuente y los recursos asociados se encuentran disponibles en el repositorio de GitHub en la siguiente dirección
 
 \url{https://github.com/AlejaDiez/iot_attack_detection}
