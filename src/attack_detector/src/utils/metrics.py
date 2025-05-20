@@ -217,6 +217,7 @@ def metrics_to_graph(
         plt.title(title)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+        plt.grid(True)
         plt.legend()
         plt.tight_layout()
         plt.savefig(path)

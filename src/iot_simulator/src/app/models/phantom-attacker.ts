@@ -46,25 +46,21 @@ export class PhantomAttacker extends FlowGenerator {
         ttlRange: [number, number],
         packetNum: number,
     ): void {
-        // for (let i = 0; i < packetNum; i++) {
-        //     const packet: UDPPacket = Packet.UDP(
-        //         this.node.ip!,
-        //         dstIP,
-        //         randomInt(1024, 65535),
-        //         dstPort,
-        //         randomString(128),
-        //     );
-        //     packet.ttl = randomInt(ttlRange[0], ttlRange[1]);
-        //     this.node.sendPacket(packet);
-        // }
-
         for (let i = 0; i < packetNum; i++) {
+            // const packet: UDPPacket = Packet.UDP(
+            //     this.node.ip!,
+            //     dstIP,
+            //     randomInt(1024, 65535),
+            //     dstPort,
+            //     randomString(128),
+            // );
             const packet = Packet.TCPSYN(
                 this.node.ip!,
                 dstIP,
                 randomInt(1024, 65535),
                 dstPort,
             );
+
             packet.ttl = randomInt(ttlRange[0], ttlRange[1]);
             this.node.sendPacket(packet);
         }
@@ -97,7 +93,7 @@ export class PhantomAttacker extends FlowGenerator {
                 );
             this._externalAttacks.push({
                 id: atk,
-                name: atk.replace("atk_", ""),
+                name: atk.substring(4).replace("_", " "),
                 multiple: paramsCount(library[atk]) === Infinity,
             });
         }
