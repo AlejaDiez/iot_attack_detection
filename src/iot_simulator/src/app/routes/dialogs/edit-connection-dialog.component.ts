@@ -44,6 +44,7 @@ export interface EditConnectionContext {
                 <input
                     hlmInput
                     type="number"
+                    placeholder="ms"
                     [ngModel]="connection.latency"
                     (ngModelChange)="connection.latency = Math.max($event, 0)"
                     class="col-span-3" />
@@ -59,6 +60,20 @@ export interface EditConnectionContext {
                     (ngModelChange)="
                         connection.latencyVariation = Math.max($event, 0)
                     "
+                    class="col-span-3" />
+            </div>
+            <div class="grid grid-cols-4 items-center gap-4">
+                <label hlmLabel class="text-right">{{
+                    "BANDWIDTH" | translate
+                }}</label>
+                <input
+                    hlmInput
+                    type="number"
+                    [ngModel]="connection.bandwidth"
+                    (ngModelChange)="
+                        connection.bandwidth = Math.max($event, 0)
+                    "
+                    placeholder="Bytes/s"
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">

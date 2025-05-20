@@ -85,6 +85,7 @@
     "MODIFY_CONNECTION": "Modifier la connexion",
     "LATENCY": "Latence",
     "VARIABILITY": "Variabilité",
+    "BANDWIDTH": "Bande passante",
     "CYBER_SHIELD": "Cyber Bouclier",
     "MODEL": "Modèle",
     "SELECT_MODEL": "Sélectionner un modèle",

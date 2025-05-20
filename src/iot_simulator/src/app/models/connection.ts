@@ -50,6 +50,19 @@ export class Connection {
             throw new Error("The latency variation cannot be negative");
         this._latencyVariation = value;
     }
+    /** Ancho de banda de la conexión. */
+    private _bandwidth: number;
+    /** Ancho de banda de la conexión. */
+    public get bandwidth(): number {
+        return this._bandwidth;
+    }
+    /** Ancho de banda de la conexión. */
+    @StateService.SetState
+    public set bandwidth(value: number) {
+        if (value <= 0) throw new Error("The bandwidth cannot be negative");
+        this._bandwidth = value;
+    }
+
     /**
      * Estado de la conexión.
      * - IDLE: La conexión está inactiva.
@@ -74,6 +87,7 @@ export class Connection {
      * @param node2 Segundo nodo de la conexión, suele ser un dispositivo.
      * @param latency Latencia de la conexión, si no se especifica, se asigna un valor aleatorio entre 0 y 1000 ms.
      * @param latencyVariation Variación de la latencia de la conexión, si no se especifica, se asigna 0.
+     * @param bandwidth Ancho de banda de la conexión, si no se especifica, se asigna un valor aleatorio entre 100 KB/s y 1 MB/s.
      * @param cyberShield Protector de flujo de red, si no se especifica, se asigna uno por defecto.
      */
     public constructor(
@@ -81,6 +95,7 @@ export class Connection {
         node2: Node,
         latency?: number,
         latencyVariation?: number,
+        bandwidth?: number,
         cyberShield?: CyberShield,
     ) {
         this._queue = [];
@@ -89,6 +104,7 @@ export class Connection {
         this.node2 = node2;
         this._latency = latency ?? randomInt(0, 1000);
         this._latencyVariation = latencyVariation ?? 0;
+        this._bandwidth = bandwidth ?? randomInt(100000, 1000000);
         this._status = ConnectionStatus.IDLE;
         this._cyberShield = cyberShield ?? new CyberShield();
     }
@@ -112,11 +128,14 @@ export class Connection {
                 reciver = this.node1;
             }
 
+            const latency = randomMeanStd(
+                this._latency,
+                this._latencyVariation,
+            );
+            const bandwidth = (packet.totalBytes / this._bandwidth) * 1000;
+
             await new Promise((resolve) =>
-                setTimeout(
-                    resolve,
-                    randomMeanStd(this._latency, this._latencyVariation),
-                ),
+                setTimeout(resolve, latency + bandwidth),
             );
             // Analiza el paquete con el modelo
             this.cyberShield.analyze(packet);
@@ -146,6 +165,7 @@ export class Connection {
         return {
             latency: this.latency,
             latencyVariation: this.latencyVariation,
+            bandwidth: this.bandwidth,
             cyberShield: this.cyberShield.toObject(),
         };
     }
@@ -168,6 +188,7 @@ export class Connection {
             node2,
             object.latency,
             object.latencyVariation,
+            object.bandwidth,
             CyberShield.fromObject(object.cyberShield),
         );
     }

@@ -85,6 +85,7 @@
     "MODIFY_CONNECTION": "Modificar conexión",
     "LATENCY": "Latencia",
     "VARIABILITY": "Variabilidad",
+    "BANDWIDTH": "Ancho de banda",
     "CYBER_SHIELD": "Cyber Shield",
     "MODEL": "Modelo",
     "SELECT_MODEL": "Selecciona un modelo",
