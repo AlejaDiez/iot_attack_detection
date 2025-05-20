@@ -13,7 +13,11 @@ import {
 } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter, withComponentInputBinding } from "@angular/router";
+import {
+    provideRouter,
+    withComponentInputBinding,
+    withHashLocation,
+} from "@angular/router";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ConfigService } from "@services/config.service";
@@ -35,7 +39,7 @@ registerLocaleData(localePt, "pt");
 const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes, withComponentInputBinding()),
+        provideRouter(routes, withHashLocation(), withComponentInputBinding()),
         provideHttpClient(),
         provideAnimations(),
         importProvidersFrom(
