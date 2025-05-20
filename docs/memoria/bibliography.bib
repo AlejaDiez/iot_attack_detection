@@ -1,26 +1,168 @@
 @InProceedings{dataset,
-    author="Sarhan, Mohanad
+    author = {Sarhan, Mohanad
     and Layeghy, Siamak
     and Moustafa, Nour
-    and Portmann, Marius",
-    editor="Deze, Zeng
+    and Portmann, Marius},
+    editor = {Deze, Zeng
     and Huang, Huan
     and Hou, Rui
     and Rho, Seungmin
-    and Chilamkurti, Naveen",
-    title="NetFlow Datasets for Machine Learning-Based Network Intrusion Detection Systems",
-    booktitle="Big Data Technologies and Applications",
-    year="2021",
-    publisher="Springer International Publishing",
-    address="Cham",
-    pages="117--135",
-    abstract="Machine Learning (ML)-based Network Intrusion Detection Systems (NIDSs) have become a promising tool to protect networks against cyberattacks. A wide range of datasets are publicly available and have been used for the development and evaluation of a large number of ML-based NIDS in the research community. However, since these NIDS datasets have very different feature sets, it is currently very difficult to reliably compare ML models across different datasets, and hence if they generalise to different network environments and attack scenarios. The limited ability to evaluate ML-based NIDSs has led to a gap between the extensive academic research conducted and the actual practical deployments in the real-world networks. This paper addresses this limitation, by providing five NIDS datasets with a common, practically relevant feature set, based on NetFlow. These datasets are generated from the following four existing benchmark NIDS datasets: UNSW-NB15, BoT-IoT, ToN-IoT, and CSE-CIC-IDS2018. We have used the raw packet capture files of these datasets, and converted them to the NetFlow format, with a common feature set. The benefits of using NetFlow as a common format include its practical relevance, its wide deployment in production networks, and its scaling properties. The generated NetFlow datasets presented in this paper have been labelled for both binary- and multi-class traffic and attack classification experiments, and we have made them available for to the research community[1]. As a use-case and application scenario, the paper presents an evaluation of an Extra Trees ensemble classifier across these datasets.",
-    isbn="978-3-030-72802-1"
+    and Chilamkurti, Naveen},
+    title = {NetFlow Datasets for Machine Learning-Based Network Intrusion Detection Systems},
+    booktitle = {Big Data Technologies and Applications},
+    year = {2021},
+    publisher = {Springer International Publishing},
+    address = {Cham},
+    pages = {117--135},
+    abstract = {Machine Learning (ML)-based Network Intrusion Detection Systems (NIDSs) have become a promising tool to protect networks against cyberattacks. A wide range of datasets are publicly available and have been used for the development and evaluation of a large number of ML-based NIDS in the research community. However, since these NIDS datasets have very different feature sets, it is currently very difficult to reliably compare ML models across different datasets, and hence if they generalise to different network environments and attack scenarios. The limited ability to evaluate ML-based NIDSs has led to a gap between the extensive academic research conducted and the actual practical deployments in the real-world networks. This paper addresses this limitation, by providing five NIDS datasets with a common, practically relevant feature set, based on NetFlow. These datasets are generated from the following four existing benchmark NIDS datasets: UNSW-NB15, BoT-IoT, ToN-IoT, and CSE-CIC-IDS2018. We have used the raw packet capture files of these datasets, and converted them to the NetFlow format, with a common feature set. The benefits of using NetFlow as a common format include its practical relevance, its wide deployment in production networks, and its scaling properties. The generated NetFlow datasets presented in this paper have been labelled for both binary- and multi-class traffic and attack classification experiments, and we have made them available for to the research community[1]. As a use-case and application scenario, the paper presents an evaluation of an Extra Trees ensemble classifier across these datasets.},
+    isbn = {978-3-030-72802-1}
 }
 
-@misc{ gicap,
-       author = "GICAP",
-       title = "Grupo de Inteligencia Computacional Aplicada",
-       year = "2008",
-       howpublished = {\url{https://gicap.ubu.es/main/home.shtml}},
+@misc{gicap,
+    author = {GICAP},
+    title = {Grupo de Inteligencia Computacional Aplicada},
+    year = {2008},
+    url = {https://gicap.ubu.es/main/home.shtml},
+	urldate = {2025-05-6}
+}
+
+@misc{machine_learning,
+    author = {Google Cloud Tech},
+	title = {¿Qué es el aprendizaje automático? Tipos y usos},
+	shorttitle = {¿Qué es el aprendizaje automático?},
+	url = {https://cloud.google.com/learn/what-is-machine-learning},
+	abstract = {El aprendizaje automático es un subconjunto de la IA que habilita el uso de redes neuronales y el aprendizaje profundo autónomo. Descubre cómo funciona el aprendizaje automático y cómo se puede usar.},
+	language = {es-419},
+	urldate = {2025-05-14},
+	journal = {Google Cloud},
+}
+
+@misc{aprendizaje_supervisado,
+    author = {IBM},
+	title = {¿Qué es el aprendizaje supervisado?},
+	url = {https://www.ibm.com/es-es/topics/supervised-learning},
+	abstract = {El aprendizaje supervisado es una técnica de machine learning que utiliza conjuntos de datos etiquetados para entrenar modelos de algoritmos de inteligencia artificial para identificar los patrones subyacentes y las relaciones entre las características de entrada y salida. El objetivo del proceso de aprendizaje es crear un modelo que pueda predecir resultados correctos en nuevos datos del mundo real.},
+	language = {es-es},
+	urldate = {2025-05-14},
+	month = dec,
+	year = {2024}
+}
+
+@misc{aprendizaje_federado_introduccion,
+	title = {Introduction to Federated Learning and Challenges},
+	url = {https://towardsdatascience.com/introduction-to-federated-learning-and-challenges-ea7e02f260ca/},
+	abstract = {Introduction},
+	language = {en-US},
+	urldate = {2025-01-28},
+	journal = {Towards Data Science},
+	author = {Kelvin},
+	month = oct,
+	year = {2020}
+}
+
+@misc{aprendizaje_federado_comic,
+	author = {Google Cloud Tech},
+	title = {Federated Learning},
+	url = {https://federated.withgoogle.com},
+	abstract = {Building better products with on-device data and privacy by default. An online comic from Google AI.},
+	language = {en},
+	urldate = {2025-01-20},
+	journal = {Federated Learning},
+}
+
+@misc{aprendizaje_federado_video,
+	title = {What is Federated Learning?},
+	url = {https://www.youtube.com/watch?v=X8YYWunttOY},
+	urldate = {2025-02-19},
+	author = {Google Cloud Tech},
+	month = feb,
+	year = {2021},
+}
+
+@misc{aprendizaje_federado_articulo,
+	title = {Communication-Efficient Learning of Deep Networks from Decentralized Data},
+	url = {http://arxiv.org/abs/1602.05629},
+	doi = {10.48550/arXiv.1602.05629},
+	abstract = {Modern mobile devices have access to a wealth of data suitable for learning models, which in turn can greatly improve the user experience on the device. For example, language models can improve speech recognition and text entry, and image models can automatically select good photos. However, this rich data is often privacy sensitive, large in quantity, or both, which may preclude logging to the data center and training there using conventional approaches. We advocate an alternative that leaves the training data distributed on the mobile devices, and learns a shared model by aggregating locally-computed updates. We term this decentralized approach Federated Learning. We present a practical method for the federated learning of deep networks based on iterative model averaging, and conduct an extensive empirical evaluation, considering five different model architectures and four datasets. These experiments demonstrate the approach is robust to the unbalanced and non-IID data distributions that are a defining characteristic of this setting. Communication costs are the principal constraint, and we show a reduction in required communication rounds by 10-100x as compared to synchronized stochastic gradient descent.},
+	urldate = {2025-04-12},
+	publisher = {arXiv},
+	author = {McMahan, H. Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and Arcas, Blaise Agüera y},
+	month = jan,
+	year = {2023},
+	note = {arXiv:1602.05629 [cs]},
+	keywords = {Computer Science - Machine Learning}
+}
+
+@misc{perceptron_multicapa,
+	title = {Multilayer {Perceptron} {Explained} with a {Real}-{Life} {Example} and {Python} {Code}: {Sentiment} {Analysis}},
+	shorttitle = {Multilayer {Perceptron} {Explained} with a {Real}-{Life} {Example} and {Python} {Code}},
+	url = {https://medium.com/data-science/multilayer-perceptron-explained-with-a-real-life-example-and-python-code-sentiment-analysis-cb408ee93141},
+	abstract = {Multilayer Perceptron is a Neural Network that learns the relationship between linear and non-linear data.},
+	language = {en},
+	urldate = {2025-05-19},
+	journal = {TDS Archive},
+	author = {Bento, Carolina},
+	month = sep,
+	year = {2021}
+}
+
+@misc{metricas,
+	title = {Classification: {Accuracy}, recall, precision, and related metrics {\textbar} {Machine} {Learning} {\textbar} {Google} for {Developers}},
+	shorttitle = {Classification},
+	url = {https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall},
+	abstract = {Learn how to calculate three key classification metrics—accuracy, precision, recall—and how to choose the appropriate metric to evaluate a given binary classification model.},
+	language = {en},
+	urldate = {2025-05-09},
+}
+
+@misc{perdida,
+	title = {Linear regression: {Loss} {\textbar} {Machine} {Learning} {\textbar} {Google} for {Developers}},
+	shorttitle = {Linear regression},
+	url = {https://developers.google.com/machine-learning/crash-course/linear-regression/loss},
+	abstract = {Learn different methods for how machine learning models quantify \&\#39;loss\&\#39;, the magnitude of their prediction errors. This page explains common loss metrics, including mean squared error (MSE), mean absolute error (MAE) and L1 and L2 loss.},
+	language = {en},
+	urldate = {2025-05-09},
+}
+
+@misc{roc,
+	title = {Classification: {ROC} and {AUC} {\textbar} {Machine} {Learning} {\textbar} {Google} for {Developers}},
+	shorttitle = {Classification},
+	url = {https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc},
+	abstract = {Learn how to interpret an ROC curve and its AUC value to evaluate a binary classification model over all possible classification thresholds.},
+	language = {en},
+	urldate = {2025-05-09},
+}
+
+@misc{matriz,
+	title = {Thresholds and the confusion matrix {\textbar} {Machine} {Learning} {\textbar} {Google} for {Developers}},
+	url = {https://developers.google.com/machine-learning/crash-course/classification/thresholding},
+	abstract = {Learn how a classification threshold can be set to convert a logistic regression model into a binary classification model, and how to use a confusion matrix to assess the four types of predictions: true positive (TP), true negative (TN), false positive (FP), and false negative (FN).},
+	language = {en},
+	urldate = {2025-05-09},
+}
+
+@misc{modelo_osi,
+	title = {¿Qué es el modelo OSI?},
+    author = {Cloudflare},
+	url = {https://www.cloudflare.com/es-es/learning/ddos/glossary/open-systems-interconnection-model-osi/},
+	abstract = {¿Qué es el modelo OSI? El modelo OSI es un enfoque por capas que ayuda a estandarizar los procedimientos de gestión de datos. Ejemplos del modelo OSI aquí.},
+	language = {es-es},
+	urldate = {2025-05-20}
+}
+
+@misc{ataques,
+	title = {¿Qué es un ciberataque y los tipos de ataques en la red?},
+    author = {Fortinet},
+	url = {https://www.fortinet.com/lat/resources/cyberglossary/types-of-cyber-attacks.html},
+	language = {es},
+	urldate = {2025-05-20},
+	journal = {Fortinet}
+}
+
+
+@misc{ataque_dos,
+	title = {Ataque de denegación de Servicio},
+    author = {Cloudflare},
+    url = {https://www.cloudflare.com/es-es/learning/ddos/glossary/denial-of-service/},
+	urldate = {2025-05-20},
 }
