@@ -1,6 +1,94 @@
 \capitulo{4}{Técnicas y herramientas}
 
-Esta parte de la memoria tiene como objetivo presentar las técnicas metodológicas y las herramientas de desarrollo que se han utilizado para llevar a cabo el proyecto. Si se han estudiado diferentes alternativas de metodologías, herramientas, bibliotecas se puede hacer un resumen de los aspectos más destacados de cada alternativa, incluyendo comparativas entre las distintas opciones y una justificación de las elecciones realizadas. 
-No se pretende que este apartado se convierta en un capítulo de un libro dedicado a cada una de las alternativas, sino comentar los aspectos más destacados de cada opción, con un repaso somero a los fundamentos esenciales y referencias bibliográficas para que el lector pueda ampliar su conocimiento sobre el tema.
+\section{Técnicas utilizadas}
+\label{sec:tecnicas}
+En el desarrollo de este proyecto, se utilizó la metodología SCRUM para gestionar la evolución del proyecto y asegurar la calidad del resultado final.
 
+\subsection{SCRUM}
+\label{subsec:scrum}
+La metodología SCRUM, es un marco de trabajo ágil pensado para la gestión de proyectos complejos. Esta metodología se estructura en ciclos de trabajo llamados sprints, de una duración aproximada de dos semanas. En cada sprint se entrega un producto funcional, lo que permite una evolución continua del proyecto.
 
+Tras cada iteración, se valoraba el trabajo realizado mediante reuniones o comunicación por correo electrónico, con el fin de informar sobre la evolución del proyecto y evaluar los posibles cambios en los requisitos de este. Una vez finalizadas estas reuniones, se procedía a la planificación de la siguiente iteración, que consistía en generar las historias de usuario y tareas que se realizarían en la próxima iteración, además de realizar las estimaciones de tiempo de cada una de ellas.
+
+Para un análisis más detallado del proceso de gestión del proyecto, debe consultar la sección A.2 de los anexos.
+
+\section{Herramientas utilizadas}
+\label{sec:herramientas}
+Durante el desarrollo de este proyecto, se han ido utilizado diversas herramientas para facilitar el desarrollo, la documentación y gestión en la realización del trabajo.
+
+\subsection{Herramientas de desarrollo}
+\label{subsec:desarrollo}
+\subsubsection{Visual Studio Code}
+\label{subsubsec:vscode}
+Herramienta de software que permite escribir, editar, compilar y depurar código de múltiples lenguajes de programación y frameworks.
+\imagen{vscode}{Logotipo de Visual Studio Code}{0.15}
+
+\subsubsection{Google Colab}
+\label{subsubsec:colab}
+Entorno de desarrollo en la nube basado en Python, que permite ejecutar código en diferentes CPU y GPU. Se ha usado para utilizar la biblioteca TensorFlow Federated.
+\imagen{colab}{Logotipo de Google Colab}{0.15}
+
+\subsubsection{Git}
+\label{subsubsec:git}
+Sistema de control de versiones que permite llevar un registro de los cambios realizados en el código. Permite obtener un control preciso del desarrollo del proyecto. 
+\imagen{git}{Logotipo de Git}{0.15}
+
+\subsubsection{Python}
+\label{subsubsec:python}
+Lenguaje de programación de alto nivel, interpretado y multiparadigma que ha sido usado en todo lo referente a el entrenamiento de redes neuronales y evaluación de estas.
+\imagen{python}{Logotipo de Python}{0.15}
+
+Entre las bibliotecas y frameworks que se han usado, destacar:
+\begin{itemize}
+    \item \textbf{Tensorflow/Keras}: plataforma de código abierto que permiten la creación, entrenamiento y evaluación de redes neuronales mediante aprendizaje automático. Se ha usado para diseñar el Perceptrón Multicapa.
+    \item \textbf{Flower}: framework de código abierto que se ha usado para la implementación del aprendizaje federado y permite el entrenamiento de modelos de inteligencia artificial de forma distribuida.
+    \item \textbf{TensorFlow Federated}: extensión de TensorFlow que esta diseñada para la implementación de algoritmos de aprendizaje federado con modelos generados en TensorFlow. Esta biblioteca se uso como primera toma de contacto con el aprendizaje federado.
+    \item \textbf{TensorFlowJS}: extensión de TensorFlow que permite convertir modelos de TensorFlow generados en Python a modelos TensorFlow compatibles con JavaScript.
+    \item \textbf{Numpy}: biblioteca fundamental para manejar grandes conjuntos de números en Python de forma eficiente.
+    \item \textbf{Scikit Learn}: biblioteca que incluye herramientas para clasificación, regresión, evaluación... de modelos de inteligencia artificial.
+    \item \textbf{Matplotlib y Seaborn}: bibliotecas de visualización de datos, ofreciendo la facilidad de generar gráficas a partir de datos.
+\end{itemize}
+
+\subsubsection{JavaScript}
+\label{subsubsec:javascript}
+Lenguaje de programación de alto nivel, interpretado y orientado a objetos, que ha sido usado en todo lo referente al simulador de red. Para poder usar JavaScript ha sido necesario instalar Node, que es el interprete disponible para entornos de servidor o escritorio.
+\imagen{javascript}{Logotipo de JavaScript}{0.15}
+
+Entre las bibliotecas y frameworks que se han usado, destacar:
+\begin{itemize}
+    \item \textbf{Typescript}: es una extensión de JavaScript que permite añadir tipado estático, interfaces, clases y otros elementos propios de lenguajes de programación. Esto permite mejorar la calidad del código y facilita el desarrollo además de detectar errores en tiempo de compilación.
+    \item \textbf{Angular}: framework que tiene como base TypeScript y permite construir aplicaciones de una sola página. Proporciona una gran variedad de herramientas y usa adicionalmente lenguajes como HTML y CSS para la gestión de estructura y estilo de la interfaz.
+    \item \textbf{RxJS}: biblioteca de programación reactiva en JavaScript basada en observables, que es muy usada en Angular. 
+    \item \textbf{TensorFlow JavaScript}: biblioteca que permite entrenar e implementar modelos de aprendizaje automático usando como lenguaje base JavaScript.
+    \item \textbf{Tailwind CSS}: framework de CSS que permite diseñar interfaces usando clases predefinidas sin necesidad de escribir un código CSS complejo.
+    \item \textbf{Spartan UI}: colección de componentes para aplicaciones de Angular basada en la biblioteca shadcn/ui para Next.
+    \item \textbf{Lucide Icons}: colección de iconos de código abierto basados en Feather Icons.
+\end{itemize}
+
+\subsection{Herramientas de documentación y gestión}
+\label{subsec:gestion}
+\subsubsection{GitHub}
+\label{subsubsec:github}
+Plataforma que permite alojar repositorios Git, facilitando así la colaboración entre desarrolladores mediante el control de versiones, issues, revisiones de código... Además, con \textbf{GitHub Projects} se puede generar tableros para organizar tareas en diferentes Sprints y hacer un seguimiento de su progreso. También ofrece la posibilidad de publicar páginas web estáticas, funcionando como un servicio de hosting mediante \textbf{GitHub Pages}.
+\imagen{github}{Logotipo de GitHub}{0.15}
+
+\subsubsection{Overleaf y LaTeX}
+\label{subsubsec:overleaf}
+Es un editor colaborativo en línea para crear documentos en LaTeX, un lenguaje de marcado que permite generar documentos en PDF con un estilo predefinido.
+\imagen{overleaf}{Logotipo de Overleaf}{0.15}
+
+\subsubsection{Draw.io}
+\label{subsubsec:draw}
+Herramienta que ayuda a crear diagramas de flujo, esquemas... Funciona en el navegador y permite multitud de opciones de personalización e integraciones con otras plataformas.
+\imagen{draw}{Logotipo de Draw}{0.15}
+
+\subsubsection{Zotero}
+\label{subsubsec:zotero}
+Gestor de referencias bibliográficas que permite recopilar, organizar y citar fuentes de manera sencilla.
+\imagen{zotero}{Logotipo de Zotero}{0.15}
+
+\subsubsection{FlatIcon}
+\label{subsubsec:flaticon}
+Plataforma que ofrece una extensa colección de iconos en múltiples formatos. En este proyecto se han utilizado varios iconos de esta web, incluyendo algunos del autor Vectorslab.
+ \imagen{flaticon}{Logotipo de FlatIcon}{0.15}
+ 
