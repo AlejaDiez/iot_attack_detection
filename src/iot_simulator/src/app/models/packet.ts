@@ -68,7 +68,7 @@ export enum ICMPType {
  */
 export interface ICMPPacket extends Packet {
     /* Tipo de mensaje ICMP */
-    type: number;
+    type: ICMPType;
     /* Código de mensaje ICMP */
     code: number;
     /** Identificador de la solicitud */
@@ -94,7 +94,7 @@ export enum TCPFlags {
  */
 export interface TCPPacket extends Packet {
     /* Bandera TCP */
-    tcpFlags: number;
+    tcpFlags: TCPFlags;
     /* Número de secuencia */
     sequence: number;
     /* Número de acuse de recibo */

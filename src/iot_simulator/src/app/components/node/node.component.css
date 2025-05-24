@@ -76,10 +76,11 @@
     @apply select-none;
 
     ::ng-deep .high-contrast & {
+        margin-left: calc(30px + 4px);
         @apply !rounded-md !bg-card !px-2 !py-1;
     }
 
-    ::ng-deep .high-contrast & .ip {
+    ::ng-deep .high-contrast & * {
         @apply !text-primary !opacity-100;
     }
 }

@@ -70,9 +70,7 @@ export interface EditConnectionContext {
                     hlmInput
                     type="number"
                     [ngModel]="connection.bandwidth"
-                    (ngModelChange)="
-                        connection.bandwidth = Math.max($event, 0)
-                    "
+                    (ngModelChange)="connection.bandwidth = Math.max($event, 1)"
                     placeholder="Bytes/s"
                     class="col-span-3" />
             </div>

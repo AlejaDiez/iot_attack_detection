@@ -47,13 +47,6 @@ export class PhantomAttacker extends FlowGenerator {
         packetNum: number,
     ): void {
         for (let i = 0; i < packetNum; i++) {
-            // const packet: UDPPacket = Packet.UDP(
-            //     this.node.ip!,
-            //     dstIP,
-            //     randomInt(1024, 65535),
-            //     dstPort,
-            //     randomString(128),
-            // );
             const packet = Packet.TCPSYN(
                 this.node.ip!,
                 dstIP,

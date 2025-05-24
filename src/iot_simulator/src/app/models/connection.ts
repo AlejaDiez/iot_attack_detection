@@ -59,7 +59,7 @@ export class Connection {
     /** Ancho de banda de la conexión. */
     @StateService.SetState
     public set bandwidth(value: number) {
-        if (value <= 0) throw new Error("The bandwidth cannot be negative");
+        if (value <= 0) throw new Error("The bandwidth cannot be negative or zero");
         this._bandwidth = value;
     }
 

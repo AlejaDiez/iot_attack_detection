@@ -1,7 +1,7 @@
 {
     "name": "iot_simulator",
     "description": "IoT network simulator to detect cyber attacks",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Alejandro Diez Bermejo",
     "license": "MIT",
     "private": true,

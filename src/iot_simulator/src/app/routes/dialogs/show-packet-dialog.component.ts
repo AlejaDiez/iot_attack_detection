@@ -35,7 +35,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_SRC_IP" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.srcIP }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.srcIP
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -43,7 +45,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_DST_IP" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.dstIP }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.dstIP
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -51,7 +55,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_SRC_PORT" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.srcPort }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.srcPort
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -59,7 +65,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_DST_PORT" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.dstPort }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.dstPort
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -67,7 +75,7 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_TRANSPORT_PROTOCOL" | translate }}</label
                 >
-                <span class="col-span-3">{{
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
                     context.packet.transportProtocol
                 }}</span>
             </div>
@@ -77,7 +85,7 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_APPLICATION_PROTOCOL" | translate }}</label
                 >
-                <span class="col-span-3">{{
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
                     context.packet.applicationProtocol
                 }}</span>
             </div>
@@ -87,7 +95,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_PAYLOAD" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.payload }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.payload
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -95,7 +105,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_TOTAL_BYTES" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.totalBytes }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.totalBytes
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -103,7 +115,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_HEADER_SIZE" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.headerSize }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.headerSize
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -111,7 +125,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_PAYLOAD_SIZE" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.payloadSize }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.payloadSize
+                }}</span>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -119,7 +135,7 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_TIMESTAMP" | translate }}</label
                 >
-                <span class="col-span-3">{{
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
                     context.packet.timestamp
                         | date: "medium" : undefined : config.language()
                 }}</span>
@@ -130,7 +146,9 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_TTL" | translate }}</label
                 >
-                <span class="col-span-3">{{ context.packet.ttl }}</span>
+                <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                    context.packet.ttl
+                }}</span>
             </div>
             @if (context.packet.type) {
                 <div class="grid grid-cols-4 items-center gap-4">
@@ -139,7 +157,9 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_TYPE" | translate }}</label
                     >
-                    <span class="col-span-3">{{ context.packet.type }}</span>
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                        context.packet.type
+                    }}</span>
                 </div>
             }
             @if (context.packet.code) {
@@ -149,7 +169,9 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_CODE" | translate }}</label
                     >
-                    <span class="col-span-3">{{ context.packet.code }}</span>
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                        context.packet.code
+                    }}</span>
                 </div>
             }
             @if (context.packet.identifier) {
@@ -159,7 +181,7 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_IDENTIFIER" | translate }}</label
                     >
-                    <span class="col-span-3">{{
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
                         context.packet.identifier
                     }}</span>
                 </div>
@@ -171,7 +193,7 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_SEQUENCE" | translate }}</label
                     >
-                    <span class="col-span-3">{{
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
                         context.packet.sequence
                     }}</span>
                 </div>
@@ -183,7 +205,7 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_TCP_FLAGS" | translate }}</label
                     >
-                    <span class="col-span-3">{{
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
                         context.packet.tcpFlags
                     }}</span>
                 </div>
@@ -195,7 +217,9 @@ export interface ShowPacketDialogContext {
                         class="items-center text-right text-sm font-medium text-muted-foreground"
                         >{{ "PACKET_ACK" | translate }}</label
                     >
-                    <span class="col-span-3">{{ context.packet.ack }}</span>
+                    <span class="col-span-3 overflow-hidden text-ellipsis">{{
+                        context.packet.ack
+                    }}</span>
                 </div>
             }
         </div>
