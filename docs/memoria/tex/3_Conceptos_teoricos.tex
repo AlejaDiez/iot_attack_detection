@@ -97,12 +97,12 @@ Cada capa está formada por un conjunto de neuronas o nodos. Los \textbf{pesos} 
 
 \imagen{neurona}{Esquema de una neurona}{0.8}
 
-El propósito de una neurona artificial es realizar una combinación lineal de sus entradas, ponderadas por unos pesos, y sumar el sesgo. A este resultado se le aplica la \textbf{función de activación}~\ref{subsec:funcion_activacion} \(f(x)\), para generar la salida de la neurona. Durante el \textbf{entrenamiento}~\ref{subsec:entrenamiento}, los pesos y el sesgo se ajustan mediante algoritmos de optimización, con el objetivo de que la neurona aprenda a producir las salidas deseadas en función de sus entradas.
+El propósito de una neurona artificial es realizar una combinación lineal de sus entradas, ponderadas por unos pesos, y sumar el sesgo. A este resultado se le aplica la \textbf{función de activación}~\ref{subsec:FuncionActivacion} \(f(x)\), para generar la salida de la neurona. Durante el \textbf{entrenamiento}~\ref{subsec:Entrenamiento}, los pesos y el sesgo se ajustan mediante algoritmos de optimización, con el objetivo de que la neurona aprenda a producir las salidas deseadas en función de sus entradas.
 
 \[y=f(\sum_{i=1}^{n}{w_ix_i + b})\]
 
 \subsection{Función de activación}
-\label{subsec:funcion_activacion}
+\label{subsec:FuncionActivacion}
 La \textbf{función de activación} es una parte fundamental de la neurona, ya que introduce la no linealidad al modelo. Sin el uso de estas funciones, la neurona simplemente seria un elemento de combinación lineal, limitando la capacidad de aprender de patrones complejos. También, permite filtrar la salida de la neurona, estableciendo un rango fijo de salidas para que no se produzcan valores excesivamente altos o bajos.
 
 Existen diversas funciones de activación, y su elección depende del tipo de problema que se desea resolver.
@@ -118,8 +118,8 @@ Existen diversas funciones de activación, y su elección depende del tipo de pr
 \imagen{relu_sigmoide}{Funciones de activación}{0.8}
 
 \subsection{Función de pérdida}
-\label{subsec:funcion_perdida}
-La \textbf{función de pérdida} es un componente fundamental durante el proceso de entrenamiento de un modelo, ya que proporciona una medida cuantitativa que permite evaluar la diferencia entre las predicciones del modelo y los valores reales del conjunto de entrenamiento. Este valor se utiliza en el proceso de \textbf{entrenamiento}~\ref{subsec:entrenamiento} de la red neuronal, con el objetivo de minimizar la pérdida y, de este modo, permitir que el modelo aprenda a partir de los datos.
+\label{subsec:FuncionPerdida}
+La \textbf{función de pérdida} es un componente fundamental durante el proceso de entrenamiento de un modelo, ya que proporciona una medida cuantitativa que permite evaluar la diferencia entre las predicciones del modelo y los valores reales del conjunto de entrenamiento. Este valor se utiliza en el proceso de \textbf{entrenamiento}~\ref{subsec:Entrenamiento} de la red neuronal, con el objetivo de minimizar la pérdida y, de este modo, permitir que el modelo aprenda a partir de los datos.
 
 Existen diversas funciones de pérdida, y su elección depende del tipo de problema que se desea resolver.
 \begin{itemize}
@@ -129,13 +129,13 @@ Existen diversas funciones de pérdida, y su elección depende del tipo de probl
 \end{itemize}
 
 \subsection{Función de costo}
-\label{subsec:funcion_costo}
-La \textbf{función de costo} es una medida global para evaluar el rendimiento del modelo durante el entrenamiento. Se obtiene al calcular el promedio de las funciones de pérdida~\ref{subsec:funcion_perdida} individuales sobre todas las muestras del conjunto de entrenamiento. Esta función proporciona un valor de error total del modelo y es la que se \textbf{minimiza} en el proceso de entrenamiento.
+\label{subsec:FuncionCosto}
+La \textbf{función de costo} es una medida global para evaluar el rendimiento del modelo durante el entrenamiento. Se obtiene al calcular el promedio de las funciones de pérdida~\ref{subsec:FuncionPerdida} individuales sobre todas las muestras del conjunto de entrenamiento. Esta función proporciona un valor de error total del modelo y es la que se \textbf{minimiza} en el proceso de entrenamiento.
 \[J(\theta) = \frac{1}{n} \sum_{i=1}^{n} \ell(y_i, \hat{y}_i)\]
 
 \subsection{Proceso de entrenamiento}
-\label{subsec:entrenamiento}
-La \textbf{función de costo}~\ref{subsec:funcion_costo} proporciona una medida global para evaluar el rendimiento del modelo sobre el conjunto de datos de entrenamiento. Durante esta etapa, el objetivo principal es \textbf{minimizar} dicho valor mediante el ajuste de los parámetros \(\theta\) del modelo, con el fin de que las predicciones generadas por el modelo se aproximen lo máximo posible a los valores reales.
+\label{subsec:Entrenamiento}
+La \textbf{función de costo}~\ref{subsec:FuncionCosto} proporciona una medida global para evaluar el rendimiento del modelo sobre el conjunto de datos de entrenamiento. Durante esta etapa, el objetivo principal es \textbf{minimizar} dicho valor mediante el ajuste de los parámetros \(\theta\) del modelo, con el fin de que las predicciones generadas por el modelo se aproximen lo máximo posible a los valores reales.
 
 Para alcanzar este objetivo, se emplean \textbf{algoritmos de optimización} que permiten reducir el valor de la función de costo, favoreciendo así la \textbf{convergencia} del modelo. Un proceso de optimización adecuado ayuda a mejorar la capacidad de generalización del modelo, evitando problemas como el \textbf{sobreajuste}\footnote{El sobreajuste (overfitting) ocurre cuando el modelo aprende demasiado bien los datos de entrenamiento, incluyendo el ruido, lo que deteriora su rendimiento en datos nuevos.} o el \textbf{subajuste}\footnote{El subajuste (underfitting) ocurre cuando el modelo no logra capturar la complejidad de los datos, lo que resulta en un rendimiento bajo tanto en el conjunto de entrenamiento como en el de prueba.}. Sin embargo, la convergencia del modelo no es un proceso rápido ni sencillo, ya que en muchos casos puede requerir un tiempo considerable, así como la posibilidad de tener un conjunto de datos de alta calidad.
 
@@ -152,43 +152,43 @@ El procedimiento general del algoritmo de entrenamiento es el siguiente:
 \end{enumerate}
 
 \subsection{Métricas de evaluación}
-\label{subsec:evaluacion}
+\label{subsec:Evaluacion}
 Para evaluar y comparar el rendimiento de los modelos de aprendizaje automático, es necesario utilizar diversas métricas que permitan poder obtener una visión general del desempeño del modelo durante el aprendizaje.
 
 \subsubsection{Exactitud (Accuracy)}
-\label{subsubsec:accuracy}
+\label{subsubsec:Accuracy}
 Mide la proporción de predicciones correctas realizadas por el modelo, sobre el conjunto total de muestras evaluadas.
 \[Accuracy = \frac{TP + TN}{TP + TN + FP + FN}\]
 Es un indicador general del rendimiento, pero no puede llegar a ser útil en conjuntos de datos desbalanceados, donde predecir la clase mayoritaria puede dar lugar a una alta precisión sin una detección significativa \cite{metricas}.
 
 \subsubsection{Pérdida (Loss)}
-\label{subsubsec:loss}
+\label{subsubsec:Loss}
 Cuantifica como de alejadas están las predicciones del modelo con respecto a las etiquetas reales. Cuando los valores sean más bajos, indican un mejor ajuste del modelo \cite{perdida}.
 
 \subsubsection{Precisión (Precision)}
-\label{subsubsec:precision}
+\label{subsubsec:Precision}
 Indica cual es la proporción de instancias positivas correctamente predichas por el modelo sobre el número total de instancias predichas como positivas.
 \[Precision = \frac{TP}{TP + FP}\]
 Una alta precisión implica menos falsas alarmas, lo cual es importante en sistemas donde los falsos positivos implican un coste \cite{metricas}.
 
 \subsubsection{Sensibilidad (Recall)}
-\label{subsubsec:recall}
+\label{subsubsec:Recall}
 Es la proporción de instancias positivas reales que fueron correctamente identificadas por el modelo.
 \[Recall = \frac{TP}{TP + FN}\] 
 Una alta sensibilidad es esencial ya que indica que el modelo está detectando la mayoría de los casos positivos reales \cite{metricas}.
 
 \subsubsection{Puntuación F1 (F1-scrore)}
-\label{subsubsec:f1_score}
+\label{subsubsec:F1Score}
 Medida equilibrada que junta la precisión y sensibilidad en una sola.
 \[\textit{F1-score} = 2 \cdot \frac{Precisión \cdot Sensibilidad}{Precisión + Sensibilidad}\]
 Es especialmente útil cuando el conjunto de datos está desbalanceado y se deben considerar tanto los falsos positivos como los falsos negativos \cite{metricas}.
 
 \subsubsection{Curva ROC}
-\label{subsubsec:roc_curve}
+\label{subsubsec:RocCurve}
 Gráfica que representa la tasa de verdaderos positivos frente a la tasa de falsos positivos para distintos umbrales. El área bajo la curva (AUC) resume el rendimiento en todos los umbrales. Un modelo con un AUC cercano a 1.0, significa que el modelo es altamente eficaz \cite{roc}.
 
 \subsubsection{Matriz de Confusión}
-\label{subsubsec:roc_curve}
+\label{subsubsec:MatrizConfusion}
 Se representa mediante una tabla que muestra el número de predicciones correctas e incorrectas para cada clase. Permite un análisis detallado de los errores del modelo \cite{matriz}.
 
 \imagen{matriz_confusion}{Matriz de Confusión}{0.8}
@@ -200,7 +200,7 @@ Las \textbf{redes de dispositivos} es una rama fundamental de la informática y 
 Estas redes pueden estar compuestas por ordenadores, pequeños dispositivos, sensores, dispositivos móviles, entre otros. Con el auge del \textbf{Internet de las Cosas} (IoT), estas redes se han ido expandiendo y utilizando con mayor frecuencia, desde entornos domésticos hasta aplicaciones industriales. Esta expansión ha conllevado una evolución constante tanto en arquitectura como en los medio de transmisión, con el objetivo de garantizar una conexión eficiente, escalable y segura.
 
 \subsection{Modelo OSI}
-\label{subsec:osi}
+\label{subsec:OSI}
 El \textbf{Modelo OSI}~\cite{modelo_osi} (Open Systems Interconnection) es un modelo conceptual que expone un protocolo estándar de comunicación, para que otros dispositivos sean capaz de comunicarse entre ellos. 
 
 Este modelo se basa en dividir el sistema de comunicación en siete capas distintas, organizadas de forma jerárquica y cada una apilada sobre otra. Cada capa tiene una función específica y se encarga de ofrecer servicios a la capa superior, usando los servicios que proporcionan las capas inferiores. De este modo, se puede establecer una arquitectura modular que facilita el diseño, implementación y mantenimiento de sistemas más complejos.
@@ -210,7 +210,7 @@ Este modelo se basa en dividir el sistema de comunicación en siete capas distin
 Para que un mensaje se distribuya de un dispositivo a otro, los datos deben atravesar cada una de las capas en orden descendente desde el emisor, y una vez en el receptor, deben atravesar las capas en orden ascendente (figura~\ref{fig:osi}). Esto garantiza que cada capa cumpla su función específica en la preparación, transmisión, recepción y reconstrucción de los datos.
 
 \subsubsection{Capa de aplicación}
-\label{subsubsec:capa_aplicacion}
+\label{subsubsec:CapaAplicacion}
 Esta capa es la única que interactúa con los datos del usuario. El software, interactúa con esta capa para poder iniciar las comunicaciones. Esta capa se encarga de la gestión de protocolos y la manipulación de los datos, con los que luego el software va a trabajar.
 
 Existen múltiples protocolos:
@@ -222,7 +222,7 @@ Existen múltiples protocolos:
 \end{itemize}
 
 \subsubsection{Capa de presentación}
-\label{subsubsec:capa_presentacion}
+\label{subsubsec:CapaPresentacion}
 Esta capa es la responsable de preparar los datos para que los pueda usar la capa de aplicación.
 \begin{itemize}
     \item \textbf{Traducción}: capaz de codificar y descodificar los datos recibidos, para que las demás capas sean capaz de entenderlos.
@@ -231,11 +231,11 @@ Esta capa es la responsable de preparar los datos para que los pueda usar la cap
 \end{itemize}
 
 \subsubsection{Capa de sesión}
-\label{subsubsec:capa_sesion}
+\label{subsubsec:CapaSesion}
 Se responsabiliza de abrir y cerrar las comunicaciones entre los dispositivos. Esta capa mantiene la conexión abierta tanto tiempo como sea necesario para completar la comunicación, además de cerrar la sesión para ahorrar recursos. También sincroniza la tranferencia de datos utilizando puntos de control.
 
 \subsubsection{Capa de transporte}
-\label{subsubsec:capa_transporte}
+\label{subsubsec:CapaTransporte}
 En esta capa se encarga de las comunicaciones de extremo a extremo entre dos dispositivos. Esto implica, que antes de realizar el envío en la capa de red, realiza una fragmentación de los datos en trozos más pequeños llamados segmentos. En la capa de transporte del receptor, se encarga de rearmar los segmentos para volver a construir los datos. Además se encarga del control de flujo y el control de errores.
 
 En esta capa se incluye varios protocolos:
@@ -245,7 +245,7 @@ En esta capa se incluye varios protocolos:
 \end{itemize}
 
 \subsubsection{Capa de red}
-\label{subsubsec:capa_red}
+\label{subsubsec:CapaRed}
 Esta capa se responsabiliza de facilitar la transferencia de datos entre dos redes diferentes, en caso de que los dos dispositivos se encuentren en la misma red, no sería necesaria esta capa. Esta capa divide los segmentos de la capa de transporte en unidades más pequeñas denominadas paquetes. También busca la mejor ruta para que los paquetes lleguen a su destino (enrutamiento).
 
 En esta capa se incluyen varios protocolos:
@@ -255,7 +255,7 @@ En esta capa se incluyen varios protocolos:
 \end{itemize}
 
 \subsubsection{Capa de enlace de datos}
-\label{subsubsec:capa_enlace_datos}
+\label{subsubsec:CapaEnlaceDatos}
 Similar a la capa de red, excepto que esta capa facilita la transferencia de datos entre dos dispositivos dentro la misma red. Obtiene los paquetes de la capa de red y los divide en partes más pequeñas denominadas tramas. También es responsable del control de flujo y la gestión de errores.
 
 \begin{itemize}
@@ -263,7 +263,7 @@ Similar a la capa de red, excepto que esta capa facilita la transferencia de dat
 \end{itemize}
 
 \subsubsection{Capa física}
-\label{subsubsec:capa_fisica}
+\label{subsubsec:CapaFisica}
 En esta capa se incluye el equipo físico que permite la transferencia de datos. En esta capa tiene lugar la conversión de los datos en una secuencia de bits (0 y 1), para poder realizar la transferencia de los datos a través del medio.
 
 \subsection{Ataques en Redes}
@@ -271,7 +271,7 @@ En esta capa se incluye el equipo físico que permite la transferencia de datos.
 Los ataques sobre redes son acciones maliciosas con el objetivo de interrumpir, interceptar, modificar o dañar la comunicación o los recursos de la red. Estos ataques pueden comprometer la \textbf{confidencialidad}, \textbf{integridad} o \textbf{disponibilidad} de los datos y el sistema~\cite{ataques}. Según el objetivo de estos ataques, se pueden dividir en distintos grupos:
 
 \subsubsection{Obtener acceso no autorizado}
-\label{subsubsec:accesso_no_autorizado}
+\label{subsubsec:AccessoNoAutorizado}
 Estos ataques tienen como objetivo intentar acceder a recursos o sistemas sin tener permiso. Los atacantes suelen aprovechar las vulnerabilidades del software, usar contraseñas robadas u otras técnicas.
 \begin{itemize}
     \item \textbf{Puerta trasera (backdoor)}: vulnerabilidades que permiten el acceso remoto mediante aplicaciones diseñadas para ello.
@@ -280,7 +280,7 @@ Estos ataques tienen como objetivo intentar acceder a recursos o sistemas sin te
 \end{itemize}
 
 \subsubsection{Interrumpir el servicio}
-\label{subsubsec:interrumpir_servicio}
+\label{subsubsec:InterrumpirServicio}
 El objetivo de estos ataques es hacer que un sistema o red deje de funcionar correctamente, debido a sobrecarga de peticiones o paquetes maliciosos.
 \begin{itemize}
     \item \textbf{Denegación de Servicio (DoS)}: se intenta saturar un sistema mediante un flujo de paquetes ilegítimo~\cite{ataque_dos}. Puede haber varias maneras de generar dicho tráfico:
@@ -292,7 +292,7 @@ El objetivo de estos ataques es hacer que un sistema o red deje de funcionar cor
 \end{itemize}
 
 \subsubsection{Robar o corromper datos}
-\label{subsubsec:robar_datos}
+\label{subsubsec:RobarDatos}
 La función de estos ataques es interceptar o modificar la información transmitida por la red.
 \begin{itemize}
     \item \textbf{Ataque de Intermediario (MITM)}: intercepta la comunicación entre dos dispositivos para espiar o modificar mensajes.
@@ -301,7 +301,7 @@ La función de estos ataques es interceptar o modificar la información transmit
 \end{itemize}
 
 \subsubsection{Destruir o dañar sistemas}
-\label{subsubsec:destruir_sistemas}
+\label{subsubsec:DestruirSistemas}
 Se busca causar daño permanente a sistemas o datos.
 \begin{itemize}
     \item \textbf{Ransomware}: cifra archivos del sistema y exige un rescate para su recuperación.
