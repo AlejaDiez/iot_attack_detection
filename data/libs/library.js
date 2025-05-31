@@ -4,8 +4,18 @@
  * @param  {...any} args - Arguments that are going to be used in the function
  * @returns {void}
  */
-function hiddenFunction(...args) {
-    // Don't worry, this function is invisible to the user, keep coding!
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomString(size) {
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+
+    for (let i = 0; i < size; i++)
+        result += chars[randomInt(0, chars.length - 1)];
+    return result;
 }
 
 /**
@@ -22,14 +32,14 @@ function hiddenFunction(...args) {
  * @param {string} self.ip - IP address of the attacker device
  * @param {string} self.name - Name of the attacker device
  * @param {string} self.type - Type of the attacker device
- * @param {function(packet) => void} self.send - Function to send a packet
+ * @param {function(Object) => void} self.send - Function to send a packet
  * @param {Object} packet - The packet that is being intercepted
  * @param {string} packet.srcIP - Source IP address of the packet
  * @param {number} [packet.srcPort] - Source port of the packet
  * @param {string} packet.dstIP - Destination IP address of the packet
  * @param {number} [packet.dstPort] - Destination port of the packet
- * @param {TransportProtocol} packet.transportProtocol - Transport protocol of the packet
- * @param {ApplicationProtocol} [packet.applicationProtocol] - Application protocol of the packet
+ * @param {number} packet.transportProtocol - Transport protocol of the packet
+ * @param {number} [packet.applicationProtocol] - Application protocol of the packet
  * @param {string} [packet.payload] - Payload of the packet
  * @param {number} packet.totalBytes - Total bytes of the packet
  * @param {number} packet.headerSize - Header size of the packet
@@ -43,12 +53,7 @@ function hiddenFunction(...args) {
  * @param {number} packet.tcpFlags - TCP flags (FIN = 1, SYN = 2, RST = 4, PSH = 8, ACK = 16, URG = 32)
  * @return {void} - If you don't want to run the default interceptor of the simulator, return null or other value
  */
-function intcp(self, packet) {
-    // Hey there is a packet here!
-    // You can modify or log the packet before sending it to the target
-    // If you don't want to run the default interceptor of the simulator, you can return null or other value
-    // return null;
-}
+function intcp(self, packet) {}
 
 /**
  * This function with cmd_ prefix is used to simulate a command, in the simulator it will show as "ping"
@@ -62,27 +67,52 @@ function intcp(self, packet) {
  * @param {string} target - IP addresses of the target device
  * @returns {void}
  */
-function cmd_ping(self, target) {
-    // Program your command here...
-    const headerSize = 8;
-    const payload = "Ping request from external library";
-    const payloadSize = new TextEncoder().encode(payload).length;
+function cmd_Stream_Video(self, target) {
+    // Flow parameters
+    const duration = 2 * 1000; // Flow duration in milliseconds
+    const minInterval = 150; // Min interval between packets (ms)
+    const maxInterval = 250; // Max interval between packets (ms)
+    const endTime = Date.now() + duration;
+    // Packet parameters
+    const headerSize = 20;
+    let sequenceNumber = 0;
+    let ackNumber = 0;
+    const srcPort = randomInt(1024, 65535);
+    const dstPort = 443;
+    const sendVideo = () => {
+        if (Date.now() > endTime) return;
 
-    self.send({
-        srcIP: self.ip,
-        dstIP: target,
-        transportProtocol: 1,
-        payload,
-        totalBytes: headerSize + payloadSize,
-        headerSize,
-        payloadSize,
-        timestamp: new Date(),
-        ttl: 64,
-        type: 8,
-        code: 0,
-        identifier: Math.floor(Math.random() * 65535),
-        sequence: Math.floor(Math.random() * 65535),
-    });
+        const payload = randomString(randomInt(512, 2056));
+        const payloadSize = new TextEncoder().encode(payload).length;
+
+        const packet = {
+            srcIP: self.ip,
+            dstIP: target,
+            srcPort,
+            dstPort,
+            transportProtocol: 6,
+            payload,
+            totalBytes: headerSize + payloadSize,
+            headerSize,
+            payloadSize,
+            timestamp: new Date(),
+            ttl: 64,
+            tcpFlags: 16, // ACK flag
+            sequence: sequenceNumber,
+            ack: ackNumber,
+        };
+
+        self.send(packet);
+
+        sequenceNumber += payloadSize;
+        ackNumber += payloadSize;
+
+        // Send the next packet
+        setTimeout(sendVideo, randomInt(minInterval, maxInterval));
+    };
+
+    // Start sending video packets
+    sendVideo();
 }
 
 /**
@@ -97,6 +127,32 @@ function cmd_ping(self, target) {
  * @param {...string} targets - IP addresses of the target devices
  * @returns {void}
  */
-function atk_DDoS_v1(self, ...targets) {
-    // Program your attack here...
+function atk_DoS_UDP(self, ...targets) {
+    const portProtocol = 53; // DNS protocol and destination port
+    const ttlRange = [32, 128]; // Range of TTL values
+    const packetNum = 200; // Number of packets to send
+    const headerSize = 8;
+
+    for (let i = 0; i < packetNum; i++) {
+        for (let j = 0; j < targets.length; j++) {
+            const payload = randomString(128); // Random payload of 128 characters
+            const payloadSize = new TextEncoder().encode(payload).length; // Calculate payload size in bytes
+            const packet = {
+                srcIP: self.ip,
+                dstIP: targets[j],
+                srcPort: randomInt(1024, 65535),
+                dstPort: portProtocol,
+                transportProtocol: 17,
+                applicationProtocol: portProtocol,
+                payload,
+                totalBytes: headerSize + payloadSize,
+                headerSize,
+                payloadSize,
+                timestamp: new Date(),
+                ttl: randomInt(ttlRange[0], ttlRange[1]),
+            };
+
+            self.send(packet);
+        }
+    }
 }
