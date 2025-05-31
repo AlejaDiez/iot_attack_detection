@@ -13,7 +13,7 @@ Estos sistemas emplean diversos algoritmos que se adaptan a las distintas situac
 Dentro del aprendizaje automático existen varios tipos de aprendizaje, entre ellos se encuentran el aprendizaje supervisado y el aprendizaje federado, que son los usados durante este proyecto.
 
 \subsection{Aprendizaje Supervisado}
-\label{sec:AprendizajeSupervisado}
+\label{subsec:AprendizajeSupervisado}
 El \textbf{aprendizaje supervisado} es una de las principales ramas del aprendizaje automático, y se basa en el entrenamiento de un modelo utilizando un conjunto de datos \textbf{etiquetados}, es decir, ejemplos de entrada con la salida esperada. El objetivo del modelo es aprender una función que relacione correctamente las entradas con las salidas correspondientes, para posteriormente poder realizar predicciones sobre un nuevo conjunto de datos no observado.
 
 Durante el proceso de entrenamiento, el modelo realiza predicciones sobre cada uno de los datos de entrada y las compara con las etiquetas correspondientes. Esta comparación se realiza mediante el uso de una \textbf{función de pérdida}, que evalúa la solución predicha por el modelo frente a la solución real, devolviendo un valor de error, que se usará con técnicas de \textbf{optimización} para ajustar los parámetros del modelo y de esta forma, se irá reduciendo el error progresivamente a medida de que se vaya mejorando la precisión del modelo~\cite{aprendizaje_supervisado}.
@@ -29,7 +29,7 @@ En el desarrollo de este proyecto, se ha optado por una tarea de \textbf{clasifi
 También se podría haber optado por una tarea de \textbf{clasificación multiclase}, la cual habría permitido identificar no solo si un flujo de red corresponde a un ataque, sino también el tipo específico de ataque que se está produciendo. Sin embargo, esta alternativa presenta una mayor complejidad, tanto en el diseño del modelo como en la recolección y etiquetado de los datos, ya que requiere un conjunto de datos amplio y bien balanceado. Debido a la dificultad de obtener este tipo de información, se ha considerado que este enfoque no era viable a corto plazo para los objetivos de este proyecto.
 
 \subsection{Aprendizaje Federado}
-\label{sec:AprendizajeFederado}
+\label{subsec:AprendizajeFederado}
 El \textbf{aprendizaje federado} es un enfoque de aprendizaje automático que permite entrenar un modelo en múltiples dispositivos, sin la necesidad de centralizar los datos. A diferencia de las técnicas tradicionales, donde los datos son recopilados y almacenados en servidores centrales para su posterior uso en entrenamiento de modelos, el aprendizaje federado mantiene los datos \textbf{localmente} en los dispositivos de origen, y únicamente se comparten los \textbf{parámetros} del modelo~\cite{aprendizaje_federado_video}.
 
 Existen varios tipos de aprendizaje federado, según la distribución y naturaleza de los datos entre los distintos participantes~\cite{aprendizaje_federado_introduccion}:
@@ -191,7 +191,7 @@ Gráfica que representa la tasa de verdaderos positivos frente a la tasa de fals
 \label{subsubsec:MatrizConfusion}
 Se representa mediante una tabla que muestra el número de predicciones correctas e incorrectas para cada clase. Permite un análisis detallado de los errores del modelo \cite{matriz}.
 
-\imagen{matriz_confusion}{Matriz de Confusión}{0.8}
+\imagen{matriz_confusion}{Matriz de Confusión}{0.6}
 
 \section{Redes de dispositivos}
 \label{sec:Redes}
