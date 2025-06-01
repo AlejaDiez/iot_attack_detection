@@ -44,7 +44,7 @@ Existen varios tipos de aprendizaje federado, según la distribución y naturale
 
 Este enfoque permite realizar un entrenamiento de forma \textbf{colaborativa} entre múltiples clientes. Cada cliente entrena un modelo local utilizando sus propios datos. Después de varias iteraciones, el modelo local se envía al servidor central para \textbf{actualizar} los parámetros mediante algoritmos como \textbf{Federated Averaging~\ref{subsubsec:FedAvg}} y así poder obtener un modelo global que incluya el proceso de aprendizaje de cada uno de los clientes. Este modelo se vuelve a distribuir entre los clientes, quienes podrán continuar con el entrenamiento usando un modelo actualizado, realizando tantas rondas sucesivas hasta alcanzar la \textbf{convergencia} del modelo. Todo este proceso se puede observar de manera gráfica en la siguiente figura~\ref{fig:federated_learning}.
 
-\imagen{federated_learning}{Arquitectura de un sistema de aprendizaje federado}{0.8}
+\imagen{federated_learning}{Arquitectura de un sistema de aprendizaje federado \cite{iconos}}{0.8}
 
 Gracias a esta técnica de aprendizaje, los datos de entrenamiento permanecen en todo momento en el cliente, lo que ofrece grandes ventajas en términos de \textbf{privacidad}, \textbf{seguridad} y cumplimiento de normativa relacionadas con la \textbf{Protección de Datos}.
 
@@ -205,7 +205,7 @@ El \textbf{Modelo OSI}~\cite{modelo_osi} (Open Systems Interconnection) es un mo
 
 Este modelo se basa en dividir el sistema de comunicación en siete capas distintas, organizadas de forma jerárquica y cada una apilada sobre otra. Cada capa tiene una función específica y se encarga de ofrecer servicios a la capa superior, usando los servicios que proporcionan las capas inferiores. De este modo, se puede establecer una arquitectura modular que facilita el diseño, implementación y mantenimiento de sistemas más complejos.
 
-\imagen{osi}{Modelo OSI}{0.8}
+\imagen{osi}{Modelo OSI \cite{iconos}}{0.8}
 
 Para que un mensaje se distribuya de un dispositivo a otro, los datos deben atravesar cada una de las capas en orden descendente desde el emisor, y una vez en el receptor, deben atravesar las capas en orden ascendente (figura~\ref{fig:osi}). Esto garantiza que cada capa cumpla su función específica en la preparación, transmisión, recepción y reconstrucción de los datos.
 
