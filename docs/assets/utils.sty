@@ -10,6 +10,7 @@
 \usepackage{microtype}
 \usepackage{placeins}
 \usepackage{xcolor}
+\usepackage{float}
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
 \RequirePackage{xtab}
@@ -30,7 +31,6 @@
 \clubpenalty100000
 %% Imagenes
 \usepackage{graphicx}
-\graphicspath{ {./img/} }
 
 % Comandos
 %% Comando para insertar una imagen en un lugar concreto.
@@ -88,12 +88,12 @@
 }
 
 %% Comando para incluir imágenes en formato apaisado (sin marco).
-\newcommand{\figuraApaisadaSinMarco}[5]{%
+\newcommand{\figuraApaisadaSinMarco}[3]{%
   \begin{figure}%
     \begin{center}%
-    \includegraphics[angle=90,height=#1\textheight,#5]{#2}%
-    \caption{#3}%
-    \label{#4}%
+    \includegraphics[angle=90,height=#3\textheight,keepaspectratio]{#1}%
+    \caption{#2}%
+    \label{fig:#1}%
     \end{center}%
   \end{figure}%
 }
