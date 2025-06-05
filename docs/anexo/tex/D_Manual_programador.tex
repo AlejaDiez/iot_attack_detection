@@ -1,11 +1,216 @@
 \apendice{Documentación técnica de programación}
 
 \section{Introducción}
+\label{sec:ProgramadorIntroduccion}
+En este apéndice se va a explicar todo lo relacionado con el código desarrollado durante la realización del proyecto. Se va a detallar de una forma clara y estructurada como se organizan los directorios del repositorio, para que en un futuro sirva de ayuda para comprender la estructura del proyecto.
 
 \section{Estructura de directorios}
+\label{sec:EstructuraDirectorios}
+El código fuente desarrollado durante este proyecto se encuentra alojado en un repositorio público en GitHub\footnote{\url{https://github.com/AlejaDiez/iot_attack_detection}}, bajo la licencia MIT. A continuación, se va a presentar la estructura de directorios que forman este repositorio para poder dar una visión general de la estructura del proyecto.
+
+La organización sigue unos estándares comunes, utilizados en proyectos de mediana y gran escala, lo que facilita su comprensión y mantenimiento por parte de programadores externos al proyecto. A continuación se va a mostrar la estructura de directorios y archivos del proyecto.
+\begin{itemize}
+    \item \textit{\textbf{data}}: directorio que contiene todos los archivos útiles para el uso del simulador.
+    \begin{itemize}
+        \item \textit{\textbf{layouts}}: directorio que contiene archivos de proyectos para importarlos en el simulador. 
+        \item \textit{\textbf{libs}}: directorio que contiene archivos de bibliotecas de comandos, ataques e interceptores.
+        \item \textit{\textbf{models}}: directorio que contiene modelos ya ``compilados'' para su uso en el simulador.
+    \end{itemize} 
+    \item \textit{\textbf{docs}}: directorio que contiene todos los archivos relacionados con la documentación del proyecto.
+    \begin{itemize}
+        \item \textit{\textbf{anexo}}: directorio que contiene los archivos LaTeX relacionados con los anexos.
+        \item \textit{\textbf{assets}}: directorio que contiene recursos comunes de los archivos de documentación.
+        \item \textit{\textbf{memoria}}: directorio que contiene los archivos LaTeX relacionados con la memoria.
+        \item \textit{\textbf{videos}}: directorio que contiene todos los vídeos explicativos del proyecto.
+    \end{itemize}
+    \item \textit{\textbf{src}}: directorio que contiene el código fuente de los dos proyectos del TFG.
+    \begin{itemize}
+        \item \textit{\textbf{attack\_detector}}: directorio principal del proyecto de detección de ataques mediante una red neuronal entrenada por aprendizaje federado.
+        \item \textit{\textbf{iot\_simulator}}: directorio principal del proyecto del simulador de redes IoT.
+    \end{itemize}
+    \item \textit{\textbf{tests}}: directorio que contiene pruebas realizadas durante las fases de investigación sobre bibliotecas de aprendizaje federado.
+    \begin{itemize}
+        \item \textit{\textbf{flower}}: directorio que contiene pruebas realizadas con la biblioteca Flower.
+        \item \textit{\textbf{tensorflow-federated}}: directorio que contiene pruebas realizadas con la biblioteca TensorFlow Federated.
+    \end{itemize}
+    \item \textit{\textbf{.gitattributes}}: archivo de configuración de Git para definir propiedades de archivos específicos.
+    \item \textit{\textbf{.gitignore}}: archivo de configuración de Git que indica que archivos omitir para no incluirlos en el control de versión.
+    \item \textit{\textbf{LICENSE}}: archivo de licencia, donde se especifica el contenido de la licencia que usa el proyecto. 
+    \item \textit{\textbf{README.md}}: archivo de presentación del proyecto, en el que se indica brevemente en que consiste el proyecto.
+\end{itemize}
+
+Dentro del directorio \textit{\textbf{src/attack\_detector}} nos encontramos con los siguientes directorios y archivos:
+\begin{itemize}
+    \item \textit{\textbf{data}}: directorio que contiene los datasets, configuraciones del modelo base para el aprendizaje federado y archivos de salida como métricas y modelos entrenados.
+    \item \textit{\textbf{src}}: directorio que contiene el código fuente del script para aprendizaje federado.
+     \begin{itemize}
+        \item \textit{\textbf{utils}}: directorio que contiene utilidades para el desarrollo del script.
+        \item \textit{\textbf{client.py}}: archivo que contiene toda la lógica del cliente federado.
+        \item \textit{\textbf{main.py}}: archivo principal del proyecto, que actúa como punto de entrada al sistema federado.
+        \item \textit{\textbf{server.py}}: archivo que contiene toda la lógica del servidor federado.
+    \end{itemize}
+    \item \textit{\textbf{.gitignore}}: archivo de configuración de Git que indica que archivos omitir de este proyecto.
+    \item \textit{\textbf{requirements.txt}}: archivo de bibliotecas con sus versiones usadas en Python para facilitar la instalación.
+\end{itemize}
+
+Dentro del directorio \textit{\textbf{src/iot\_simulator}} nos encontramos con los siguientes directorios y archivos:
+\begin{itemize}
+    \item \textit{\textbf{public}}: directorio que contiene recursos públicos de la web.
+    \item \textit{\textbf{src}}: directorio que contiene todo el proyecto del simulador.
+     \begin{itemize}
+        \item \textit{\textbf{app}}: directorio principal de la aplicación, que contiene todas las vistas y lógica de esta.
+        \begin{itemize}
+            \item \textit{\textbf{assets}}: directorio de recursos de la aplicación.
+            \item \textit{\textbf{components}}: directorio de componentes de la aplicación. En esta carpeta se encuentra parte de las vistas.
+            \item \textit{\textbf{guards}}: directorio de protectores de rutas de la aplicación.
+            \item \textit{\textbf{models}}: directorio con los modelos de la aplicación. En esta carpeta se encuentra parte de la lógica.
+            \item \textit{\textbf{resolvers}}: directorio de servicios de resolución de datos de la aplicación.
+            \item \textit{\textbf{routes}}: directorio de rutas de la aplicación. En esta carpeta se encuentra parte de las vistas.
+            \item \textit{\textbf{services}}: directorio de servicios de la aplicación. En esta carpeta se encuentran los controladores de la aplicación.
+            \item \textit{\textbf{utils}}: directorio que contiene funciones de utilidad.
+            \item \textit{\textbf{app.component.html}}: archivo html del componente principal de la aplicación.
+            \item \textit{\textbf{app.component.ts}}: archivo ts del componente principal de la aplicación.
+            \item \textit{\textbf{app.routes.transition.ts}}: archivo que contiene las animaciones entre rutas de la aplicación.
+            \item \textit{\textbf{app.routes.ts}}: archivo de rutas de la aplicación. En este archivo se encuentran las rutas definidas de la aplicación.
+        \end{itemize}
+        
+        \item \textit{\textbf{index.html}}: archivo html principal que actúa como punto de entrada al simulador. 
+        \item \textit{\textbf{main.ts}}: archivo de arranque de la aplicación angular.
+        \item \textit{\textbf{styles.css}}: archivo css principal que contiene los estilos globales de la aplicación.
+    \end{itemize}
+    \item \textit{\textbf{.gitignore}}: archivo de configuración de Git que indica que archivos omitir de este proyecto.
+    \item \textit{\textbf{.prettierrc}}: archivo de configuración para Prettier, herramienta de formateo de código
+    \item \textit{\textbf{angular.json}}: archivo de configuración principal del framework Angular.
+    \item \textit{\textbf{components.json}}: archivo de configuración de la biblioteca de componentes.
+    \item \textit{\textbf{package-lock.json}}: archivo generado automáticamente que registra las versiones exactas de las dependencias.
+    \item \textit{\textbf{package.json}}: archivo principal de configuración del proyecto, contiene tanto el nombre, como versión, dependencias y muchos datos más.
+    \item \textit{\textbf{tailwind.config.js}}: archivo de configuración de Tailwind CSS.
+    \item \textit{\textbf{tsconfig.app.json}}: archivo de configuración específico para la compilación de la aplicación Angular.
+    \item \textit{\textbf{tsconfig.json}}: archivo de configuración de TypeScript.
+    \item \textit{\textbf{tsconfig.spec.json}}: archivo de configuración para la compilación de pruebas.
+\end{itemize}
 
 \section{Manual del programador}
+\label{sec:ManualProgramador}
+\subsection{Gestión del repositorio}
+\label{subsec:GestionRepositorio}
+Como ya se ha mencionado en el Apéndice \ref{sec:Planificacion}, este proyecto se ha desarrollado bajo una metodología SCRUM. Para ello se han planificado sprints en los que se establecieron distintas tareas. La gestión de estas tareas se han realizado mediante la herramienta \textbf{GitHub Projects}\footnote{\url{https://github.com/users/AlejaDiez/projects/8}}, permitiendo realizar un seguimiento organizado del progreso.
+
+Para mejorar la implementación de estas tareas y no interferir en las entregas pasadas, el proyecto se gestiono con un sistema de \textbf{ramas}. Cada mejora incremental se implementó en una rama independiente, permitiendo aislar los cambios y trabajar de forma controlada. Una vez finalizada la implementación, la rama se fusionaba con la \textbf{rama principal}, obteniendo así una versión actualizada y estable del proyecto.
+
+Para el despliegue, existe una rama especial denominada \textbf{release}, que contiene únicamente los archivos generados en el momento de ''compilación`` del simulador.
+
+\subsection{Obtención del código fuente}
+\label{subsec:CodigoFuente}
+Para obtener el código fuente del proyecto completo, es necesario clonar\footnote{git clone \url{https://github.com/AlejaDiez/iot_attack_detection.git}} el repositorio o bien descargarlo directamente desde GitHub\footnote{\url{https://github.com/AlejaDiez/iot_attack_detection}}.
+
+\subsection{Entorno de desarrollo}
+\label{subsec:EntornoDesarrollo}
+Para poder reproducir completamente el proyecto, es necesario contar con la instalación de las siguientes herramientas (se podría usar otras alternativas):
+\begin{itemize}
+    \item Python >=3.7 <=3.12
+    \item Node.js >=18.19.1
+    \item Git
+    \item Navegador basado en Chromium
+    \item IDE (Visual Studio Code)
+    \item Acceso a compilador LaTeX (Overleaf)
+\end{itemize}
 
 \section{Compilación, instalación y ejecución del proyecto}
+\label{sec:CompilacionInstalacion}
+\subsection{Entrenamiento con aprendizaje federado}
+\label{subsec:ConfiguracionAprendizajeFederado}
+Para el entrenamiento federado usando el script, es necesario realizar los siguientes pasos en cada uno de los dispositivos que vaya a participar en el entrenamiento. Hay que tener en cuenta que los datasets y la configuración del modelo deberían estar en cada uno de los dispositivos.
+
+\subsubsection{Instalación de dependencias}
+\label{subsubsec:InstalacionDependencias}
+Para instalar las bibliotecas necesarias, es necesario situarse en la carpeta principal del proyecto \textbf{attack\_detector} y ejecutar el siguiente comando:
+
+\begin{verbatim}
+$ pip3 install -r requirements.txt
+\end{verbatim}
+
+Esto instalará todas las dependencias necesarias con las versiones correspondientes.
+
+\subsubsection{Ejecución del script}
+\label{subsubsec:EjecucionScript}
+Para ejecutar el script, es necesario situarse en la carpeta principal del proyecto \textbf{attack\_detector} y ejecutar el siguiente comando:
+
+\begin{verbatim}
+$ python3 src/main.py
+\end{verbatim}
+
+El script admite los siguientes argumentos para configurar su ejecución:
+\begin{table}[h]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.24\columnwidth} X }
+		\toprule
+		\textbf{Argumento} & \textbf{Descripción} \\
+		\toprule
+        \texttt{-h, --help} & Muestra el mensaje de ayuda \\
+        \texttt{-s [HOST:PORT], --server} & Ejecuta el servidor de entrenamiento en la dirección y puerto especificados \\
+        \texttt{-c [HOST:PORT], --client} & Ejecuta el cliente de entrenamiento con la dirección y puerto del servidor indicados \\
+        \texttt{-d [NUM\_FILES], --divide} & Divide el conjunto de entrenamiento en el número indicado de partes \\
+        \texttt{-m [METRICS], --metrics} & Convierte las métricas en archivos CSV y genera gráficas \\
+        \texttt{--model MODEL} & Ruta al archivo que contiene el modelo de la red neuronal \\
+        \texttt{--train X\_TRAIN Y\_TRAIN} & Ruta a los archivos que contienen el conjunto de entrenamiento (entradas y etiquetas) \\
+        \texttt{--test X\_TEST Y\_TEST} & Ruta a los archivos que contienen el conjunto de prueba (entradas y etiquetas) \\
+        \texttt{--output OUTPUT} & Ruta al directorio donde se guardarán los archivos de salida \\
+        \texttt{--batch-size BATCH\_SIZE} & Tamaño del lote de entrenamiento \\
+        \texttt{--rounds ROUNDS} & Número de rondas de entrenamiento federado \\
+        \texttt{--epochs EPOCHS} & Número de épocas de entrenamiento por ronda \\
+		\bottomrule
+	\end{tabularx}
+	\caption{Argumentos para el script attack\_detector}
+\end{table}
+
+\newpage
+\subsection{Simulador IoT}
+\label{subsec:ConfiguracionSimuladorIoT}
+\subsubsection{Instalación de dependencias}
+\label{subsubsec:InstalacionDependencias}
+Para instalar Angular de forma global, es necesario ejecutar el siguiente comando:
+\begin{verbatim}
+$ npm install -g @angular/cli
+\end{verbatim}
+
+Para instalar las bibliotecas necesarias, es necesario situarse en la carpeta principal del proyecto \textbf{iot\_simulator} y ejecutar el siguiente comando:
+\begin{verbatim}
+$ npm install
+\end{verbatim}
+
+Esto instalará todas las dependencias necesarias con las versiones correspondientes.
+
+\subsubsection{Ejecución del simulador}
+\label{subsubsec:EjecucionSimulador}
+Para ejecutar el simulador, es necesario situarse en la carpeta principal del proyecto \textbf{iot\_simulator} y ejecutar el siguiente comando:
+
+\begin{verbatim}
+$ npm run start
+\end{verbatim}
+
+Esto ejecuta un comando definido en el archivo \textit{package.json} y lanzará la aplicación en la dirección http://localhost:4200 que se puede introducir en el navegador del equipo local para visualizar la interfaz.
+
+\subsubsection{``Compilación'' del simulador}
+\label{subsubsec:EjecucionSimulador}
+Para construir la versión final de producción del simulador, es necesario situarse en la carpeta principal del proyecto \textbf{iot\_simulator} y ejecutar el siguiente comando:
+
+\begin{verbatim}
+$ npm run build
+\end{verbatim}
+
+Esto ejecuta un comando definido en el archivo \textit{package.json} y construirá los archivos finales del simulador, que se guardarán en el directorio \textit{dist} del proyecto. Con estos archivos, es posible desplegar la aplicación en un servidor web o levantar un servidor local para su ejecución.
 
 \section{Pruebas del sistema}
+\label{sec:Pruebas}
+Una vez terminado el proyecto, se llevó a cabo una fase de pruebas con el objetivo de validar la correcta implementación del sistema.
+
+\subsection{Pruebas del simulador de red}
+\label{subsec:PruebasSimulador}
+Se probó el simulador mediante diferentes configuraciones de red, con distinta cantidad de nodos, flujos y parámetros. También se valido que en los formularios de parámetros no era posible introducir valores no deseados y se comprobó que el simulador realizaba las acciones oportunas para solucionar estos datos inválidos.
+
+Además, se comprobó que al cargar archivos erróneos, ya sea de proyecto, biblioteca o modelo, lanzara una excepción y no se paraliza el programa.
+
+\subsection{Pruebas de entrenamiento federado}
+\label{subsec:PruebasEntrenamientoFederado}
+Se realizaron pruebas funcionales para asegurar de que el script respondía correctamente en situaciones habituales. Por ejemplo, se probó qué ocurría al intentar conectar un cliente a una dirección de servidor inexistente, lanzar un cliente antes de que el servidor estuviera en funcionamiento, o desconectar clientes en mitad del entrenamiento. También se hicieron pruebas de estrés, ejecutando varios clientes al mismo tiempo y trabajando con grandes volúmenes de datos y configuraciones más exigentes.
