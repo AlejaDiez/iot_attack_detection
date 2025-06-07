@@ -24,9 +24,7 @@ La solución propuesta consiste en el desarrollo de un entorno de simulación ca
 
 Para el desarrollo del simulador se emplearán tecnologías como TypeScript y el framework Angular. Por otro lado, el entrenamiento del modelo se llevará a cabo utilizando Python, el framework Flower y la biblioteca TensorFlow, bajo el paradigma del aprendizaje federado.
 
-Para el entrenamiento y validación del modelo se utilizará el conjunto de datos NF-ToN-IoT~\cite{dataset}, el cual será particionado en dos partes, permitiendo que cada segmento sea procesado por un dispositivo distinto. Cada archivo contendrá un número determinado de trazas de red, tanto benignas como asociadas a distintos tipos de ataques dirigidos a dispositivos IoT. Este conjunto de datos está disponible de forma gratuita a través de la plataforma Kaggle y puede utilizarse con fines científicos y educativos, pero no comerciales.
-
-\url{https://www.kaggle.com/datasets/dhoogla/nftoniot?select=NF-ToN-IoT.parquet}
+Para el entrenamiento y validación del modelo se utilizará el conjunto de datos NF-ToN-IoT~\cite{dataset}, el cual será particionado en dos partes, permitiendo que cada segmento sea utilizado por un cliente distinto. Cada archivo contendrá un número determinado de trazas de red, tanto benignas como asociadas a distintos tipos de ataques dirigidos a dispositivos IoT. Este conjunto de datos está disponible de forma gratuita a través de la plataforma Kaggle\footnote{\url{https://www.kaggle.com/datasets/dhoogla/nftoniot?select=NF-ToN-IoT.parquet}} y puede utilizarse con fines científicos y educativos, pero no comerciales.
 
 \section{Estructura de la memoria}
 \label{sec:Estructura}
@@ -43,10 +41,4 @@ La memoria se organiza en los siguientes apartados:
 
 \section{Repositorio}
 \label{sec:Repositorio}
-El código fuente y los recursos asociados se encuentran disponibles en el repositorio de GitHub en la siguiente dirección
-
-\url{https://github.com/AlejaDiez/iot_attack_detection}
-
-La estructura del repositorio está organizada de tal manera que facilite la comprensión y reproducción del trabajo realizado, incluyendo directorios para las diferentes partes del proyecto, datos utilizados y documentación.
-
-Para una comprensión más detallada del repositorio, debe consultar la sección D.2 de los anexos.
+El código fuente y los recursos asociados se encuentran disponibles en el repositorio de GitHub\footnote{\url{https://github.com/AlejaDiez/iot_attack_detection}}. La estructura del repositorio está organizada de tal manera que facilite la comprensión y reproducción del trabajo realizado, incluyendo directorios para las diferentes partes del proyecto, datos utilizados y documentación. Para una comprensión más detallada de la estructura del repositorio, se debe consultar la sección D.2 de los anexos.

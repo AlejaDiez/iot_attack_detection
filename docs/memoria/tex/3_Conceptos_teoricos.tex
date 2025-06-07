@@ -1,12 +1,12 @@
 \capitulo{3}{Conceptos teóricos}
 En el marco de este proyecto, se abordan múltiples disciplinas pertenecientes a distintas áreas de la informática, tales como la inteligencia artificial, las redes de dispositivos y la seguridad.
-La parte de mayor complejidad teórica corresponde al \textbf{entrenamiento federado} de un \textbf{perceptrón multicapa} (MLP). Con esta novedosa estrategia, es posible entrenar un modelo de inteligencia artificial de forma descentralizada, preservando la privacidad de los datos al evitar su transferencia a un servidor central. Este aspecto resulta especialmente relevante en contextos relacionados con el flujo de datos en redes, donde la confidencialidad y la seguridad de la información son prioridades fundamentales.
+La parte de mayor complejidad teórica corresponde al \textbf{entrenamiento federado} de un \textbf{perceptrón multicapa  (MLP)}. Con esta novedosa estrategia, es posible entrenar un modelo de inteligencia artificial de forma descentralizada, preservando la privacidad de los datos al evitar su transferencia a un servidor central. Este aspecto resulta especialmente relevante en contextos relacionados con el flujo de datos en redes, donde la confidencialidad y la seguridad de la información son prioridades fundamentales.
 
 \section{Aprendizaje Automático}
 \label{sec:AprendizajeAutomático}
 La \textbf{inteligencia artificial (IA)} es una rama de la informática que se centra en la creación de máquinas que sean capaces de imitar la inteligencia humana para realizar tareas, y que puedan mejorar sus capacidades según recopilen información.
 
-El \textbf{aprendizaje automático (machine learning)} es una rama de la inteligencia artificial que permite a un sistema aprender a partir de un conjunto de datos, identificando patrones y relaciones de forma autónoma, sin necesidad de ser programado con instrucciones específicas para resolver una determinada tarea~\cite{machine_learning}. Entre las distintas tareas que es capaz de abordar esta tecnología, destaca la \textbf{clasificación binaria}, que permite determinar si un conjunto de datos pertenece a una clase o a otra, resultando especialmente útil en la detección de ataques en red.
+El \textbf{aprendizaje automático (machine learning)}~\cite{machine_learning} es una rama de la inteligencia artificial que permite a un sistema aprender a partir de un conjunto de datos, identificando patrones y relaciones de forma autónoma, sin necesidad de ser programado con instrucciones específicas para resolver una determinada tarea. Entre las distintas tareas que es capaz de abordar esta tecnología, destaca la \textbf{clasificación binaria}, que permite determinar si un conjunto de datos pertenece a una clase o a otra, resultando especialmente útil en la detección de ataques en red.
 
 Estos sistemas emplean diversos algoritmos que se adaptan a las distintas situaciones presentadas por el conjunto de datos utilizado durante el proceso de entrenamiento. Durante cada iteración, se ajustan los parámetros del algoritmo, dando como resultado un \textbf{modelo matemático} que es capaz de relacionar las variables de entradas y las salidas deseadas.
 
@@ -14,9 +14,9 @@ Dentro del aprendizaje automático existen varios tipos de aprendizaje, entre el
 
 \subsection{Aprendizaje Supervisado}
 \label{subsec:AprendizajeSupervisado}
-El \textbf{aprendizaje supervisado} es una de las principales ramas del aprendizaje automático, y se basa en el entrenamiento de un modelo utilizando un conjunto de datos \textbf{etiquetados}, es decir, ejemplos de entrada con la salida esperada. El objetivo del modelo es aprender una función que relacione correctamente las entradas con las salidas correspondientes, para posteriormente poder realizar predicciones sobre un nuevo conjunto de datos no observado.
+El \textbf{aprendizaje supervisado}~\cite{aprendizaje_supervisado} es una de las principales ramas del aprendizaje automático, y se basa en el entrenamiento de un modelo utilizando un conjunto de datos \textbf{etiquetados}, es decir, ejemplos de entrada con la salida esperada. El objetivo del modelo es aprender una función que relacione correctamente las entradas con las salidas correspondientes, para posteriormente poder realizar predicciones sobre un nuevo conjunto de datos no observado.
 
-Durante el proceso de entrenamiento, el modelo realiza predicciones sobre cada uno de los datos de entrada y las compara con las etiquetas correspondientes. Esta comparación se realiza mediante el uso de una \textbf{función de pérdida}, que evalúa la solución predicha por el modelo frente a la solución real, devolviendo un valor de error, que se usará con técnicas de \textbf{optimización} para ajustar los parámetros del modelo y de esta forma, se irá reduciendo el error progresivamente a medida de que se vaya mejorando la precisión del modelo~\cite{aprendizaje_supervisado}.
+Durante el proceso de entrenamiento, el modelo realiza predicciones sobre cada uno de los datos de entrada y las compara con las etiquetas correspondientes. Esta comparación se realiza mediante el uso de una \textbf{función de pérdida}, que evalúa la solución predicha por el modelo frente a la solución real, devolviendo un valor de error, que se usará con técnicas de \textbf{optimización} para ajustar los parámetros del modelo y de esta forma, se irá reduciendo el error progresivamente a medida que se vaya mejorando la precisión del modelo.
 
 Con este tipo de aprendizaje se pueden resolver dos problemas principalmente:
 \begin{itemize}
@@ -30,19 +30,19 @@ También se podría haber optado por una tarea de \textbf{clasificación multicl
 
 \subsection{Aprendizaje Federado}
 \label{subsec:AprendizajeFederado}
-El \textbf{aprendizaje federado} es un enfoque de aprendizaje automático que permite entrenar un modelo en múltiples dispositivos, sin la necesidad de centralizar los datos. A diferencia de las técnicas tradicionales, donde los datos son recopilados y almacenados en servidores centrales para su posterior uso en entrenamiento de modelos, el aprendizaje federado mantiene los datos \textbf{localmente} en los dispositivos de origen, y únicamente se comparten los \textbf{parámetros} del modelo~\cite{aprendizaje_federado_video}.
+El \textbf{aprendizaje federado}~\cite{aprendizaje_federado_video} es un enfoque de aprendizaje automático que permite entrenar un modelo en múltiples dispositivos, sin la necesidad de centralizar los datos. A diferencia de las técnicas tradicionales, donde los datos son recopilados y almacenados en servidores centrales para su posterior uso en entrenamiento de modelos, el aprendizaje federado mantiene los datos \textbf{localmente} en los dispositivos de origen, y únicamente se comparten los \textbf{parámetros} del modelo.
 
 Existen varios tipos de aprendizaje federado, según la distribución y naturaleza de los datos entre los distintos participantes~\cite{aprendizaje_federado_introduccion}:
 
 \begin{itemize}
-    \item \textbf{Aprendizaje federado horizontal}: se aplica cuando los datos tienen características similares pero de diferentes usuarios. Por ejemplo, el entrenamiento de un modelo con transacciones bancarias del mismo tipo, pero procedentes de distintos clientes.
+    \item \textbf{Aprendizaje federado horizontal}: se aplica cuando los datos tienen características similares, pero de diferentes usuarios. Por ejemplo, el entrenamiento de un modelo con transacciones bancarias del mismo tipo, pero procedentes de distintos clientes.
     
-    \item \textbf{Aprendizaje federado vertical}: se utiliza cuando los datos presentan características diferentes pero se refieren a las mismas entidades. Por ejemplo, al combinar la información de compras de una plataforma con las reseñas de usuarios de otra, para entrenar un modelo de recomendación.
+    \item \textbf{Aprendizaje federado vertical}: se utiliza cuando los datos presentan características diferentes, pero se refieren a las mismas entidades. Por ejemplo, al combinar la información de compras de una plataforma con las reseñas de usuarios de otra, para entrenar un modelo de recomendación.
     
     \item \textbf{Aprendizaje federado por transferencia}: emplea un modelo previamente entrenado en un conjunto de datos, que se adapta posteriormente a un conjunto de datos similar para resolver una tarea relacionada. Por ejemplo, utilizar un modelo entrenado para reconocer animales y ajustarlo para identificar especies específicas.
 \end{itemize}
 
-Este enfoque permite realizar un entrenamiento de forma \textbf{colaborativa} entre múltiples clientes. Cada cliente entrena un modelo local utilizando sus propios datos. Después de varias iteraciones, el modelo local se envía al servidor central para \textbf{actualizar} los parámetros mediante algoritmos como \textbf{Federated Averaging~\ref{subsubsec:FedAvg}} y así poder obtener un modelo global que incluya el proceso de aprendizaje de cada uno de los clientes. Este modelo se vuelve a distribuir entre los clientes, quienes podrán continuar con el entrenamiento usando un modelo actualizado, realizando tantas rondas sucesivas hasta alcanzar la \textbf{convergencia} del modelo. Todo este proceso se puede observar de manera gráfica en la siguiente figura~\ref{fig:federated_learning}.
+Este enfoque permite realizar un entrenamiento de forma \textbf{colaborativa} entre múltiples clientes. Cada cliente entrena un modelo local utilizando sus propios datos. Después de varias iteraciones, el modelo local se envía al servidor central para \textbf{actualizar} los parámetros mediante algoritmos como \textbf{Federated Averaging} (subsección ~\ref{subsubsec:FedAvg}) y así poder obtener un modelo global que incluya el proceso de aprendizaje de cada uno de los clientes. Este modelo se vuelve a distribuir entre los clientes, quienes podrán continuar con el entrenamiento usando un modelo actualizado, realizando tantas rondas sucesivas hasta alcanzar la \textbf{convergencia} del modelo. Todo este proceso se puede observar de manera gráfica en la siguiente figura~\ref{fig:federated_learning}.
 
 \imagen{federated_learning}{Arquitectura de un sistema de aprendizaje federado \cite{iconos}}{0.8}
 
@@ -62,7 +62,7 @@ En este proyecto, se ha optado por un enfoque de \textbf{aprendizaje federado su
 
 \subsubsection{Algoritmo Federated Averaging (FedAvg)}
 \label{subsubsec:FedAvg}
-El algoritmo \textbf{Federated Averaging} (FedAvg), es uno de los enfoques más usados en el ámbito del aprendizaje federado. Si objetivo es permitir el entrenamiento de forma eficiente de modelos sobre datos distribuidos, preservando la privacidad de los usuarios. Este algoritmo combina el entrenamiento local de modelos y la agregación de los modelos locales en el servidor central para generar un modelo global. El procedimiento general del algoritmo es el siguiente:
+El algoritmo \textbf{Federated Averaging (FedAvg)}~\cite{aprendizaje_federado_articulo}, es uno de los enfoques más usados en el ámbito del aprendizaje federado. Su objetivo es permitir el entrenamiento de forma eficiente de modelos sobre datos distribuidos, preservando la privacidad de los usuarios. Este algoritmo combina el entrenamiento local de modelos y la agregación de los modelos locales en el servidor central para generar un modelo global. El procedimiento general del algoritmo es el siguiente:
 
 \begin{enumerate}
     \item El \textbf{servidor central} inicializa el modelo global con unos parámetros iniciales \(w_0\).
@@ -82,7 +82,7 @@ Este algoritmo permite que los clientes realicen múltiples pasos de entrenamien
 
 \section{Perceptrón Multicapa (MLP)}
 \label{sec:MLP}
-Un \textbf{Perceptrón Multicapa}~\cite{perceptron_multicapa} (MLP) es un tipo de \textbf{Red Neuronal Artificial} (ANN) que consta de varias capas de neuronas interconectadas entre sí, logrando poder detectar patrones complejos en los datos (figura~\ref{fig:mlp}).
+Un \textbf{Perceptrón Multicapa (MLP)}~\cite{perceptron_multicapa} es un tipo de \textbf{Red Neuronal Artificial (ANN)} que consta de varias capas de neuronas interconectadas entre sí, logrando poder detectar patrones complejos en los datos (figura~\ref{fig:mlp}).
 
 Las capas se pueden identificar según su tipo:
 \begin{itemize}
@@ -93,17 +93,17 @@ Las capas se pueden identificar según su tipo:
 
 \imagen{mlp}{Esquema de un Perceptrón Multicapa}{0.8}
 
-Cada capa está formada por un conjunto de neuronas o nodos. Los \textbf{pesos} y el \textbf{sesgo (bias)} son parámetros que se usan para ajustar la salida de cada neurona en función de las entradas que esta reciba (imagen~\ref{fig:neurona}).
+Cada capa está formada por un conjunto de neuronas o nodos. Los \textbf{pesos} y el \textbf{sesgo (bias)} son parámetros que se usan para ajustar la salida de cada neurona en función de las entradas que esta reciba (figura~\ref{fig:neurona}).
 
 \imagen{neurona}{Esquema de una neurona}{0.8}
 
-El propósito de una neurona artificial es realizar una combinación lineal de sus entradas, ponderadas por unos pesos, y sumar el sesgo. A este resultado se le aplica la \textbf{función de activación}~\ref{subsec:FuncionActivacion} \(f(x)\), para generar la salida de la neurona. Durante el \textbf{entrenamiento}~\ref{subsec:Entrenamiento}, los pesos y el sesgo se ajustan mediante algoritmos de optimización, con el objetivo de que la neurona aprenda a producir las salidas deseadas en función de sus entradas.
+El propósito de una neurona artificial es realizar una combinación lineal de sus entradas, ponderadas por unos pesos, y sumar el sesgo. A este resultado se le aplica la \textbf{función de activación} (subsección~\ref{subsec:FuncionActivacion}) \(f(x)\), para generar la salida de la neurona. Durante el \textbf{entrenamiento} (subsección~\ref{subsec:Entrenamiento}), los pesos y el sesgo se ajustan mediante algoritmos de optimización, con el objetivo de que la neurona aprenda a producir las salidas deseadas en función de sus entradas.
 
 \[y=f(\sum_{i=1}^{n}{w_ix_i + b})\]
 
 \subsection{Función de activación}
 \label{subsec:FuncionActivacion}
-La \textbf{función de activación} es una parte fundamental de la neurona, ya que introduce la no linealidad al modelo. Sin el uso de estas funciones, la neurona simplemente seria un elemento de combinación lineal, limitando la capacidad de aprender de patrones complejos. También, permite filtrar la salida de la neurona, estableciendo un rango fijo de salidas para que no se produzcan valores excesivamente altos o bajos.
+La \textbf{función de activación} es una parte fundamental de la neurona, ya que introduce la no linealidad al modelo. Sin el uso de estas funciones, la neurona simplemente sería un elemento de combinación lineal, limitando la capacidad de aprender de patrones complejos. También, permite filtrar la salida de la neurona, estableciendo un rango fijo de salidas para que no se produzcan valores excesivamente altos o bajos.
 
 Existen diversas funciones de activación, y su elección depende del tipo de problema que se desea resolver.
 \begin{itemize}
@@ -119,7 +119,7 @@ Existen diversas funciones de activación, y su elección depende del tipo de pr
 
 \subsection{Función de pérdida}
 \label{subsec:FuncionPerdida}
-La \textbf{función de pérdida} es un componente fundamental durante el proceso de entrenamiento de un modelo, ya que proporciona una medida cuantitativa que permite evaluar la diferencia entre las predicciones del modelo y los valores reales del conjunto de entrenamiento. Este valor se utiliza en el proceso de \textbf{entrenamiento}~\ref{subsec:Entrenamiento} de la red neuronal, con el objetivo de minimizar la pérdida y, de este modo, permitir que el modelo aprenda a partir de los datos.
+La \textbf{función de pérdida} es un componente fundamental durante el proceso de entrenamiento de un modelo, ya que proporciona una medida cuantitativa que permite evaluar la diferencia entre las predicciones del modelo y los valores reales del conjunto de entrenamiento. Este valor se utiliza en el proceso de \textbf{entrenamiento} (subsección~\ref{subsec:Entrenamiento}) de la red neuronal, con el objetivo de minimizar la pérdida y, de este modo, permitir que el modelo aprenda a partir de los datos.
 
 Existen diversas funciones de pérdida, y su elección depende del tipo de problema que se desea resolver.
 \begin{itemize}
@@ -130,12 +130,12 @@ Existen diversas funciones de pérdida, y su elección depende del tipo de probl
 
 \subsection{Función de costo}
 \label{subsec:FuncionCosto}
-La \textbf{función de costo} es una medida global para evaluar el rendimiento del modelo durante el entrenamiento. Se obtiene al calcular el promedio de las funciones de pérdida~\ref{subsec:FuncionPerdida} individuales sobre todas las muestras del conjunto de entrenamiento. Esta función proporciona un valor de error total del modelo y es la que se \textbf{minimiza} en el proceso de entrenamiento.
+La \textbf{función de costo} es una medida global para evaluar el rendimiento del modelo durante el entrenamiento. Se obtiene al calcular el promedio de las funciones de pérdida (subsección~\ref{subsec:FuncionPerdida}) individuales sobre todas las muestras del conjunto de entrenamiento. Esta función proporciona un valor de error total del modelo y es la que se \textbf{minimiza} en el proceso de entrenamiento.
 \[J(\theta) = \frac{1}{n} \sum_{i=1}^{n} \ell(y_i, \hat{y}_i)\]
 
 \subsection{Proceso de entrenamiento}
 \label{subsec:Entrenamiento}
-La \textbf{función de costo}~\ref{subsec:FuncionCosto} proporciona una medida global para evaluar el rendimiento del modelo sobre el conjunto de datos de entrenamiento. Durante esta etapa, el objetivo principal es \textbf{minimizar} dicho valor mediante el ajuste de los parámetros \(\theta\) del modelo, con el fin de que las predicciones generadas por el modelo se aproximen lo máximo posible a los valores reales.
+La \textbf{función de costo} (subsección ~\ref{subsec:FuncionCosto}) proporciona una medida global para evaluar el rendimiento del modelo sobre el conjunto de datos de entrenamiento. Durante esta etapa, el objetivo principal es \textbf{minimizar} dicho valor mediante el ajuste de los parámetros \(\theta\) del modelo, con el fin de que las predicciones generadas por el modelo se aproximen lo máximo posible a los valores reales.
 
 Para alcanzar este objetivo, se emplean \textbf{algoritmos de optimización} que permiten reducir el valor de la función de costo, favoreciendo así la \textbf{convergencia} del modelo. Un proceso de optimización adecuado ayuda a mejorar la capacidad de generalización del modelo, evitando problemas como el \textbf{sobreajuste}\footnote{El sobreajuste (overfitting) ocurre cuando el modelo aprende demasiado bien los datos de entrenamiento, incluyendo el ruido, lo que deteriora su rendimiento en datos nuevos.} o el \textbf{subajuste}\footnote{El subajuste (underfitting) ocurre cuando el modelo no logra capturar la complejidad de los datos, lo que resulta en un rendimiento bajo tanto en el conjunto de entrenamiento como en el de prueba.}. Sin embargo, la convergencia del modelo no es un proceso rápido ni sencillo, ya que en muchos casos puede requerir un tiempo considerable, así como la posibilidad de tener un conjunto de datos de alta calidad.
 
@@ -197,11 +197,11 @@ Se representa mediante una tabla que muestra el número de predicciones correcta
 \label{sec:Redes}
 Las \textbf{redes de dispositivos} es una rama fundamental de la informática y las telecomunicaciones que se centra en la conexión entre dispositivos, la comunicación entre ellos y la gestión de recursos compartidos. Su objetivo principal es facilitar el intercambio de información y la colaboración entre diferentes dispositivos.
 
-Estas redes pueden estar compuestas por ordenadores, pequeños dispositivos, sensores, dispositivos móviles, entre otros. Con el auge del \textbf{Internet de las Cosas} (IoT), estas redes se han ido expandiendo y utilizando con mayor frecuencia, desde entornos domésticos hasta aplicaciones industriales. Esta expansión ha conllevado una evolución constante tanto en arquitectura como en los medio de transmisión, con el objetivo de garantizar una conexión eficiente, escalable y segura.
+Estas redes pueden estar compuestas por ordenadores, pequeños dispositivos, sensores, dispositivos móviles, entre otros. Con el auge del \textbf{Internet de las Cosas (IoT)}, estas redes se han ido expandiendo y utilizando con mayor frecuencia, desde entornos domésticos hasta aplicaciones industriales. Esta expansión ha conllevado una evolución constante tanto en arquitectura como en los medios de transmisión, con el objetivo de garantizar una conexión eficiente, escalable y segura.
 
 \subsection{Modelo OSI}
 \label{subsec:OSI}
-El \textbf{Modelo OSI}~\cite{modelo_osi} (Open Systems Interconnection) es un modelo conceptual que expone un protocolo estándar de comunicación, para que otros dispositivos sean capaz de comunicarse entre ellos. 
+El \textbf{Modelo OSI (Open Systems Interconnection)}~\cite{modelo_osi} es un modelo conceptual que expone un protocolo estándar de comunicación, para que otros dispositivos sean capaces de comunicarse entre ellos. 
 
 Este modelo se basa en dividir el sistema de comunicación en siete capas distintas, organizadas de forma jerárquica y cada una apilada sobre otra. Cada capa tiene una función específica y se encarga de ofrecer servicios a la capa superior, usando los servicios que proporcionan las capas inferiores. De este modo, se puede establecer una arquitectura modular que facilita el diseño, implementación y mantenimiento de sistemas más complejos.
 
@@ -217,7 +217,7 @@ Existen múltiples protocolos:
 \begin{itemize}
     \item \textbf{Protocolo de Transferencia de Hipertexto (HTTP)}: se usa para las comunicaciones entre navegadores web y servidores.
     \item \textbf{Protocolo Simple de Transferencia de Correo (SMTP)}: se usa para el envío de correos electrónicos a través de redes.
-    \item \textbf{Protocolo de Transferencia de Archivos (FTP)}: se usa para la tranferencia de archivos entre un cliente y un servidor.
+    \item \textbf{Protocolo de Transferencia de Archivos (FTP)}: se usa para la transferencia de archivos entre un cliente y un servidor.
     \item \textbf{Sistema de Nombre de Dominios (DNS)}: sistema que traduce nombres de dominio legibles por humanos a direcciones IP.
 \end{itemize}
 
@@ -225,23 +225,23 @@ Existen múltiples protocolos:
 \label{subsubsec:CapaPresentacion}
 Esta capa es la responsable de preparar los datos para que los pueda usar la capa de aplicación.
 \begin{itemize}
-    \item \textbf{Traducción}: capaz de codificar y descodificar los datos recibidos, para que las demás capas sean capaz de entenderlos.
-    \item \textbf{Cifrado}: se responsabiliza de encriptar en el extremo del emisor así como de desencriptar en el extremo del receptor.
+    \item \textbf{Traducción}: capaz de codificar y descodificar los datos recibidos, para que las demás capas sean capaces de entenderlos.
+    \item \textbf{Cifrado}: se responsabiliza de encriptar en el extremo del emisor, así como de desencriptar en el extremo del receptor.
     \item \textbf{Compresión de datos}: ayuda a comprimir los datos producidos en la capa de aplicación, para mejorar la velocidad de transferencia y minimizar la cantidad de datos transferidos.
 \end{itemize}
 
 \subsubsection{Capa de sesión}
 \label{subsubsec:CapaSesion}
-Se responsabiliza de abrir y cerrar las comunicaciones entre los dispositivos. Esta capa mantiene la conexión abierta tanto tiempo como sea necesario para completar la comunicación, además de cerrar la sesión para ahorrar recursos. También sincroniza la tranferencia de datos utilizando puntos de control.
+Se responsabiliza de abrir y cerrar las comunicaciones entre los dispositivos. Esta capa mantiene la conexión abierta tanto tiempo como sea necesario para completar la comunicación, además de cerrar la sesión para ahorrar recursos. También sincroniza la transferencia de datos utilizando puntos de control.
 
 \subsubsection{Capa de transporte}
 \label{subsubsec:CapaTransporte}
-En esta capa se encarga de las comunicaciones de extremo a extremo entre dos dispositivos. Esto implica, que antes de realizar el envío en la capa de red, realiza una fragmentación de los datos en trozos más pequeños llamados segmentos. En la capa de transporte del receptor, se encarga de rearmar los segmentos para volver a construir los datos. Además se encarga del control de flujo y el control de errores.
+En esta capa se encarga de las comunicaciones de extremo a extremo entre dos dispositivos. Esto implica, que antes de realizar el envío en la capa de red, realiza una fragmentación de los datos en trozos más pequeños llamados segmentos. En la capa de transporte del receptor, se encarga de rearmar los segmentos para volver a construir los datos. Además, se encarga del control de flujo y el control de errores.
 
 En esta capa se incluye varios protocolos:
 \begin{itemize}
-    \item \textbf{Protocolo de Control de Tranmisión (TCP)}: esta orientado a garantizar una conexión fiable y ordenada de los datos. Utiliza mecanismos de control de errores, control de flujo y retransmisión de paquetes perdidos.
-    \item \textbf{Protocolo de Datagrama de Usuario (UDP)}: esta orientado a la eficiencia y velocidad, ya que no establece la conexión entre los dispositivos y por lo tanto no garantiza de que lleguen los datos completos u ordenados.
+    \item \textbf{Protocolo de Control de Transmisión (TCP)}: está orientado a garantizar una conexión fiable y ordenada de los datos. Utiliza mecanismos de control de errores, control de flujo y retransmisión de paquetes perdidos.
+    \item \textbf{Protocolo de Datagrama de Usuario (UDP)}: está orientado a la eficiencia y velocidad, ya que no establece la conexión entre los dispositivos y por lo tanto no garantiza de que lleguen los datos completos u ordenados.
 \end{itemize}
 
 \subsubsection{Capa de red}
@@ -259,7 +259,7 @@ En esta capa se incluyen varios protocolos:
 Similar a la capa de red, excepto que esta capa facilita la transferencia de datos entre dos dispositivos dentro la misma red. Obtiene los paquetes de la capa de red y los divide en partes más pequeñas denominadas tramas. También es responsable del control de flujo y la gestión de errores.
 
 \begin{itemize}
-    \item \textbf{Control de Acceso al Medio (MAC)}: identificador fíniso único que esta asignado a la tarjeta de red y se usa para identificar de forma única a los dispositivos de una red local.
+    \item \textbf{Control de Acceso al Medio (MAC)}: identificador físico único que está asignado a la tarjeta de red y se usa para identificar de forma única a los dispositivos de una red local.
 \end{itemize}
 
 \subsubsection{Capa física}
@@ -274,9 +274,9 @@ Los ataques sobre redes son acciones maliciosas con el objetivo de interrumpir, 
 \label{subsubsec:AccessoNoAutorizado}
 Estos ataques tienen como objetivo intentar acceder a recursos o sistemas sin tener permiso. Los atacantes suelen aprovechar las vulnerabilidades del software, usar contraseñas robadas u otras técnicas.
 \begin{itemize}
-    \item \textbf{Puerta trasera (backdoor)}: vulnerabilidades que permiten el acceso remoto mediante aplicaciones diseñadas para ello.
+    \item \textbf{Puerta trasera (Backdoor)}: vulnerabilidades que permiten el acceso remoto mediante aplicaciones diseñadas para ello.
     \item \textbf{Ataques de contraseñas}: ataques dirigidos a obtener contraseñas por fuerza bruta o sniffing.
-    \item \textbf{Escaneo (scanning)}: técnicas de rastreo para descubrir servicios vulnerables o mal configurados.
+    \item \textbf{Escaneo (Scanning)}: técnicas de rastreo para descubrir servicios vulnerables o mal configurados.
 \end{itemize}
 
 \subsubsection{Interrumpir el servicio}
@@ -286,7 +286,7 @@ El objetivo de estos ataques es hacer que un sistema o red deje de funcionar cor
     \item \textbf{Denegación de Servicio (DoS)}: se intenta saturar un sistema mediante un flujo de paquetes ilegítimo~\cite{ataque_dos}. Puede haber varias maneras de generar dicho tráfico:
     \begin{itemize}
         \item \textbf{Desbordamiento de búfer}: consiste en saturar los recursos de una máquina como la memoria, tiempo de CPU o espacio disponible en el disco duro. Logrando que el sistema se ralentice y produzca comportamientos indeseados.
-        \item \textbf{Inundación}: consiste en saturar un sistema con una cantidad abrumadora de paquetes. Para que se logre este ataque, el atacante debe tener mas ancho de banda que el atacado.
+        \item \textbf{Inundación}: consiste en saturar un sistema con una cantidad abrumadora de paquetes. Para que se logre este ataque, el atacante debe tener más ancho de banda que el atacado.
     \end{itemize}
     \item \textbf{Denegación de Servicio Distribuido (DDoS)}: se satura un sistema debido a tráfico ilegítimo que provienen desde múltiples dispositivos infectados. Tiene el mismo comportamiento que el ataque DoS, pero se ejecuta en varios dispositivos al mismo tiempo, produciendo un mayor daño al sistema.
 \end{itemize}
@@ -306,3 +306,27 @@ Se busca causar daño permanente a sistemas o datos.
 \begin{itemize}
     \item \textbf{Ransomware}: cifra archivos del sistema y exige un rescate para su recuperación.
 \end{itemize}
+
+\section{Sistema de detección de intrusiones}
+\label{sec:DeteccionIntrusiones}
+Un \textbf{sistema de detección de intrusiones} es un componente clave en la seguridad de una red. Se encarga de detectar el acceso no autorizado, comportamientos anómalos o ataques en el tráfico de red procedentes de dispositivos conectados. Estos necesitan analizar el tráfico en tiempo real, para que después puedan evaluar posibles patrones que indiquen algún indicio de amenaza.
+
+\subsection{Paquetes a Flujos}
+\label{subsec:PaquetesFlujos}
+El \textbf{tráfico de red} está compuesto por paquetes individuales, cada uno contienen una carga útil además de cabeceras que se encargan de identificar el tipo de paquete, estructura, direcciones... Sin embargo, el análisis de un paquete aislado no es muy significativo en cuanto a un sistema de detección de intrusiones, ya que no se muestra un contexto global del funcionamiento de la red.
+
+Por esta razón, este tipo de sistemas usa lo que se denomina \textbf{flujo de red}~\cite{flujo_paquetes}, que es una secuencia de paquetes que comparten ciertos atributos importantes como las direcciones IPs, los puertos, el protocolo y el sentido del flujo, durante un determinado intervalo de tiempo.
+
+Posibles campos que puede incluir un flujo:
+\begin{itemize}
+    \item IP de origen y destino
+    \item Puertos de origen y destino
+    \item Protocolo de la capa de transporte
+    \item Número de paquetes y bytes transmitidos
+    \item Tiempo de inicio y fin del flujo
+    \item Banderas del protocolo TCP y otros posibles datos importantes
+\end{itemize}
+
+Gracias a esta representación de los paquetes, se permite a los dispositivos de detección analizar mejor los posibles patrones que pueden surgir en una red. Esto es muy importante a la hora de la detección de ataques mediante técnicas de inteligencia artificial, ya que así se ofrece a los modelos una visión más amplia del tráfico de la red, fundamental para la identificación de comportamientos anómalos.
+
+En el desarrollo de este proyecto, el modelo de detección entrenado se ha basado en flujos de red, no sobre paquetes. Esta elección se debe a temas de \textbf{eficiencia}, ya que se reduce enormemente la cantidad de instancias del conjunto de datos. Además, la mayoría de ataques en redes se realizan a lo \textbf{largo del tiempo} y no en un instante puntual, haciendo que el análisis basado en flujos resulte más adecuado.
