@@ -1,6 +1,6 @@
 {
     "FILE": "File",
-    "NEW_FILE": "New file...",
+    "NEW_FILE": "New file",
     "OPEN": "Open...",
     "EXTERNAL_LIBRARY": "External library",
     "IMPORT_EXTERNAL_LIBRARY": "Import external library",
@@ -27,6 +27,8 @@
     "ORIGINAL_ZOOM": "Original zoom",
     "ZOOM_IN": "Zoom in",
     "ZOOM_OUT": "Zoom out",
+    "HELP": "Help",
+    "SOURCE_CODE": "Source code",
     "NETWORK_TRAFFIC": "Network traffic",
     "NO_ROUTER": "You are not connected to any router. To send and receive data, you must be connected to a router.",
     "NO_CONNECTED_DEVICES": "You have no connected devices. Wait for a device to connect before sending or receiving data.",

@@ -1,6 +1,6 @@
 {
     "FILE": "Archivo",
-    "NEW_FILE": "Nuevo archivo...",
+    "NEW_FILE": "Nuevo archivo",
     "OPEN": "Abrir...",
     "EXTERNAL_LIBRARY": "Biblioteca externa",
     "IMPORT_EXTERNAL_LIBRARY": "Importar biblioteca externa",
@@ -27,6 +27,8 @@
     "ORIGINAL_ZOOM": "Zoom original",
     "ZOOM_IN": "Acercar",
     "ZOOM_OUT": "Alejar",
+    "HELP": "Ayuda",
+    "SOURCE_CODE": "Código fuente",
     "NETWORK_TRAFFIC": "Tráfico de red",
     "NO_ROUTER": "No estas conectado a ningún router. Para poder enviar y recibir datos, debes estar conectado a un router.",
     "NO_CONNECTED_DEVICES": "No tienes dispositivos conectados. Espera a que algún dispositivo se conecte para poder enviar y recibir datos.",
