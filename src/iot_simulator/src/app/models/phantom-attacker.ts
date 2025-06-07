@@ -61,7 +61,7 @@ export class PhantomAttacker extends FlowGenerator {
 
     public override loadLibrary(library: any | undefined): void {
         if (!library) {
-            this.library = undefined;
+            super.loadLibrary(library);
             this._externalAttacks = [];
             return;
         }
@@ -86,7 +86,7 @@ export class PhantomAttacker extends FlowGenerator {
                 );
             this._externalAttacks.push({
                 id: atk,
-                name: atk.substring(4).replace("_", " "),
+                name: atk.substring(4).replaceAll("_", " "),
                 multiple: paramsCount(library[atk]) === Infinity,
             });
         }

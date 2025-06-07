@@ -114,7 +114,7 @@ export class FlowGenerator {
                 );
             this._externalCommands.push({
                 id: cmd,
-                name: cmd.substring(4).replace("_", " "),
+                name: cmd.substring(4).replaceAll("_", " "),
                 multiple: paramsCount(library[cmd]) === Infinity,
             });
         }

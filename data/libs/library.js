@@ -8,6 +8,12 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * Function without any prefix is a "private" function.
+ *
+ * @param  {...any} args - Arguments that are going to be used in the function
+ * @returns {void}
+ */
 function randomString(size) {
     const chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -27,11 +33,11 @@ function randomString(size) {
  *      - intcp_iot: intercept packets from IoT devices
  *      - intcp_computer: intercept packets from computers
  *
- * @param {Object} self - The attacker device
- * @param {string} self.mac - MAC address of the attacker device
- * @param {string} self.ip - IP address of the attacker device
- * @param {string} self.name - Name of the attacker device
- * @param {string} self.type - Type of the attacker device
+ * @param {Object} self - The interceptor device
+ * @param {string} self.mac - MAC address of the interceptor device
+ * @param {string} self.ip - IP address of the interceptor device
+ * @param {string} self.name - Name of the interceptor device
+ * @param {string} self.type - Type of the interceptor device
  * @param {function(Object) => void} self.send - Function to send a packet
  * @param {Object} packet - The packet that is being intercepted
  * @param {string} packet.srcIP - Source IP address of the packet
@@ -56,13 +62,13 @@ function randomString(size) {
 function intcp(self, packet) {}
 
 /**
- * This function with cmd_ prefix is used to simulate a command, in the simulator it will show as "ping"
+ * This function with cmd_ prefix is used to simulate a command, in the simulator it will show as "Stream Video"
  *
- * @param {Object} self - The attacker device
- * @param {string} self.mac - MAC address of the attacker device
- * @param {string} self.ip - IP address of the attacker device
- * @param {string} self.name - Name of the attacker device
- * @param {string} self.type - Type of the attacker device
+ * @param {Object} self - The executor device
+ * @param {string} self.mac - MAC address of the executor device
+ * @param {string} self.ip - IP address of the executor device
+ * @param {string} self.name - Name of the executor device
+ * @param {string} self.type - Type of the executor device
  * @param {function(packet) => void} self.send - Function to send a packet
  * @param {string} target - IP addresses of the target device
  * @returns {void}
@@ -116,7 +122,7 @@ function cmd_Stream_Video(self, target) {
 }
 
 /**
- * This function with atk_ prefix is used to attack a device, in the simulator it will show as "DDoS v1"
+ * This function with atk_ prefix is used to attack a device, in the simulator it will show as "DoS UDP"
  *
  * @param {Object} self - The attacker device
  * @param {string} self.mac - MAC address of the attacker device

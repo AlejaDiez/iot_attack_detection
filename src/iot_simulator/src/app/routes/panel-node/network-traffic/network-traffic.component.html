@@ -5,9 +5,9 @@
             stickyHeader
             [dataSource]="node().traffic.slice(-50)"
             [displayedColumns]="displayedColumns()"
-            class="block max-h-[280px] overflow-auto rounded-md border border-border"
+            class="block max-h-64 min-h-44 overflow-auto rounded-md border border-border"
             [onRowClick]="viewPacket.bind(this)">
-            <brn-column-def name="icon" class="w-12">
+            <brn-column-def name="icon" class="w-12 pointer-events-none">
                 <hlm-th *brnHeaderDef />
                 <hlm-td *brnCellDef="let item">
                     @switch (node().ip) {
@@ -32,25 +32,25 @@
                     }
                 </hlm-td>
             </brn-column-def>
-            <brn-column-def name="source" class="w-28">
+            <brn-column-def name="source" class="w-28 pointer-events-none">
                 <hlm-th *brnHeaderDef>{{ "SOURCE" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.srcIP }}
                 </hlm-td>
             </brn-column-def>
-            <brn-column-def name="destination" class="w-28">
+            <brn-column-def name="destination" class="w-28 pointer-events-none">
                 <hlm-th *brnHeaderDef>{{ "DESTINATION" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item">
                     {{ item.dstIP }}
                 </hlm-td>
             </brn-column-def>
-            <brn-column-def name="size" class="w-[86px]">
+            <brn-column-def name="size" class="w-[86px] pointer-events-none">
                 <hlm-th *brnHeaderDef>{{ "BYTES" | translate }}</hlm-th>
                 <hlm-td *brnCellDef="let item" class="justify-center">
                     {{ item.totalBytes }}
                 </hlm-td>
             </brn-column-def>
-            <brn-column-def name="data" class="w-56">
+            <brn-column-def name="data" class="w-56 pointer-events-none">
                 <hlm-th *brnHeaderDef>{{ "DATA" | translate }}</hlm-th>
                 <hlm-td truncate *brnCellDef="let item">
                     {{ item.payload }}

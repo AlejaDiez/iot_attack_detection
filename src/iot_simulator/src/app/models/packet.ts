@@ -16,6 +16,7 @@ export enum ApplicationProtocol {
     DNS = 53,
     DHCP = 67,
     HTTP = 80,
+    HTTPS = 443,
 }
 
 /**
@@ -68,7 +69,7 @@ export enum ICMPType {
  */
 export interface ICMPPacket extends Packet {
     /* Tipo de mensaje ICMP */
-    type: ICMPType;
+    type: ICMPType | number;
     /* Código de mensaje ICMP */
     code: number;
     /** Identificador de la solicitud */
@@ -94,7 +95,7 @@ export enum TCPFlags {
  */
 export interface TCPPacket extends Packet {
     /* Bandera TCP */
-    tcpFlags: TCPFlags;
+    tcpFlags: TCPFlags | number;
     /* Número de secuencia */
     sequence: number;
     /* Número de acuse de recibo */
@@ -194,7 +195,7 @@ export namespace Packet {
         dstPort: number,
         sequence: number,
         ack: number,
-        tcpFlags: number,
+        tcpFlags: TCPFlags | number,
         payload: string = "",
     ): TCPPacket => {
         const headerSize = 20;

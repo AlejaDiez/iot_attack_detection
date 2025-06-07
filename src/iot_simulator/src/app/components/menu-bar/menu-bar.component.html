@@ -11,6 +11,9 @@
     <button hlmMenuBarItem [brnMenuTriggerFor]="view">
         {{ "VIEW" | translate }}
     </button>
+    <button hlmMenuBarItem [brnMenuTriggerFor]="help">
+        {{ "HELP" | translate }}
+    </button>
 </hlm-menu-bar>
 
 <ng-template #file>
@@ -155,7 +158,7 @@
                 {{ "ZOOM_OUT" | translate }}
                 <hlm-menu-shortcut>⌘-</hlm-menu-shortcut>
             </button>
-        </hlm-menu-group>
+        </hlm-menu-group>        
     </hlm-menu>
 </ng-template>
 
@@ -204,4 +207,17 @@
             Português
         </button>
     </hlm-sub-menu>
+</ng-template>
+
+<ng-template #help>
+    <hlm-menu variant="menubar" class="w-48">
+        <hlm-menu-group>
+            <button hlmMenuItem (click)="handleOnSourceCode()">
+                {{ "SOURCE_CODE" | translate }}
+            </button>
+            <button hlmMenuItem disabled>
+                {{ versionName }}
+            </button>
+        </hlm-menu-group>
+    </hlm-menu>
 </ng-template>

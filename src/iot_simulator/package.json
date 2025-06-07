@@ -1,14 +1,14 @@
 {
     "name": "iot_simulator",
     "description": "IoT network simulator to detect cyber attacks",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "Alejandro Diez Bermejo",
     "license": "MIT",
     "private": true,
     "scripts": {
         "ng": "ng",
         "start": "ng serve --no-hmr",
-        "build": "ng build",
+        "build": "ng build --configuration production --base-href https://alejadiez.github.io/iot_attack_detection/",
         "watch": "ng build --watch --configuration development",
         "test": "ng test"
     },
@@ -34,7 +34,6 @@
         "embla-carousel-angular": "19.0.0",
         "js-yaml": "^4.1.0",
         "jszip": "^3.10.1",
-        "lodash": "^4.17.21",
         "ngx-scrollbar": ">=18.0.0",
         "ngx-sonner": "^3.1.0",
         "rxjs": "~7.8.2",
@@ -48,7 +47,6 @@
         "@spartan-ng/cli": "^0.0.1-alpha.450",
         "@types/jasmine": "~5.1.7",
         "@types/js-yaml": "^4.0.9",
-        "@types/lodash": "^4.17.16",
         "autoprefixer": "^10.4.21",
         "jasmine-core": "~5.6.0",
         "karma": "~6.4.4",

@@ -26,9 +26,10 @@
         [attr.cy]="t.y - point.y"
         r="5"
         class="cyber-shield {{
+            connection().cyberShield.enabled &&
             connection().cyberShield.model
-                ? connection().cyberShield.state
-                : 'disabled'
+            ? connection().cyberShield.state
+            : 'disabled'
         }}"
         [ngClass]="{ animate }" />
-</svg>
+    </svg>

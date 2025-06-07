@@ -92,7 +92,14 @@ export class NetworkService {
         toast.promise(ConfigService.openFile(".yaml"), {
             loading: this.config.translate.instant("PROJECT_IMPORTING"),
             success: (data: string) => {
-                this._network.fromObject(load(data));
+                try {
+                    this._network.fromObject(load(data));
+                } catch (error) {
+                    this._network.reset();
+                    this.state.reset(false);
+                    throw error;
+                }
+                
                 // Comprobar si hay un nodo seleccionado
                 if (
                     this.focusedNode() &&

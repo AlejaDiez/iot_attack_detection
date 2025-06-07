@@ -69,8 +69,8 @@ export class CyberShield {
     /** Estado de activación del cyber shield. */
     public get enabled(): boolean {
         return (
-            this._models !== undefined &&
-            this._state !== CyberShieldState.Disabled
+            this._state !== CyberShieldState.Disabled &&
+            this._models !== undefined
         );
     }
     /** Estado de activación del cyber shield. */
@@ -146,15 +146,17 @@ export class CyberShield {
      */
     public analyze(packet: Packet): void {
         try {
-            const model = this._models?.[this._model ?? ""];
+            if (this.enabled) {
+                const model = this._models?.[this._model ?? ""];
 
-            if (this.enabled && model) {
-                const res = model.analyze(packet);
+                if (model) {
+                    const res = model.analyze(packet);
 
-                if (typeof res === "boolean") {
-                    if (res) this._state = CyberShieldState.Attack;
-                    else this._state = CyberShieldState.Safe;
-                } else this._state = CyberShieldState.Waiting;
+                    if (typeof res === "boolean") {
+                        if (res) this._state = CyberShieldState.Attack;
+                        else this._state = CyberShieldState.Safe;
+                    } else this._state = CyberShieldState.Waiting;
+                }
             }
         } catch (error) {
             console.error(error);
@@ -168,7 +170,7 @@ export class CyberShield {
      */
     public toObject(): any {
         return {
-            enabled: this.enabled,
+            enabled: this._state !== CyberShieldState.Disabled,
             model: this.model,
         };
     }

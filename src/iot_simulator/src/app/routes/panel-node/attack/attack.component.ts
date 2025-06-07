@@ -8,7 +8,9 @@ import {
     InputSignal,
     model,
     ModelSignal,
+    OnChanges,
     Signal,
+    SimpleChanges,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Device } from "@models/device";
@@ -41,7 +43,7 @@ import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/s
     templateUrl: "attack.component.html",
     host: { class: "flex flex-col gap-4" },
 })
-export class AttackComponent {
+export class AttackComponent implements OnChanges {
     public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
     protected readonly attack: ModelSignal<Attack | null> =
@@ -83,6 +85,11 @@ export class AttackComponent {
                     return value;
                 });
         });
+    }
+    
+    public ngOnChanges(changes: SimpleChanges): void {
+        this.attack.set(null);
+        this.target.set(null);
     }
 
     protected connect() {

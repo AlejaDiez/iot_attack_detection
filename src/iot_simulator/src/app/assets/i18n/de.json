@@ -1,6 +1,6 @@
 {
     "FILE": "Datei",
-    "NEW_FILE": "Neue Datei...",
+    "NEW_FILE": "Neue Datei",
     "OPEN": "Öffnen...",
     "EXTERNAL_LIBRARY": "Externe Bibliothek",
     "IMPORT_EXTERNAL_LIBRARY": "Externe Bibliothek importieren",
@@ -27,6 +27,8 @@
     "ORIGINAL_ZOOM": "Originalzoom",
     "ZOOM_IN": "Vergrößern",
     "ZOOM_OUT": "Verkleinern",
+    "HELP": "Hilfe",
+    "SOURCE_CODE": "Quellcode",
     "NETWORK_TRAFFIC": "Netzwerkverkehr",
     "NO_ROUTER": "Du bist mit keinem Router verbunden. Um Daten senden und empfangen zu können, musst du mit einem Router verbunden sein.",
     "NO_CONNECTED_DEVICES": "Es sind keine Geräte verbunden. Warte, bis ein Gerät verbunden ist, um Daten senden und empfangen zu können.",

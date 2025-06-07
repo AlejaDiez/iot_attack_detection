@@ -240,7 +240,7 @@ def metrics_to_graph(
             ylabel (str): Etiqueta del eje y.
             path (str): Ruta donde se guardará la imagen del gráfico.
         """
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(8, 6))
         sns.heatmap(
             values,
             annot=True,

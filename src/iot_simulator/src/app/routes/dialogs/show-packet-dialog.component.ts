@@ -1,9 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
+import {
+    HlmTooltipComponent,
+    HlmTooltipTriggerDirective,
+} from "@components/ui/ui-tooltip-helm/src";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
+import { BrnTooltipContentDirective } from "@spartan-ng/brain/tooltip";
 import {
     HlmDialogHeaderComponent,
     HlmDialogTitleDirective,
@@ -20,6 +25,9 @@ export interface ShowPacketDialogContext {
         CommonModule,
         TranslateModule,
         BrnSelectImports,
+        HlmTooltipComponent,
+        HlmTooltipTriggerDirective,
+        BrnTooltipContentDirective,
         HlmDialogHeaderComponent,
         HlmDialogTitleDirective,
         HlmSelectModule,
@@ -28,7 +36,7 @@ export interface ShowPacketDialogContext {
         <hlm-dialog-header>
             <h3 hlmDialogTitle>{{ "PACKET_DETAILS" | translate }}</h3>
         </hlm-dialog-header>
-        <div class="grid gap-4 py-4">
+        <div class="grid gap-4 py-4 overflow-y-auto">
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
                     hlmLabel
@@ -95,9 +103,19 @@ export interface ShowPacketDialogContext {
                     class="items-center text-right text-sm font-medium text-muted-foreground"
                     >{{ "PACKET_PAYLOAD" | translate }}</label
                 >
-                <span class="col-span-3 overflow-hidden text-ellipsis">{{
-                    context.packet.payload
-                }}</span>
+                <hlm-tooltip>
+                    <span
+                        hlmTooltipTrigger
+                        showDelay="500"
+                        class="col-span-3 inline-block truncate">
+                        {{ context.packet.payload }}
+                    </span>
+                    <span
+                        *brnTooltipContent
+                        class="overflow-hidden whitespace-normal break-words break-all">
+                        {{ context.packet.payload }}
+                    </span>
+                </hlm-tooltip>
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
@@ -224,7 +242,7 @@ export interface ShowPacketDialogContext {
             }
         </div>
     `,
-    host: { class: "min-w-96 flex flex-col gap-4" },
+    host: { class: "min-w-96 max-h-[80vh] flex flex-col gap-4" },
 })
 export class ShowPacketDialogComponent {
     public readonly config = inject(ConfigService);

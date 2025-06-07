@@ -25,6 +25,7 @@ import {
     HlmMenuShortcutComponent,
     HlmSubMenuComponent,
 } from "@spartan-ng/ui-menu-helm";
+import { name, version } from "../../../../package.json";
 
 @Component({
     selector: "app-menu-bar",
@@ -89,6 +90,7 @@ export class MenuBarComponent {
     protected get canZoomOut(): boolean {
         return this.config.zoom() > 0.5;
     }
+    protected readonly versionName: string = `${name} v${version}`;
 
     protected handleOnNewFile() {
         this.onNewFile.emit();
@@ -160,5 +162,13 @@ export class MenuBarComponent {
 
     protected handleOnZoomOut() {
         this.onZoomOut.emit();
+    }
+
+    protected handleOnSourceCode() {
+        window.open(
+            "https://github.com/AlejaDiez/iot_attack_detection",
+            "_blank",
+            "noopener noreferrer",
+        );
     }
 }

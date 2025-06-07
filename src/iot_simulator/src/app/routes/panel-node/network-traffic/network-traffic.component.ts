@@ -8,7 +8,9 @@ import {
     InputSignal,
     model,
     ModelSignal,
+    OnChanges,
     Signal,
+    SimpleChanges,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
@@ -67,7 +69,7 @@ import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
     templateUrl: "network-traffic.component.html",
     host: { class: "flex flex-col gap-4" },
 })
-export class NetworkTrafficComponent {
+export class NetworkTrafficComponent implements OnChanges {
     public readonly dialog: HlmDialogService = inject(HlmDialogService);
     public readonly network: NetworkService = inject(NetworkService);
     protected readonly node: InputSignal<Node> = input.required<Node>();
@@ -116,6 +118,11 @@ export class NetworkTrafficComponent {
                     return value;
                 });
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        this.command.set(null);
+        this.target.set(null);
     }
 
     protected connect() {
