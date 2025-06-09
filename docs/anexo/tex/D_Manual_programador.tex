@@ -137,28 +137,28 @@ Esto instalará todas las dependencias necesarias con las versiones correspondie
 Para ejecutar el script, es necesario situarse en la carpeta principal del proyecto \textbf{attack\_detector} y ejecutar el siguiente comando:
 
 \begin{verbatim}
-$ python3 src/main.py
+$ python3 src/main.py ...
 \end{verbatim}
 
 El script admite los siguientes argumentos para configurar su ejecución:
 \begin{table}[h]
 	\centering
-	\begin{tabularx}{\linewidth}{ p{0.24\columnwidth} X }
+	\begin{tabularx}{\linewidth}{ p{0.32\columnwidth} X }
 		\toprule
 		\textbf{Argumento} & \textbf{Descripción} \\
 		\toprule
-        \texttt{-h, --help} & Muestra el mensaje de ayuda \\
-        \texttt{-s [HOST:PORT], --server} & Ejecuta el servidor de entrenamiento en la dirección y puerto especificados \\
-        \texttt{-c [HOST:PORT], --client} & Ejecuta el cliente de entrenamiento con la dirección y puerto del servidor indicados \\
-        \texttt{-d [NUM\_FILES], --divide} & Divide el conjunto de entrenamiento en el número indicado de partes \\
-        \texttt{-m [METRICS], --metrics} & Convierte las métricas en archivos CSV y genera gráficas \\
-        \texttt{--model MODEL} & Ruta al archivo que contiene el modelo de la red neuronal \\
-        \texttt{--train X\_TRAIN Y\_TRAIN} & Ruta a los archivos que contienen el conjunto de entrenamiento (entradas y etiquetas) \\
-        \texttt{--test X\_TEST Y\_TEST} & Ruta a los archivos que contienen el conjunto de prueba (entradas y etiquetas) \\
-        \texttt{--output OUTPUT} & Ruta al directorio donde se guardarán los archivos de salida \\
-        \texttt{--batch-size BATCH\_SIZE} & Tamaño del lote de entrenamiento \\
-        \texttt{--rounds ROUNDS} & Número de rondas de entrenamiento federado \\
-        \texttt{--epochs EPOCHS} & Número de épocas de entrenamiento por ronda \\
+        \texttt{-h, -{}-help} & Muestra el mensaje de ayuda \\
+        \texttt{-s [HOST:PORT], -{}-server [HOST:PORT]} & Ejecuta el servidor de entrenamiento en la dirección y puerto especificados \\
+        \texttt{-c [HOST:PORT], -{}-client [HOST:PORT]} & Ejecuta el cliente de entrenamiento con la dirección y puerto del servidor indicados \\
+        \texttt{-d [NUM\_FILES], -{}-divide [NUM\_FILES]} & Divide el conjunto de entrenamiento en el número indicado de partes \\
+        \texttt{-m [METRICS], -{}-metrics [METRICS]} & Convierte las métricas en archivos CSV y genera gráficas \\
+        \texttt{-{}-model MODEL} & Ruta al archivo que contiene el modelo de la red neuronal \\
+        \texttt{-{}-train X\_TRAIN Y\_TRAIN} & Ruta a los archivos que contienen el conjunto de entrenamiento (entradas y etiquetas) \\
+        \texttt{-{}-test X\_TEST Y\_TEST} & Ruta a los archivos que contienen el conjunto de prueba (entradas y etiquetas) \\
+        \texttt{-{}-output OUTPUT} & Ruta al directorio donde se guardarán los archivos de salida \\
+        \texttt{-{}-batch-size BATCH\_SIZE} & Tamaño del lote de entrenamiento \\
+        \texttt{-{}-rounds ROUNDS} & Número de rondas de entrenamiento federado \\
+        \texttt{-{}-epochs EPOCHS} & Número de épocas de entrenamiento por ronda \\
 		\bottomrule
 	\end{tabularx}
 	\caption{Argumentos para el script attack\_detector}
@@ -199,7 +199,8 @@ Para construir la versión final de producción del simulador, es necesario situ
 $ npm run build
 \end{verbatim}
 
-Esto ejecuta un comando definido en el archivo \textit{package.json} y construirá los archivos finales del simulador, que se guardarán en el directorio \textit{dist} del proyecto. Con estos archivos, es posible desplegar la aplicación en un servidor web o levantar un servidor local para su ejecución.
+Esto ejecuta un comando definido en el archivo \textit{package.json} y construirá los archivos finales del simulador, que se guardarán en el directorio \textit{dist} del proyecto. Con estos archivos, es posible desplegar\footnote{Para desplegar la aplicación bajo otro nombre de dominio, hay que modificar el comando cambiando el argumento \texttt{-{}-base-href}} la aplicación en un servidor web o levantar un servidor local para su ejecución.
+
 
 \section{Pruebas del sistema}
 \label{sec:Pruebas}
