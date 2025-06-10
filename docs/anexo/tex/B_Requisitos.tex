@@ -46,7 +46,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
         \item \textbf{RF-1.1 Añadir nodos}: el usuario debe poder añadir el número indefinido de nodos a la red.
         \item \textbf{RF-1.2 Eliminar nodos}: el usuario debe poder eliminar los nodos de la red.
         \item \textbf{RF-1.3 Modificar nodos}: el usuario debe poder modificar cada una de las propiedades de los nodos según el diseño lo permita.
-        \item \textbf{RF-1.4 Conectar nodos}: el usuario debe poder conectar los nodos entre si.
+        \item \textbf{RF-1.4 Conectar nodos}: el usuario debe poder conectar los nodos entre sí.
         \item \textbf{RF-1.5 Modificar conexiones}: el usuario debe poder modificar las propiedades de las conexiones.
         \item \textbf{RF-1.6 Importar configuración}: el usuario debe ser capaz de importar configuraciones guardadas.
         \item \textbf{RF-1.7 Guardar configuración}: el usuario debe ser capaz de guardar topologías de red diseñadas.
@@ -93,7 +93,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 \begin{itemize}
     \item \textbf{RNF-1 Usabilidad}: la interfaz debe de ser intuitiva y accesible para usuarios no expertos, además de no requerir configuraciones complejas para su uso.
     \item \textbf{RNF-2 Rendimiento y confiabilidad}: las simulaciones deben de ejecutarse en tiempos razonables. También es esperable que se gestionen correctamente los errores y que en caso de actualización de la página no se pierda el estado de la aplicación.
-    \item \textbf{RNF-3 Compatibilidad}: debe de ser compatible con la mayoría de navegadores modernos y no requerir de funciones especiales que sean necesaria la configuración.
+    \item \textbf{RNF-3 Compatibilidad}: debe de ser compatible con la mayoría de los navegadores modernos y no requerir de funciones especiales que sean necesaria la configuración.
     \item \textbf{RNF-4 Seguridad}: debe de ser un software estable ante posibles fallos que cometa el usuario, además de no comprometer al sistema.
     \item \textbf{RNF-5 Mantenibilidad y escalabilidad}: el código debe de estar bien estructurado y la documentación debe ser clara y concisa.
 \end{itemize}
@@ -115,7 +115,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\textbf{Requisitos asociados} & RF-1, RF-1.1, RF-1.2, RF-1.3, RF-1.4, RF-1.5, RF-1.6, RF-1.7 \\
 		\textbf{Descripción}          & El usuario quiere modificar la topología de la red \\
 		\textbf{Precondición}         & El usuario tiene conexión a internet \\
-                                      & El simulador esta disponible \\
+                                      & El simulador está disponible \\
 		\textbf{Acciones}             &
 		\begin{enumerate}\def\labelenumi{\arabic{enumi}.}\tightlist
 			\item El usuario entra al simulador
@@ -236,7 +236,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
             \item El usuario selecciona la opción de conectarse
             \item El simulador conecta los nodos y asigna una IP al dispositivo
 		\end{enumerate}\\
-		\textbf{Postcondición}        & El nodo esta conectado y tiene una IP asignada \\
+		\textbf{Postcondición}        & El nodo está conectado y tiene una IP asignada \\
 		\textbf{Excepciones}          & - \\
 		\textbf{Importancia}          & Alta \\
 		\bottomrule
@@ -574,7 +574,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-			\item El usuario selecciona ”Importar modelos”
+			\item El usuario selecciona ``Importar modelos''
             \item El usuario selecciona los modelos a cargar
             \item El simulador valida e importa los modelos
 		\end{enumerate}\\
@@ -602,7 +602,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-			\item El usuario selecciona ”Eliminar modelos”
+			\item El usuario selecciona ``Eliminar modelos''
             \item El simulador elimina todos los modelos de las conexiones
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Modelos eliminados \\
@@ -742,7 +742,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento --model y la ruta del modelo
+            \item El usuario ejecuta el script con el argumento \texttt{-{}-model} y la ruta del modelo
             \item El script carga el modelo en memoria
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Modelo cargado en memoria \\
@@ -769,7 +769,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento -d seguido del número de archivos a crear
+            \item El usuario ejecuta el script con el argumento \texttt{-d} seguido del número de archivos a crear
             \item El script genera los archivos
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Archivos divididos \\
@@ -795,7 +795,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento --train (entrenamiento) o --test (validación) seguido de la ruta de los archivos de datos y etiquetas
+            \item El usuario ejecuta el script con el argumento \texttt{-{}-train} (entrenamiento) o \texttt{-{}-test} (validación) seguido de la ruta de los archivos de datos y etiquetas
             \item El script carga en memoria los datasets
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Datasets cargados en memoria \\
@@ -824,10 +824,10 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento -s y la dirección IP del servidor junto a su puerto
-            \item El usuario indica configuraciones adicionales como --batch-size o --rounds
+            \item El usuario ejecuta el script con el argumento \texttt{-s} y la dirección IP del servidor junto a su puerto
+            \item El usuario indica configuraciones adicionales como \texttt{-{}-batch-size} o \texttt{-{}-rounds}
             \item El script inicializa el servidor
-            \item El servidor esta pendiente de posibles clientes
+            \item El servidor está pendiente de posibles clientes
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Servidor federado inicializado \\
 		\textbf{Excepciones}          & IP o puerto ocupado \\
@@ -937,8 +937,8 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento -c y la dirección IP del servidor junto a su puerto
-            \item El usuario indica configuraciones adicionales como --batch-size o --epochs
+            \item El usuario ejecuta el script con el argumento \texttt{-c} y la dirección IP del servidor junto a su puerto
+            \item El usuario indica configuraciones adicionales como \texttt{-{}-batch-size} o \texttt{-{}-epochs}
             \item El script inicializa el cliente
             \item El cliente se conecta con el servidor
 		\end{enumerate}\\
@@ -1019,7 +1019,7 @@ Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
-            \item El usuario ejecuta el script con el argumento -m seguido de la ruta del archivo de métricas generado por el servidor
+            \item El usuario ejecuta el script con el argumento \texttt{-m} seguido de la ruta del archivo de métricas generado por el servidor
             \item El script genera diferentes gráficas y archivos a partir del archivo de métricas
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Archivos de valores y gráficas \\

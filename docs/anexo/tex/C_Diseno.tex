@@ -2,15 +2,15 @@
 
 \section{Introducción}
 \label{sec:DisenoIntroduccion}
-La especificación de diseño ofrece la perspectiva de como debe ser desarrollado un software para que cumpla los requisitos definidos anteriormente. Esta sección es el camino a seguir para poder pasar de un software en fase de análisis a una implementación de software real. Para ello, se van a explicar los distintos aspectos del diseño del software, incluyendo los datos que se van a manejar, la arquitectura de la aplicación y el diseño procedimental.
+La especificación de diseño ofrece la perspectiva de cómo debe ser desarrollado un software para que cumpla los requisitos definidos anteriormente. Esta sección es el camino a seguir para poder pasar de un software en fase de análisis a una implementación de software real. Para ello, se van a explicar los distintos aspectos del diseño del software, incluyendo los datos que se van a manejar, la arquitectura de la aplicación y el diseño procedimental.
 
 \section{Diseño de datos}
 \label{sec:DisenoDatos}
 \subsection{Entrada y Salida}
 \label{subsec:DatosEntradaSalida}
-Las entradas de datos del simulador está formada principalmente por la topología de red, la cual será diseñada por el usuario. A partir de esta topología, el usuario podrá generar flujos de datos entre los nodos mediante una biblioteca externa. Además, se permite configurar los nodos y las conexiones entre estos. Otra entrada importante corresponde a los modelos de predicción de ataques, que el usuario podrá importar.
+Las entradas de datos del simulador están formadas principalmente por la topología de red, la cual será diseñada por el usuario. A partir de esta topología, el usuario podrá generar flujos de datos entre los nodos mediante una biblioteca externa. Además, se permite configurar los nodos y las conexiones entre estos. Otra entrada importante corresponde a los modelos de predicción de ataques, que el usuario podrá importar.
 
-Las salidas dependen del modelo utilizado, pero todas ofrecen una salida general como la predicción de los flujos y un historial de los paquetes que han recibido cada nodo. Además se permite guardar el proyecto en un formato .yaml.
+Las salidas dependen del modelo utilizado, pero todas ofrecen una salida general como la predicción de los flujos y un historial de los paquetes que han recibido cada nodo. Además, se permite guardar el proyecto en un formato \texttt{.yaml}.
 
 En cuanto al script de aprendizaje federado, como entrada recibe el tipo de nodo federado con opciones adicionales, además de la configuración base del modelo junto con los datasets de entrenamiento y validación. La salida será el modelo entrenado y un archivo de métricas. También existe la posibilidad de obtener gráficas a partir de las métricas. 
 

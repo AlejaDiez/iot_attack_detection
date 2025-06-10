@@ -8,7 +8,7 @@ En este apéndice se va a explicar todo lo relacionado con el código desarrolla
 \label{sec:EstructuraDirectorios}
 El código fuente desarrollado durante este proyecto se encuentra alojado en un repositorio público en GitHub\footnote{\url{https://github.com/AlejaDiez/iot_attack_detection}}, bajo la licencia MIT. A continuación, se va a presentar la estructura de directorios que forman este repositorio para poder dar una visión general de la estructura del proyecto.
 
-La organización sigue unos estándares comunes, utilizados en proyectos de mediana y gran escala, lo que facilita su comprensión y mantenimiento por parte de programadores externos al proyecto. A continuación se va a mostrar la estructura de directorios y archivos del proyecto.
+La organización sigue unos estándares comunes, utilizados en proyectos de mediana y gran escala, lo que facilita su comprensión y mantenimiento por parte de programadores externos al proyecto. A continuación, se va a mostrar la estructura de directorios y archivos del proyecto.
 \begin{itemize}
     \item \textit{\textbf{data}}: directorio que contiene todos los archivos útiles para el uso del simulador.
     \begin{itemize}
@@ -94,11 +94,11 @@ Dentro del directorio \textit{\textbf{src/iot\_simulator}} nos encontramos con l
 \label{sec:ManualProgramador}
 \subsection{Gestión del repositorio}
 \label{subsec:GestionRepositorio}
-Como ya se ha mencionado en el Apéndice \ref{sec:Planificacion}, este proyecto se ha desarrollado bajo una metodología SCRUM. Para ello se han planificado sprints en los que se establecieron distintas tareas. La gestión de estas tareas se han realizado mediante la herramienta \textbf{GitHub Projects}\footnote{\url{https://github.com/users/AlejaDiez/projects/8}}, permitiendo realizar un seguimiento organizado del progreso.
+Como ya se ha mencionado en el Apéndice \ref{sec:Planificacion}, este proyecto se ha desarrollado bajo una metodología SCRUM. Para ello se han planificado sprints en los que se establecieron distintas tareas. La gestión de estas tareas se ha realizado mediante la herramienta \textbf{GitHub Projects}\footnote{\url{https://github.com/users/AlejaDiez/projects/8}}, permitiendo realizar un seguimiento organizado del progreso.
 
-Para mejorar la implementación de estas tareas y no interferir en las entregas pasadas, el proyecto se gestiono con un sistema de \textbf{ramas}. Cada mejora incremental se implementó en una rama independiente, permitiendo aislar los cambios y trabajar de forma controlada. Una vez finalizada la implementación, la rama se fusionaba con la \textbf{rama principal}, obteniendo así una versión actualizada y estable del proyecto.
+Para mejorar la implementación de estas tareas y no interferir en las entregas pasadas, el proyecto se gestionó con un sistema de \textbf{ramas}. Cada mejora incremental se implementó en una rama independiente, permitiendo aislar los cambios y trabajar de forma controlada. Una vez finalizada la implementación, la rama se fusionaba con la \textbf{rama principal}, obteniendo así una versión actualizada y estable del proyecto.
 
-Para el despliegue, existe una rama especial denominada \textbf{release}, que contiene únicamente los archivos generados en el momento de ''compilación`` del simulador.
+Para el despliegue, existe una rama especial denominada \textbf{release}, que contiene únicamente los archivos generados en el momento de ``compilación'' del simulador.
 
 \subsection{Obtención del código fuente}
 \label{subsec:CodigoFuente}
@@ -127,7 +127,7 @@ Para el entrenamiento federado usando el script, es necesario realizar los sigui
 Para instalar las bibliotecas necesarias, es necesario situarse en la carpeta principal del proyecto \textbf{attack\_detector} y ejecutar el siguiente comando:
 
 \begin{verbatim}
-$ pip3 install -r requirements.txt
+$ pip install -r requirements.txt
 \end{verbatim}
 
 Esto instalará todas las dependencias necesarias con las versiones correspondientes.
@@ -137,7 +137,7 @@ Esto instalará todas las dependencias necesarias con las versiones correspondie
 Para ejecutar el script, es necesario situarse en la carpeta principal del proyecto \textbf{attack\_detector} y ejecutar el siguiente comando:
 
 \begin{verbatim}
-$ python3 src/main.py ...
+$ python src/main.py ...
 \end{verbatim}
 
 El script admite los siguientes argumentos para configurar su ejecución:
@@ -208,9 +208,9 @@ Una vez terminado el proyecto, se llevó a cabo una fase de pruebas con el objet
 
 \subsection{Pruebas del simulador de red}
 \label{subsec:PruebasSimulador}
-Se probó el simulador mediante diferentes configuraciones de red, con distinta cantidad de nodos, flujos y parámetros. También se valido que en los formularios de parámetros no era posible introducir valores no deseados y se comprobó que el simulador realizaba las acciones oportunas para solucionar estos datos inválidos.
+Se probó el simulador mediante diferentes configuraciones de red, con distinta cantidad de nodos, flujos y parámetros. También se validó que en los formularios de parámetros no era posible introducir valores no deseados y se comprobó que el simulador realizaba las acciones oportunas para solucionar estos datos inválidos.
 
-Además, se comprobó que al cargar archivos erróneos, ya sea de proyecto, biblioteca o modelo, lanzara una excepción y no se paraliza el programa.
+Además, se comprobó que, al cargar archivos erróneos, ya sea de proyecto, biblioteca o modelo, lanzara una excepción y no se paraliza el programa.
 
 \subsection{Pruebas de entrenamiento federado}
 \label{subsec:PruebasEntrenamientoFederado}

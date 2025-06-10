@@ -9,7 +9,7 @@ Este apartado se va a dividir en dos secciones fundamentales:
     \item \textbf{Planificación temporal}: se desarrolla la distribución de tareas durante los meses que ha durado el proyecto.
     \item \textbf{Estudio de viabilidad}: se analizan la estimación de los costes y restricciones relacionados con el proyecto.
     \begin{itemize}
-        \item \textbf{Viabilidad económica}: se analizan los coste asociados al desarrollo, implementación y posible mantenimiento del software, además de una estimación de los posibles beneficios.
+        \item \textbf{Viabilidad económica}: se analizan los costes asociados al desarrollo, implementación y posible mantenimiento del software, además de una estimación de los posibles beneficios.
         \item \textbf{Viabilidad legal}: se evalúan las licencias de los distintos recursos utilizados además de aspectos relativos a la protección de datos.
     \end{itemize}
 \end{itemize}
@@ -43,7 +43,7 @@ Este sprint marcó el inicio oficial del proyecto, organizando toda la planifica
     \begin{itemize}
         \item \textbf{Inicialización del proyecto Angular}: configuración inicial del entorno Angular, instalación de dependencias y organización de la estructura base para el desarrollo del simulador.
         \item \textbf{Diseño de la barra de navegación}: diseño del menú principal del simulador y elección de las opciones que se van a dar.
-        \item \textbf{Diseño del espacio de simulación}: diseño del espacio de trabajo donde se diseñara la red.
+        \item \textbf{Diseño del espacio de simulación}: diseño del espacio de trabajo donde se diseñará la red.
         \item \textbf{Creación de clases para la gestión de red}: desarrollo de la estructura básica de la lógica del simulador.
     \end{itemize}
 \end{itemize}
@@ -51,12 +51,12 @@ Este sprint marcó el inicio oficial del proyecto, organizando toda la planifica
 
 \subsection{Sprint 2 (10/02/2025 - 23/02/2025)}
 \label{subsec:SegundoSprint}
-Durante este sprint se avanzó tanto en el desarrollo del entorno de simulación como en la exploración de las posibles técnica para la implementación del aprendizaje federado.
+Durante este sprint se avanzó tanto en el desarrollo del entorno de simulación como en la exploración de las posibles técnicas para la implementación del aprendizaje federado.
 
 \begin{itemize}
     \item \textbf{Gestión flexible de nodos en la red}
     \begin{itemize}
-        \item \textbf{Configuración de nodo}: se desarrollo la interfaz para la configuración de un nodo al ser seleccionado.
+        \item \textbf{Configuración de nodo}: se desarrolló la interfaz para la configuración de un nodo al ser seleccionado.
     \end{itemize}
     \item \textbf{Probar y experimentar con las librerías de aprendizaje federado}
     \begin{itemize}
@@ -68,7 +68,7 @@ Durante este sprint se avanzó tanto en el desarrollo del entorno de simulación
 
 \subsection{Sprint 3 (24/02/2025 - 09/03/2025)}
 \label{subsec:TercerSprint}
-Esta iteración se centro principalmente en el simulador de redes IoT. El objetivo principal fue permitir una iteración básica entre los dispositivos, además de añadir utilidades útiles para el desarrollo de los siguientes sprints.
+Esta iteración se centró en el simulador de redes IoT. El objetivo principal fue permitir una iteración básica entre los dispositivos, además de añadir utilidades útiles para el desarrollo de los siguientes sprints.
 
 \begin{itemize}
     \item \textbf{Gestión flexible de nodos en la red}
@@ -78,18 +78,18 @@ Esta iteración se centro principalmente en el simulador de redes IoT. El objeti
     \end{itemize}
     \item \textbf{Simulador de red}
     \begin{itemize}
-        \item \textbf{Definición de nodo}: se desarrollo la lógica interna del nodo, añadiendo las propiedades y métodos necesarios.
-        \item \textbf{Implementación de dispositivo}: se desarrollo la lógica interna que representaría un dispositivo en la red.
-        \item \textbf{Implementación del paquete}: se desarrollo el modelo de lo que sería un paquete de red.
-        \item \textbf{Implementación del router}: se desarrollo la lógica interna que representaría un router en la red.
-        \item \textbf{Servicio de gestión de red}: se desarrollo un servicio centralizado, que se encargaría de coordinar el estado global de la red.
+        \item \textbf{Definición de nodo}: se desarrolló la lógica interna del nodo, añadiendo las propiedades y métodos necesarios.
+        \item \textbf{Implementación de dispositivo}: se desarrolló la lógica interna que representaría un dispositivo en la red.
+        \item \textbf{Implementación del paquete}: se desarrolló el modelo de lo que sería un paquete de red.
+        \item \textbf{Implementación del router}: se desarrolló la lógica interna que representaría un router en la red.
+        \item \textbf{Servicio de gestión de red}: se desarrolló un servicio centralizado, que se encargaría de coordinar el estado global de la red.
     \end{itemize}
 \end{itemize}
 \imagen{sprint_3}{Gráfico temporal del Sprint 3}{0.8}
 
 \subsection{Sprint 4 (10/03/2025 - 23/03/2025)}
 \label{subsec:CuartoSprint}
-En esta iteración, el foco principal fue el desarrollo del script para el entrenamiento del modelo de inteligencia artificial mediante aprendizaje federado. Además se realizó una gran reestructuración del código de la parte del simulador. 
+En esta iteración, el foco principal fue el desarrollo del script para el entrenamiento del modelo de inteligencia artificial mediante aprendizaje federado. Además, se realizó una gran reestructuración del código de la parte del simulador. 
 
 \begin{itemize}
     \item \textbf{Implementación de aprendizaje federado con Flower}
@@ -97,9 +97,9 @@ En esta iteración, el foco principal fue el desarrollo del script para el entre
         \item \textbf{Cargar los datasets desde un archivo}: se añadió la funcionalidad para cargar los datasets desde archivos csv.
         \item \textbf{Cargar modelo de TensorFlow}: se añadió la funcionalidad para cargar la configuración del modelo TensorFlow para que sea entrenado.
         \item \textbf{Configuración de argumentos por consola}: se añadió la funcionalidad de establecer argumentos a la hora de iniciar el script, para seleccionar que se desea hacer.
-        \item \textbf{Crear cliente de aprendizaje federado}: se desarrollo el cliente del aprendizaje federado, permitiendo entrenar el modelo que recibe.
-        \item \textbf{Crear servidor de aprendizaje federado}: se desarrollo el servidor del aprendizaje federado, permitiendo distribuir el modelo para que lo entrenen los clientes y después realizar una combinación de los modelos.
-        \item \textbf{Función para dividir los datasets}: se creo una función que permitiera dividir los datasets entre clientes diferentes.
+        \item \textbf{Crear cliente de aprendizaje federado}: se desarrolló el cliente del aprendizaje federado, permitiendo entrenar el modelo que recibe.
+        \item \textbf{Crear servidor de aprendizaje federado}: se desarrolló el servidor del aprendizaje federado, permitiendo distribuir el modelo para que lo entrenen los clientes y después realizar una combinación de los modelos.
+        \item \textbf{Función para dividir los datasets}: se creó una función que permitiera dividir los datasets entre clientes diferentes.
     \end{itemize}
     \item \textbf{Refactorización de código}: se reestructuro el código del simulador para mejorar su estructura, legibilidad y mantenibilidad.
 \end{itemize}
@@ -107,15 +107,15 @@ En esta iteración, el foco principal fue el desarrollo del script para el entre
 
 \subsection{Sprint 5 (24/03/2025 - 06/04/2025)}
 \label{subsec:QuintoSprint}
-Durante el quinto sprint se consolidaron varias funcionalidades de la simulación del flujo de red y la interacción entre dispositivos. Además se realizaron pequeñas optimizaciones y correcciones en la interfaz general.
+Durante el quinto sprint se consolidaron varias funcionalidades de la simulación del flujo de red y la interacción entre dispositivos. Además, se realizaron pequeñas optimizaciones y correcciones en la interfaz general.
 
 \begin{itemize}
     \item \textbf{Mejoras en el simulador IoT}
     \begin{itemize}
-        \item \textbf{Generar un generador de flujo de red}: se implemento la clase que permitiría realizar flujos sobre la red de dispositivos.
+        \item \textbf{Generar un generador de flujo de red}: se implementó la clase que permitiría realizar flujos sobre la red de dispositivos.
         \item \textbf{Permitir la conexión con nodos}: desarrollo de la funcionalidad que permite a los dispositivos establecer enlaces entre ellos.
         \item \textbf{Poder realizar ping entre dispositivos}: implementación del comando ping entre nodos, permitiendo comprobar la conectividad entre los nodos.
-        \item \textbf{Refactorizar interfaz de paquete}: modificar el modelo de paquete, para poder distinguir entre varios tipos de paquetes y obtener un código mas estructurado.
+        \item \textbf{Refactorizar interfaz de paquete}: modificar el modelo de paquete, para poder distinguir entre varios tipos de paquetes y obtener un código más estructurado.
         \item \textbf{Pequeñas mejoras}: conjunto de cambios menores y solución de errores.
     \end{itemize}
 \end{itemize}
@@ -123,7 +123,7 @@ Durante el quinto sprint se consolidaron varias funcionalidades de la simulació
 
 \subsection{Sprint 6 (07/04/2025 - 20/04/2025)}
 \label{subsec:SextoSprint}
-Esta iteración fue una de las más intensivas. Se incluyeron funcionalidades relacionadas con la simulación y la generación de ataques. Además se realizaron grandes tareas de refactorización de componentes clave del simulador, ya que añadieron nuevas funcionalidades y así se pudo mejorar la comprensión del código.
+Esta iteración fue una de las más intensivas. Se incluyeron funcionalidades relacionadas con la simulación y la generación de ataques. Además, se realizaron grandes tareas de refactorización de componentes clave del simulador, ya que añadieron nuevas funcionalidades y así se pudo mejorar la comprensión del código.
 
 \begin{itemize}
     \item \textbf{Mejoras en el simulador IoT}
@@ -154,7 +154,7 @@ Esta iteración fue una de las más intensivas. Se incluyeron funcionalidades re
 
 \subsection{Sprint 7 (21/04/2025 - 04/05/2025)}
 \label{subsec:SeptimoSprint}
-En este sprint, se integraron las funcionalidades finales necesarias para cerrar el desarrollo del simulador. Fue una de las iteraciones con mas complejidad, ya que se debía implementar los modelos de inteligencia artificial en el simulador. De hecho no se logró completar el sprint y se tuvo que dejar alguna tarea para el siguiente sprint.
+En este sprint, se integraron las funcionalidades finales necesarias para cerrar el desarrollo del simulador. Fue una de las iteraciones con más complejidad, ya que se debía implementar los modelos de inteligencia artificial en el simulador. De hecho, no se logró completar el sprint y se tuvo que dejar alguna tarea para el siguiente sprint.
 
 \begin{itemize}
     \item \textbf{Implementación Cyber Shield}
@@ -189,7 +189,7 @@ Este fue el último sprint y tuvo como objetivo principal finalizar las tareas d
     \begin{itemize}
         \item \textbf{Añadir la posibilidad del ancho de banda de una conexión}: mejora que permite implementar más realismo al simulador.
         \item \textbf{Permitir ver el paquete completo}: permite ver el paquete con todos los campos que tiene.
-        \item \textbf{Solución de errores en la interfaz}: se solucionan errores detectados en en la interfaz.
+        \item \textbf{Solución de errores en la interfaz}: se solucionan errores detectados en la interfaz.
     \end{itemize}
     \item \textbf{Memoria del Trabajo de Fin de Grado}
     \begin{itemize}
@@ -313,13 +313,14 @@ El software creado se distribuye de forma gratuita y sin publicidad, por lo que 
     \item \textbf{Licencias comerciales}: aunque el proyecto es de código abierto, se podría contemplar la opción de establecer una licencia para uso comercial.
 \end{itemize}
 
+\newpage
 \subsection{Viabilidad legal}
 \label{subsec:Legal}
 El proyecto debe cumplir con varias normativas legales, especialmente las relacionadas con las licencias y la protección de datos.
 
 \subsubsection{Protección de Datos}
 \label{subsubsec:ProteccionDatos}
-Este proyecto no usa directamente datos personales de usuarios, ya que el simulador de red se ejecuta de forma local en los dispositivos de los usuarios y nunca envía información fuera. Sin embargo, es importante recalcar que para el entrenamiento de la red neuronal mediante aprendizaje federado es necesario tener el acceso a flujos de red, los cuales obtienen información sensible y pudiera comprometer la privacidad de los usuario.
+Este proyecto no usa directamente datos personales de usuarios, ya que el simulador de red se ejecuta de forma local en los dispositivos de los usuarios y nunca envía información fuera. Sin embargo, es importante recalcar que para el entrenamiento de la red neuronal mediante aprendizaje federado es necesario tener el acceso a flujos de red, los cuales obtienen información sensible y pudiera comprometer la privacidad del usuario.
 
 Aunque estos datos no salen del dispositivo, el usuario que realice el entrenamiento debe plantearse los riesgos asociados al uso de la herramienta y por lo tanto debe garantizar el cumplimiento de la normativa referente a la protección de datos en el país en el que se encuentre.
 
@@ -370,7 +371,7 @@ Para el desarrollo de este proyecto se han utilizado diversas herramientas y bib
 	\caption{Licencias de herramientas}
 \end{table}
 
-Como se puede observar, la mayoría de herramientas utilizadas en el desarrollo de este proyecto usan licencias como MIT, Apache 2.0, BSD e ISC. Estas licencias son ampliamente compatibles entre sí y no imponen restricciones significativas sobre el uso.
+Como se puede observar, la mayoría de las herramientas utilizadas en el desarrollo de este proyecto usan licencias como MIT, Apache 2.0, BSD e ISC. Estas licencias son ampliamente compatibles entre sí y no imponen restricciones significativas sobre el uso.
 
 Debido a esta compatibilidad de licencias, se ha optado por escoger la licencia \textbf{MIT} para este proyecto, permitiendo su libre uso y modificación, con la condición de mantener la atribución correspondiente.
 
@@ -384,14 +385,14 @@ Para el desarrollo de este proyecto se han utilizado diversos recursos, cada una
         \textbf{Recursos} & \textbf{Licencia} \\
         \midrule
         Dataset NF-ToN-IoT & CC BY-NC-SA 4.0 \\
-        Iconos de imagenes (Flaticon - Vectorslab) & Propia \\
+        Iconos de imágenes (Flaticon - Vectorslab) & Propia \\
         \bottomrule
 	\end{tabularx}
 	\caption{Licencias de recursos}
 \end{table}
 
-Como se puede observar, el dataset usa la licenca Creative Commons Atribución/Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional por lo que el uso del modelo entrenado con este dataset, no puede usarse para fines comerciales.
+Como se puede observar, el dataset usa la licencia Creative Commons Atribución/Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional por lo que el uso del modelo entrenado con este dataset, no puede usarse para fines comerciales.
 
-En cuanto a la documentación del proyecto, todas las imágenes que existen son de creación propia, aunque algunas usan iconos que son pertenecientes Vectorslab distribuidos en la plataforma Flaticon. Como se le atribuye reconocimiento, se pueden usar con fines comerciales.
+En cuanto a la documentación del proyecto, todas las imágenes que existen son de creación propia, aunque algunas usan iconos que son pertenecientes a Vectorslab, distribuidos en la plataforma Flaticon. Como se le atribuye reconocimiento, se pueden usar con fines comerciales.
 
 Debido a esta compatibilidad de licencias, se ha optado por escoger la licencia \textbf{MIT} para la documentación de este proyecto, permitiendo su libre uso y modificación, con la condición de mantener la atribución correspondiente.
