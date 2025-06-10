@@ -1,1 +1,3 @@
 src/attack_detector/data/x_train.csv filter=lfs diff=lfs merge=lfs -text
+docs/videos/library.mov filter=lfs diff=lfs merge=lfs -text
+docs/videos/model.mov filter=lfs diff=lfs merge=lfs -text

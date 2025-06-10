@@ -1,0 +1,251 @@
+\capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
+
+En este capítulo se recogen los aspectos más importantes durante el desarrollo del proyecto. Se incluyen los detalles más relevantes de las fases de análisis, diseño, implementación y resultados.
+
+\section{Desarrollo del simulador IoT}
+\label{sec:DesarolloSimuladorIot}
+El simulador IoT desarrollado durante este proyecto tiene como objetivo emular un entorno de red realista en el que múltiples dispositivos se comunican a través de un router central, generando tráfico para que pueda ser analizado mediante un modelo de inteligencia artificial. A continuación, se describen las distintas fases de su desarrollo.
+
+\subsection{Elección de tecnología}
+\label{subsec:EleccionTecnologia}
+Durante esta fase inicial del proyecto, se valoraron distintas alternativas para realizar el simulador. Entre las opciones consideradas se encontraban el desarrollo como programa de escritorio, aplicación móvil o aplicación web. Finalmente opte por la versión web, que, aunque es más limitada en cuanto a recursos, da una gran versatilidad muy grande a la hora de usar el programa, eliminando la necesidad de configuración por parte del usuario. 
+
+En cuanto a la tecnología utilizada, elegí el framework \textbf{Angular}, ya que permite construir aplicaciones de una sola página (SPA) de forma bastante estructurada, permitiendo separar la lógica de la parte visual de una forma bastante sencilla.
+
+\subsection{Arquitectura del simulador de red}
+\label{subsec:ArquitecturaSimulador}
+La arquitectura del simulador forma la parte más importante del software y ha sido diseñada con el objetivo de reproducir (de forma sencilla) el funcionamiento de una red de dispositivos conectados. Para ello, tomé como referencia el modelo \textbf{OSI}, explicado en la Sección~\ref{subsec:OSI}, como guía conceptual para estructurar las distintas capas de comunicación.
+
+Cada dispositivo dentro del simulador actúa como un nodo capaz de enviar y recibir paquetes. Estos paquetes contienen información que simula distintos niveles del modelo OSI, incluyendo direcciones de red, protocolos y datos de aplicación. La comunicación entre dispositivos se realiza a través de un nodo central que simula el comportamiento de un router, y es el encargado de transferir los paquetes, asignar direcciones IP... Además, se incluye una abstracción de conexión entre nodos, lo que permite introducir parámetros como la latencia y el ancho de banda, que son gestionados mediante tiempos de espera.
+
+La arquitectura se ha diseñado siguiendo principios de modularidad y separación de responsabilidades. Cada componente está representado por una clase independiente, lo que facilita su mantenimiento, ampliación y reutilización. La implementación detallada de estos componentes se describe en el Apéndice C de los anexos.
+
+\subsection{Interfaz gráfica}
+\label{subsec:InterfazGrafica}
+Una vez finalizada la estructura interna del simulador mediante clases, el siguiente paso fue diseñar una interfaz gráfica que permitiera interactuar con el sistema de forma intuitiva y visual. La interfaz era un aspecto importante, ya que tendría que permitir observar el comportamiento del simulador en tiempo real.
+
+Para que el desarrollo y posterior mantenimiento sea sencillo, se ha implementado un patrón Modelo-Vista-Controlador (MVC), aunque no de forma estricta. Los modelos encapsulan tanto el estado como la lógica de cada entidad de red. La vista, se encarga de la representación gráfica de este modelo y la interacción con el usuario.
+
+Además, existe un controlador global encargado de coordinar la comunicación entre las distintas entidades de la red y gestionar la interacción entre la interfaz gráfica y los modelos. Este controlador actúa como intermediario, permitiendo que la interfaz pueda observar y modificar el estado de la red sin acoplarse directamente a los modelos internos.
+
+\subsection{Utilidades}
+\label{subsec:Utilidades}
+Una vez terminada la implementación de la interfaz gráfica, surgía la necesidad de implementar funciones, que sean útiles durante la ejecución de la simulación.
+
+Una de las más relevantes fue la posibilidad de importar una biblioteca externa de comandos, ataques e interceptores definidos por el usuario. Esta funcionalidad permite extender el comportamiento del simulador sin necesidad de modificar su código fuente. Cada una de estas funciones externas recibe como parámetro el dispositivo que las ejecuta. En el caso de los comandos y ataques, también reciben como argumento las direcciones IP de destino. Por otro lado, los interceptores reciben el paquete que han interceptado. Para distinguir el tipo de cada función, es necesario que en el nombre lleve un prefijo que la identifique. Para realizar esta tarea de análisis del script, se han utilizado expresiones regulares, permitiendo obtener el nombre de la función y los parámetros de esta. Para consultar como construir una biblioteca para el simulador, visitar el Apéndice E de los anexos.
+
+Otra funcionalidad importante es la implementación de un gestor de cambios que permita realizar deshacer y rehacer los cambios realizados. Para evitar modificar los métodos existentes, este servicio se implementó utilizando una clase estática encargada de almacenar los estados del simulador. Además, se crearon decoradores con el objetivo de invocar una función que guarde el estado actual cada vez que se ejecute un método anotado. Para evitar almacenar demasiadas instancias del simulador, el guardado se realiza de forma controlada (se guarda un estado si han pasado al menos 500 ms desde el último cambio), además se limita el número de estados guardados.
+
+\subsection{Predicción con Redes Neuronales}
+\label{subsec:PrediccionRedesNeuronales}
+Una de las funcionalidades más importantes del simulador es la integración de modelos de inteligencia artificial para realizar predicciones sobre los flujos de red generados en la simulación. Desde el diseño inicial, se planteó como requisito fundamental ofrecer al usuario la posibilidad de cargar sus propios modelos, permitiendo así una total libertad en cuanto a la elección de la arquitectura de estos.
+
+Estos requisitos dan una serie de problemas que se han intentado solucionar durante el desarrollo. En primer lugar, los modelos suelen ser entrenados en Python utilizando TensorFlow, por lo que se necesita convertirlos a un formato compatible con la biblioteca JavaScript.js. Para ello, se ha empleado la herramienta \texttt{tensorflowjs}, que permite la transformación de modelos entrenados en Python a versiones compatibles para el uso en navegador usando JavaScript.
+
+Otro desafío importante era definir cómo dar la posibilidad al usuario de usar sus modelos durante la captura de paquetes. La solución buscada fue permitir al usuario incluir un script propio que se encargue de ejecutar el modelo, y que implemente una función específica que el simulador pueda invocar para obtener una predicción.
+
+\subsection{Despliegue para la utilización}
+\label{subsec:Despliegue}
+Para facilitar el acceso al simulador, he habilitado una dirección web que permite acceder al simulador. El simulador está alojado en GitHub Pages, lo que permite desplegar la versión final del proyecto de forma gratuita y accesible. En concreto, la página sirve el contenido de la rama release del repositorio, donde se encuentra el código ya compilado y preparado para producción.
+
+\url{https://alejadiez.github.io/iot_attack_detection}
+
+Un aspecto importante a tener en cuenta es la forma en que Angular gestiona las rutas. Por defecto, Angular utiliza un enrutamiento que provoca errores al recargar la página. Para evitar este problema, se optó por utilizar el sistema de rutas mediante hashes (HashLocationStrategy).
+
+\section{Desarrollo del aprendizaje federado}
+\label{sec:DesarrolloAprendizajeFederado}
+El objetivo de este desarrollo es la creación de un script que permita desplegar un entorno de entrenamiento distribuido, tanto en clientes como en el servidor. A continuación, se describen las distintas fases de su desarrollo.
+
+\subsection{Investigación sobre Aprendizaje Federado}
+\label{subsec:InvestigacionAprendizajeFederado}
+Durante esta etapa inicial, se realizó una investigación para comprender en profundidad el concepto de aprendizaje federado y cómo era posible entrenar un modelo en entornos distribuidos. El objetivo principal fue entender cómo en que consiste entrenar un modelo de redes neuronales sin centralizar los datos y cómo, posteriormente, se iban a mezclar todos los modelos generados para obtener un modelo global.
+
+La investigación englobó una multitud de consultas en diversas fuentes, sobre todo en recursos de \textbf{Google AI}, que fue una empresa pionera en la implementación de esta técnica en entornos reales. Se analizaron artículos, documentación oficial, vídeos e implementaciones reales, lo que permitió obtener una visión sobre el funcionamiento de esta novedosa técnica. También, se evaluaron las ventajas y desventajas, tales como la seguridad de los datos, el uso de diferentes datasets, la complejidad de coordinación entre clientes y servidor, la heterogeneidad de los datos (non-IID) ... 
+
+\subsection{Pruebas de entornos federados con datasets simples}
+\label{subsec:PruebasEntornosFederados}
+Después de la primera fase de investigación sobre el aprendizaje federado, llega el momento de intentar explorar varias bibliotecas que permitan realizar un aprendizaje federado basándose en un modelo de TensorFlow.
+
+La primera opción considerada fue \textbf{TensorFlow Federated (TFF)}, una extensión de la biblioteca TensorFlow para Python que permite entrenar un modelo Keras en una arquitectura federada. Tras varias pruebas e intentos, se logró entrenar un modelo básico que consistía en una regresión lineal utilizando una función matemática, siendo un ejemplo muy simple que pretendía ser un acercamiento a un entrenamiento distribuido. Sin embargo, la implementación usando esta biblioteca presentó muchos problemas a la hora de ejecutarse sobre dispositivos con arquitectura ARM, lo que dificultó su uso práctico. Además, TFF está orientada principalmente a fines académicos y de simulación, por lo que no resultó adecuada para entrenamientos reales en múltiples dispositivos.
+
+Teniendo en cuenta las limitaciones encontradas en TFF, se decidió explorar alternativas más adecuadas para nuestro objetivo. Una de las alternativas, mejor valoradas por la comunidad fue Flower, un framework que permite el entrenamiento de modelos de inteligencia artificial sin importar la tecnología usada. Gracias a esto, fue posible el entrenamiento del mismo modelo usado durante la anterior prueba, pero esta vez usando diferentes dispositivos físicos, permitiendo llevar a cabo una prueba real de aprendizaje federado.
+
+\subsection{Análisis del dataset NF-ToN-IoT y adaptación para entornos federados}
+\label{subsec:AnalisisDataset}
+Uno de los objetivos principales del proyecto es entrenar un modelo ya definido, que permita detectar ataques en una red, sobre un entorno distribuido. Para ello, se ha usado el dataset \textbf{NF-ToN-IoT}~\cite{dataset_source}.
+
+NF-ToN-IoT es un conjunto de datos basados en el conjunto ToN-IoT, creado por la Universidad de Nueva Gales del Sur (UNSW) en Sídney. Fue creado para tener un amplio conjunto de flujos de red que permitiera el entrenamiento en la detección de ataques en entornos de re de dispositivos IoT. Fue desarrollado en el laboratorio de ciberseguridad IoT de UNSW Canberra con una emulación de entornos IoT realistas y complejos.
+
+Este dataset contiene flujo de red procesado y etiquetado, con una proporción de 19.6\% de tráfico benigno y 80.4\% de tráfico malicioso (Tabla~\ref{tab:distribucion-detallada}).
+\begin{table}[h]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.18\linewidth} >{\centering\arraybackslash}p{0.18\linewidth} X }
+		\toprule
+		\textbf{Etiqueta} & \textbf{Distribución} & \textbf{Descripción} \\
+		\toprule
+		Benigno & 270.279 & Tráfico normal sin actividad maliciosa \\
+		Puerta trasera & 17.247 & Acceso remoto no autorizado mediante programas ocultos \\
+		DoS & 17.717 & Saturación de recursos para interrumpir servicios \\
+		DDoS & 326.345 & DoS desde múltiples fuentes distribuidas \\
+		Inyección & 468.539 & Ingreso de datos maliciosos para alterar la ejecución de programas \\
+		Hombre en el medio & 1.295 & Intercepción de comunicaciones entre dos partes \\
+		Contraseñas & 156.299 & Ataques para obtener contraseñas (fuerza bruta, sniffing) \\
+		Ransomware & 142 & Cifrado de archivos y exigencia de rescate para su recuperación \\
+		Escaneo & 21.467 & Exploración de red para identificar dispositivos y servicios \\
+		XSS & 99.944 & Inyección de scripts maliciosos en páginas web \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{0.4cm}
+	\caption{Distribución del tráfico en el conjunto de datos NF-ToN-IoT}
+	\label{tab:distribucion-detallada}
+\end{table}
+
+Para el entrenamiento del modelo, se tuvo que extraer las características más representativas y se normalizaron los datos (media cero y varianza unitaria) además de transformar las etiquetas en una nueva etiqueta que indicara si el flujo pertenecía a un ataque o no, logrando así un conjunto de datos apto para una clasificación binaria. Este conjunto de datos se dividió en tres subconjuntos:
+\begin{itemize}
+    \item 70\% para entrenamiento
+    \item 15\% para validación
+    \item 15\% para selección de umbral
+\end{itemize}
+Dado que el objetivo es entrenar un modelo de forma distribuida, el subconjunto de entrenamiento se tuvo que dividir de manera equitativa en dos subconjuntos, uno para cada cliente, simulando así un dataset para un entorno federado.
+
+Como resultado de todos los pasos descritos, se obtuvieron los siguientes subconjuntos del dataset principal que se puede observar en la Tabla~\ref{tab:subconjunto-dataset}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabularx}{\linewidth}{p{0.24\linewidth} >{\centering\arraybackslash}p{0.13\linewidth} >{\centering\arraybackslash}p{0.18\linewidth} >{\centering\arraybackslash}p{0.13\linewidth} >{\centering\arraybackslash}p{0.13\linewidth}}
+        \toprule
+        \textbf{Subconjunto} & \multicolumn{2}{c}{\textbf{Distribución}} & \textbf{Benignos} & \textbf{Ataques} \\
+        \toprule
+        Entrenamiento 1 & 35\% & 405.297 & 17,11\% & 82,89\% \\
+        Entrenamiento 2 & 35\% & 405.298 & 17,14\% & 82,86\% \\
+        Validación & 15\% & 173.699 & 17,28\% & 82,72\% \\
+        Umbral & 15\% & 173.700 & 17,06\% & 82,94\% \\
+        \midrule
+        \textbf{Total} & \textbf{100\%} & \textbf{1.157.994} & & \\
+        \bottomrule
+    \end{tabularx}
+    \vspace{0.4cm}
+    \caption{Partición del conjunto de datos y distribución entre clientes}
+    \label{tab:subconjunto-dataset}
+\end{table}
+
+\subsection{Entrenamiento del modelo en entornos federados}
+\label{subsec:EntrenamientoModelo}
+Una vez que se tiene el conjunto de datos procesado, se procede a entrenar el modelo. Para ello, primero se debe de disponer de una configuración base del modelo que se debe entrenar. En este caso, se utilizó el modelo ya desarrollado por otros integrantes del Grupo de Inteligencia Computacional Aplicada (GICAP) de la Universidad de Burgos.
+
+El modelo empleado es un \textbf{Perceptrón Multicapa (MLP)} con la siguiente arquitectura:
+\begin{itemize}
+    \item \textbf{Capa de entrada} de 10 neuronas, una neurona por característica analizada:
+    \begin{itemize}
+        \item \texttt{L4\_SRC\_PORT}: Puerto de origen a nivel de capa 4.
+        \item \texttt{L4\_DST\_PORT}: Puerto de destino a nivel de capa 4.
+        \item \texttt{PROTOCOL}: Protocolo de red utilizado (por ejemplo, TCP, UDP).
+        \item \texttt{L7\_PROTO}: Protocolo a nivel de la capa de aplicación.
+        \item \texttt{IN\_BYTES}: Número de bytes entrantes.
+        \item \texttt{OUT\_BYTES}: Número de bytes salientes.
+        \item \texttt{IN\_PKTS}: Número de paquetes entrantes.
+        \item \texttt{OUT\_PKTS}: Número de paquetes salientes.
+        \item \texttt{TCP\_FLAGS}: Indicadores de control TCP codificados en bits.
+        \item \texttt{FLOW\_DURATION\_MILLISECONDS}: Duración del flujo en milisegundos.
+    \end{itemize}
+    \item \textbf{Primera capa oculta} con 64 neuronas y función de activación \textbf{ReLU}.
+    \item \textbf{Segunda capa oculta} con 32 neuronas y función de activación \textbf{ReLU}.
+    \item \textbf{Capa de salida} con función de activación \textbf{Sigmoide}.
+\end{itemize}
+Para el entrenamiento, se utilizó el optimizador \textbf{Adam} con una tasa de aprendizaje de 0.001. La función de pérdida empleada fue la \textbf{entropía cruzada binaria}, y la métrica principal de evaluación fue la \textbf{exactitud}.
+
+Con todo esto, se desarrolló un script que permitía lanzar el entorno federado tanto en el lado del servidor como clientes y lo único que había que seleccionar es la IP del servidor para que se pudieran realizar comunicaciones entre ellos.
+
+Con toda la configuración preparada, se desarrolló un script que permitía lanzar el entorno federado, tanto en el servidor como en los clientes. Era necesario obtener la dirección IP del servidor para indicar a los dos clientes el servidor con el que comunicarse.
+
+El flujo de entrenamiento seguido fue el siguiente:
+\begin{enumerate}
+    \item Evaluación inicial del modelo en el servidor.
+    \item El servidor selecciona a los clientes participantes y les envía el modelo global.
+    \item Cada cliente entrena el modelo localmente durante \textbf{4 epochs} y envía el modelo entrenado de vuelta al servidor.
+    \item El servidor agrega los modelos recibidos y genera un nuevo modelo global.
+    \item El nuevo modelo se envía a otro subconjunto de clientes para la evaluación\footnote{En este caso no es necesario evaluar el modelo en cada cliente, ya que se usa el mismo conjunto de evaluación.}.
+    \item Los clientes evalúan el rendimiento del modelo global y devuelven los resultados al servidor. Al mismo tiempo el servidor evalúa también el modelo global.
+    \item Se repite el proceso desde el paso 2 hasta completar un total de 12 rondas.
+\end{enumerate}
+
+\imagen{entrenamiento_federado}{Proceso de entrenamiento de forma distribuida}{1}
+
+\subsection{Evaluación del modelo}
+\label{subsec:EvaluacionModelo}
+Una vez finalizado el proceso de entrenamiento, se procede a evaluar el modelo para analizar su desempeño y la capacidad de generalización. Como ya se mencionó en la Sección~\ref{subsec:Evaluacion}, se van a usar diferentes métricas para evaluar la precisión y eficacia del modelo.
+
+Para ello, se va a usas el archivo de métricas que se ha generado durante el entrenamiento. Este archivo contiene todos los resultados obtenidos durante el entrenamiento y la evaluación del modelo. Además, el mismo script que se ha usado para entrenar el modelo, permite generar gráficas a partir de este archivo, lo que ofrece una manera más visual el comportamiento que ha tenido el modelo durante todas las fases de su evolución.
+
+Esta la siguiente Tabla~\ref{tab:metricas} se pueden observar los resultados obtenidos durante el entrenamiento y la evaluación del modelo distribuido.
+\begin{table}[h]
+	\centering
+	\begin{tabularx}{0.7\linewidth}{ X >{\centering\arraybackslash}p{0.14\linewidth} >{\centering\arraybackslash}p{0.14\linewidth} }
+		\toprule
+		\textbf{Entrenamiento} & \textbf{Cliente 1} & \textbf{Cliente 2} \\
+		\toprule
+		Exactitud &  0,9919 & 0,9918 \\
+        Pérdida &  0,0242 & 0,0236 \\
+        \toprule
+		\textbf{Evaluación} & & \textbf{Servidor} \\
+		\toprule
+		Exactitud & & 0,9916 \\
+        Pérdida & & 0,0244 \\
+		Precisión & & 0,9915 \\
+        Sensibilidad & & 0,9916 \\
+        Puntuación F1 & & 0,9915 \\
+        Área bajo la curva & & 0,9992 \\
+		\bottomrule
+	\end{tabularx}
+	\vspace{0.4cm}
+	\caption{Métricas de rendimiento obtenidas durante el ajuste del modelo}
+	\label{tab:metricas}
+\end{table}
+
+Teniendo como base estas métricas, se observa que el modelo presenta un rendimiento sobresaliente en todas las evaluaciones, lo que indica que hemos logrado obtener un modelo lo suficientemente avanzado como para distinguir con alta precisión flujos maliciosos frente a flujos benignos.
+
+Sin embargo, debido a la naturaleza de este tipo de entrenamiento, surgieron algunos inconvenientes durante el proceso, los cuales se intentarán analizar mediante representaciones gráficas.
+
+Como se puede observar en la Figura~\ref{fig:perdida_entrenamiento_evaluacion}, durante las rondas 6 y 8 se presentan valores inusuales en la evaluación que realiza el servidor en comparación con la pérdida de entrenamiento de cada uno de los clientes. Esto puede deberse a uno de los principales problemas mencionados en la Sección~\ref{subsec:AprendizajeFederado}, relacionado con la heterogeneidad de los datos. Esta heterogeneidad puede provocar que, en determinadas rondas, el modelo colapse parcialmente durante el entrenamiento, generando estos desajustes. No obstante, en las rondas posteriores el comportamiento se estabiliza, permitiendo alcanzar un modelo con mayor convergencia.
+\imagen{perdida_entrenamiento_evaluacion}{Pérdida durante el entrenamiento y la validación}{1}
+
+Para visualizar mejor el comportamiento del modelo, en la Figura~\ref{fig:matriz_confusion_modelo} se muestra la matriz de confusión, la cual muestra que el modelo es capaz de predecir correctamente la mayoría de los casos. Cabe destacar que el modelo tiende a detectar con mayor precisión los ataques frente a los flujos benignos, esto podría deberse a un desbalanceo en el conjunto de datos, donde podría ser necesario introducir una mayor cantidad de muestras de flujos benignos para mejorar la representatividad y el equilibrio entre clases.
+\imagen{matriz_confusion_modelo}{Matriz de confusión del modelo}{0.7}
+
+\subsection{Pruebas del modelo}
+\label{subsec:PruebasModelo}
+Con el fin de validar el modelo\footnote{Es necesario convertir el modelo generado en TensorFlow Python usando la herramienta tensorflowjs para que sea compatible con la biblioteca TensorFlow.js} en un entorno más próximo al uso real, se usó el Simulador IoT desarrollado en este mismo proyecto para simular flujos de paquetes benignos y ataques.
+
+Para ello, se realizó un script en JavaScript que permitiera adaptar el modelo al simulador, analizando cada uno de los flujos que se transmitían de un nodo a otro. Este script mantiene un registro de cada uno de los tráficos activos y, cuando alguno de los tráficos permanece cerrado durante 8 segundos, se cierra y se extraen sus características principales.
+
+Cada flujo cerrado se transforma en un conjunto de características numéricas, las cuales se normalizan utilizando la media y desviación estándar utilizadas durante la fase de entrenamiento. Estas características incluyen:
+\begin{itemize}
+    \item Puertos de origen y destino
+    \item Protocolo de transporte
+    \item Tamaño de paquetes transmitidos durante el flujo
+    \item Número de paquetes transmitidos durante el flujo
+    \item Banderas TCP
+    \item Duración total del flujo
+\end{itemize}
+Una vez realizada la transformación de los datos, se introducen al modelo para que genere una predicción en el rango \([0, 1]\). Si el resultado es superior a 0.5, este flujo se clasifica como ataque y en caso contrario se considera como flujo benigno.
+
+\imagen{ataque_ddos}{Ataque DDoS en el Simulador IoT}{1}
+
+Para realizar las pruebas fue necesario generar varias simulaciones de flujo de datos y combinarlas entre sí para que el modelo pueda detectar los ataques.
+
+\subsubsection{Ataque DoS}
+\label{subsubsec:AtaqueDoSTCP}
+Simula el envío masivo de paquetes TCP con la bandera SYN, simulando un SYN flood. Para realizar este ataque se envía una cantidad de paquetes TCP con la bandera SYN activada, con puertos de origen y valores de TTL aleatorios. También se generó un ataque con paquetes UDP, para comprobar si cambiaba en algo.
+Si lo que se quiere es simular un ataque DDoS, se lanzara el mismo ataque desde diferentes dispositivos simultáneamente.
+
+\subsubsection{Ping}
+\label{subsubsec:Ping}
+Se intenta simular la transmisión de un comando ping. Consiste en enviar un paquete ICMP, con código 8 (Echo Request). Después el otro dispositivo le responde con un paquete ICMP y código 0 (Echo Reply).
+
+\subsubsection{Three-Way Handshake}
+\label{subsubsec:ThreeWayHandshake}
+Se intenta simular el inicio de una conexión confiable entre dispositivos mediante el protocolo TCP. Se envía un paquete TCP con la bandera SYN. Después, el otro dispositivo le responde con un paquete TCP con las banderas SYN y ACK. Finalmente, se responde con un paquete TCP con la bandera ACK, confirmando así la conexión.
+
+\subsubsection{Video Streaming}
+\label{subsubsec:VideoStreaming}
+Se intenta simular la transmisión de un video desde un servidor que envía datos de forma continua. Consiste en enviar durante un tiempo definido, paquetes cada cierto tiempo con un contenido aleatorio en un rango de \([512, 2056]\) caracteres. Este tráfico simula un flujo de datos benigno para compartir un vídeo en tiempo real, como se haría durante una videollamada. Se usa un paquete TCP, con bandera AKC y se envía hacia el puerto de destino 443 y desde un puerto aleatorio.

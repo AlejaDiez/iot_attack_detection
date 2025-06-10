@@ -1,0 +1,95 @@
+\documentclass[a4paper,12pt,twoside]{memoir}
+\usepackage{../assets/utils}
+\graphicspath{{./img/}}
+
+% Datos
+\titulo{Detección de ataques en un entorno de red de dispositivos IoT}
+\autor{Alejandro Diez Bermejo}{71307675Q}
+\tutor{Daniel Urda Muñoz}
+\cotutor{Jaime Andrés Rincón Arango}
+\fecha{\today}
+
+% Documento
+\begin{document}
+
+% Portada
+\portada
+
+\newpage\null\thispagestyle{empty}
+
+% Instancia
+\newpage\thispagestyle{empty}
+\noindent\includegraphics[width=\textwidth]{../assets/cabecera}\vspace{1cm}
+\noindent D. \tutor\ y D. \cotutor, profesores del departamento de Digitalización, área de Ciencia de la Computación e Inteligencia Artificial.
+
+\noindent Exponen:
+
+\noindent Que el alumno D. \autor, con DNI \dni, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado ``\titulo'' \space de TFG. 
+
+\noindent Y que dicho trabajo ha sido realizado por el alumno bajo la dirección del que suscribe, en virtud de lo cual se autoriza su presentación y defensa.
+\begin{center}
+    En Burgos, {\large \fecha}
+\end{center}
+\vfill\vfill\vfill
+%% Firmas
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft}
+    Vº. Bº. del Tutor:\\[2cm]
+    D. \tutor
+\end{flushleft}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft}
+    Vº. Bº. del Cotutor:\\[2cm]
+    D. \cotutor
+\end{flushleft}
+\end{minipage}
+\hfill
+\vfill
+
+\newpage\null\thispagestyle{empty}
+
+% Resumenes
+\newpage\frontmatter
+%% Castellano
+\renewcommand*\abstractname{Resumen}
+\begin{abstract}
+    Este proyecto propone el desarrollo de un simulador de una red de dispositivos IoT, orientado a la experimentación con modelos de inteligencia artificial para la detección de ataques. El simulador permitirá construir una topología de red en la que se pueda generar tráfico y simular distintos tipos de ataques a los dispositivos conectados. Además, se entrenará un modelo de red neuronal utilizando aprendizaje federado, un enfoque descentralizado que prioriza la privacidad de los datos locales de cada dispositivo.
+\end{abstract}
+\renewcommand*\abstractname{Descriptores}
+\begin{abstract}
+    internet de las cosas, simulación de red, detección de ataques, inteligencia artificial, aprendizaje federado, redes neuronales, ciberseguridad, emulación de ataques, aprendizaje con preservación de la privacidad, sistemas distribuidos
+\end{abstract}
+\clearpage
+%% Inglés
+\renewcommand*\abstractname{Abstract}
+\begin{abstract}
+    This project proposes the development of a simulator for an IoT device network, aimed at experimenting with artificial intelligence models for attack detection. The simulator will allow the construction of a network topology where traffic can be generated and various types of attacks on connected devices can be simulated. Additionally, a neural network model will be trained using federated learning, a decentralized approach that prioritizes the privacy of each device’s local data.
+\end{abstract}
+\renewcommand*\abstractname{Keywords}
+\begin{abstract}
+    internet of things, network simulation, attack detection, artificial intelligence, federated learning, neural networks, cybersecurity, attack emulation, privacy-preserving learning, distributed systems
+\end{abstract}
+\clearpage
+
+% Índices
+\tableofcontents\clearpage
+\listoffigures\clearpage
+\listoftables\clearpage
+
+% Contenido
+\mainmatter
+\include{./tex/1_Introduccion}
+\include{./tex/2_Objetivos_del_proyecto}
+\include{./tex/3_Conceptos_teoricos}
+\include{./tex/4_Tecnicas_y_herramientas}
+\include{./tex/5_Aspectos_relevantes_del_desarrollo_del_proyecto}
+\include{./tex/6_Trabajos_relacionados}
+\include{./tex/7_Conclusiones_Lineas_de_trabajo_futuras}
+
+% Bibliografía
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}

@@ -1,0 +1,331 @@
+\apendice{Documentación de usuario}
+
+\section{Introducción}
+\label{sec:UsuarioIntroduccion}
+En este apartado se van a detallar los requisitos que necesita el usuario para poder usar el software desarrollado y una guía detallada de como utilizar el simulador.
+
+\section{Requisitos de usuarios}
+\label{sec:RequisitosUsuario}
+Para poder usar el Simulador IoT, es necesario que el usuario cumpla los siguientes requisitos:
+\begin{itemize}
+    \item Se requiere una \textbf{conexión a internet} para acceder a la aplicación web.
+    \item Si el usuario desea crear su propia biblioteca de comandos, ataques o interceptores, debe contar con un \textbf{editor de código}.
+    \item Para utilizar modelos de detección personalizados, el usuario debe tener instalado \textbf{Python} y la biblioteca \textbf{\texttt{tensorflowjs}}, además de un \textbf{editor de código} para implementar la función de análisis.
+\end{itemize}
+
+\section{Instalación}
+\label{sec:InstalacionUsuario}
+Para un uso básico del simulador, sin necesidad de implementar funcionalidades adicionales, no se requiere ninguna instalación. Es suficiente con contar con un navegador web compatible.
+
+Sin embargo, si se desea utilizar una biblioteca externa o modelos de predicción personalizados, es necesario contar con un \textbf{editor de código}, así como tener instalado \textbf{Python} y la biblioteca \textbf{tensorflowjs}.
+
+Para instalar tensorflowjs, es necesario ejecutar el siguiente comando en la terminal del sistema:
+\begin{verbatim}
+$ pip install tensorflowjs
+\end{verbatim}
+
+\section{Manual del usuario}
+\label{sec:ManualUsuario}
+En esta sección se va a realizar un recorrido completo por el simulador, presentando en detalle cada una de sus funciones y utilidades. Además, se explicará de forma detallada el proceso de creación de una biblioteca personalizada de comandos, ataques e interceptores, así como la adaptación de un modelo de inteligencia artificial desarrollado en Python para su integración en el simulador.
+
+\subsection{Acceso al simulador}
+\label{subsec:AccesoSimulador}
+Para poder acceder al Simulador IoT, es necesario introducir la siguiente dirección en el navegador web:
+
+\begin{center}
+    \url{https://alejadiez.github.io/iot_attack_detection/}
+\end{center}
+\imagen{simulador_iot}{Logo del Simulador IoT}{0.24}
+
+\newpage
+\subsection{Vista general}
+\label{subsec:VistaGeneral}
+El simulador está compuesto por una barra de menús flotante en la parte superior y un lienzo desplazable en ambas direcciones, donde se diseñará la arquitectura de la red.
+
+\imagen{vista_general}{Vista general del Simulador IoT}{1}
+
+Para comprender mejor la vista general, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/general_view.mov}
+
+\subsubsection{Barra de menús}
+\label{subsubsec:BarraMenus}
+\imagen{vista_menu}{Vista de la barra de menús}{0.6}
+
+En esta barra de menús se encuentran todas las posibles opciones del simulador, que están divididas por diferentes secciones:
+\begin{itemize}
+    \item \textbf{Archivo}: en este menú se encuentran todas las opciones relacionadas con la gestión de datos del simulador.
+    \begin{itemize}
+        \item \textbf{Nuevo archivo}: permite crear un nuevo proyecto, eliminando el proyecto actual.
+        \item \textbf{Abrir...}: permite abrir un proyecto guardado en el equipo.
+        \item \textbf{Importar biblioteca externa}: permite importar una biblioteca de comandos, ataques e interceptores. Si ya existe una biblioteca importada, ofrece la opción de eliminar la actual o reemplazarla por una nueva.
+        \item \textbf{Importar modelos}: permite importar modelos para el análisis de las trazas. En caso de haber modelos importados, se puede eliminar o reemplazar por otros.
+        \item \textbf{Guardar}: permite guardar el estado actual del proyecto en un archivo \textit{.yaml}.
+    \end{itemize}
+    \item \textbf{Editar}: en este menú se encuentran todas las opciones relacionadas con la edición del proyecto actual.
+    \begin{itemize}
+        \item \textbf{Deshacer}: permite revertir los cambios realizados.
+        \item \textbf{Rehacer}: permite restaurar los cambios deshechos.
+    \end{itemize}
+    \item \textbf{Insertar}: en este menú se encuentran todas las opciones relacionadas con la inserción de nodos en la red.
+    \begin{itemize}
+        \item \textbf{Router}: permite insertar un nodo tipo router en la red.
+        \item \textbf{Dispositivo}: permite insertar un nodo tipo dispositivo en la red.
+    \end{itemize}
+    \item \textbf{Ver}: en este menú se encuentran todas las opciones relacionadas con la configuración de visualización del simulador.
+    \begin{itemize}
+        \item \textbf{Idioma}: permite cambiar el idioma del simulador. Hay disponibles el Alemán, Inglés, Español, Francés, Italiano y Portugués.
+        \item \textbf{Alto contraste}: permite cambiar al modo de alto contraste para personas con dificultad visual.
+        \item \textbf{Mostrar cuadrícula}: permite cambiar el estado de visibilidad de la cuadrícula del lienzo.
+        \item \textbf{Centrar}: permite centrar el lienzo.
+        \item \textbf{Zoom original}: permite restablecer la escala del lienzo.
+        \item \textbf{Acercar}: permite aumentar la escala del lienzo.
+        \item \textbf{Alejar}: permite disminuir la escala del lienzo.
+    \end{itemize}
+    \item \textbf{Ayuda}: en este menú se encuentran todas las opciones relacionadas con la ayuda para el simulador.
+    \begin{itemize}
+        \item \textbf{Código fuente}: lleva al usuario al repositorio del proyecto, donde puede buscar la documentación o publicar cualquier comentario a mejorar.
+        \item \textbf{Versión del simulador}: muestra al usuario la versión actual del simulador.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Lienzo}
+\label{subsubsec:Lienzo}
+\imagen{vista_lienzo}{Vista del lienzo con clic derecho}{0.6}
+
+En el lienzo se va a mostrar toda la arquitectura de la red en el proyecto actual. Al hacer clic derecho sobre el lienzo, se muestra el siguiente menú:
+\begin{itemize}
+    \item \textbf{Insertar router}: permite insertar un router en la posición actual.
+    \item \textbf{Insertar dispositivo}: permite insertar un dispositivo en la posición actual.
+\end{itemize}
+
+\subsection{Añadir un nodo}
+\label{subsec:AnadirNodo}
+Para insertar un nodo, se puede hacer desde la barra de menús o desde el lienzo haciendo clic derecho. Una vez elegido el nodo a insertar router o dispositivo, se nos muestra una modal preguntando el nombre del nodo, y en caso de ser necesario el tipo de este.
+
+\imagen{vista_anadir_nodo}{Vista de la modal para añadir un nodo}{0.6}
+
+Al añadir un dispositivo, es obligatorio seleccionar su tipo. Se puede elegir entre dispositivo \textbf{IoT}, que corresponde a un dispositivo normal de la red, o \textbf{ordenador}, que es un dispositivo capaz de enviar ataques.
+
+Para comprender mejor como añadir nodos, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/add_nodes.mov}
+
+\subsection{Editar un nodo}
+\label{subsec:EditarNodo}
+Para editar un nodo, es necesario seleccionar el nodo e ir al apartado de ``Configuración'' del panel, o bien hacer clic derecho en el nodo y seleccionar ``Configuración''.
+
+\imagen{vista_editar_nodo}{Vista del panel para modificar un nodo}{0.6}
+
+En esta sección se puede configurar el nombre del nodo, modificar el tipo y eliminar el nodo.
+
+Para comprender mejor como editar un nodo, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/edit_node.mov}
+
+\subsection{Eliminar un nodo}
+\label{subsec:EliminarNodo}
+Para eliminar un nodo, es necesario seleccionar el nodo e ir al apartado de ``Configuración'' del panel y seleccionar la opción ``Eliminar'', o bien hacer clic derecho en el nodo y seleccionar ``Eliminar''.
+
+\imagen{vista_eliminar_nodo}{Vista de la modal para eliminar un nodo}{0.6}
+
+Para comprender mejor como eliminar un nodo, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/delete_node.mov}
+
+\subsection{Conectar un nodo}
+\label{subsec:ConectarNodo}
+Para conectar un nodo, es necesario disponer de una red con un router y al menos un nodo. Se debe seleccionar el nodo e ir al apartado de ``Tráfico de red'' del panel y seleccionar la opción ``Conectar''.
+
+\imagen{vista_conectar_nodo}{Vista del panel para conectar un nodo}{0.6}
+
+Para comprender mejor como conectar un nodo, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/connect_node.mov}
+
+\subsection{Editar conexión}
+\label{subsec:EditarConexion}
+Para editar una conexión, se debe seleccionar la conexión y se muestra una modal.
+
+\imagen{vista_editar_conexion}{Vista de la modal para editar una conexión}{0.6}
+
+En esta sección se puede configurar la latencia de la conexión, la variabilidad de la latencia, el ancho de banda (bytes / segundo) y el modelo de detección activado.
+
+Para comprender mejor como editar una conexión, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/edit_connection.mov}
+
+\subsection{Ejecutar comando}
+\label{subsec:EjecutarComando}
+Para ejecutar un comando, se debe seleccionar el nodo desde donde se va a ejecutar el comando e ir al apartado de ``Tráfico de red'' del panel y seleccionar el comando a ejecutar además de los objetivos que se desee enviar el comando.
+
+\imagen{vista_comando}{Vista del panel para enviar un comando}{0.6}
+
+Para comprender mejor como enviar un comando, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/send_command.mov}
+
+\subsection{Visualizar paquete}
+\label{subsec:VisualizarPaquete}
+Para visualizar un paquete que se ha enviado, se debe seleccionar el nodo desde donde se va a visualizar el paquete e ir al apartado de ``Tráfico de red'' del panel y seleccionar el paquete a visualizar.
+
+\imagen{vista_paquete}{Vista de la modal para visualizar un paquete}{0.6}
+
+Para comprender mejor como visualizar un paquete, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/view_packet.mov}
+
+\subsection{Lanzar ataque}
+\label{subsec:LanzarAtaque}
+Para lanzar un ataque, se debe seleccionar un nodo de tipo ordenador desde donde se va a lanzar el ataque e ir al apartado de ``Phantom Attacker'' del panel y seleccionar el ataque a lanzar además de los objetivos que se desee enviar el ataque.
+
+\imagen{vista_ataque}{Vista del panel para enviar un ataque}{0.6}
+
+Para comprender mejor como enviar un ataque, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/send_attack.mov}
+
+\subsection{Detectar un ataque}
+\label{subsec:DetectarAtaque}
+Para detectar los ataques, se debe tener al menos una conexión con un modelo de detección activado, además de generar un flujo maligno desde uno o varios ordenadores.
+
+\imagen{vista_detectar_ataque}{Vista de la detección de un ataque DoS}{1}
+
+Sobre cada conexión hay un indicador que señala si el modelo está activado, además del estado de la predicción. Si el indicador está en \textbf{azul}, el modelo aún no dispone de suficientes datos para realizar una predicción. Si está en \textbf{verde}, el flujo ha sido clasificado como benigno. En cambio, si está en \textbf{rojo}, el flujo ha sido identificado como malicioso.
+
+Para comprender mejor como detectar ataques, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/detect_attack.mov}
+
+\subsection{Escribir una biblioteca externa para el simulador}
+\label{subsec:BibliotecaExterna}
+Para crear una biblioteca externa que incluya comandos, ataques e interceptores, es necesario programar un script en JavaScript que siga una estructura específica. 
+
+\subsubsection{Comandos}
+\label{subsubsec:BibliotecaExternaComandos}
+Los comandos permiten generar flujos benignos entre nodos. Cada comando debe definirse como una función cuyo nombre comience con el prefijo \textbf{\texttt{cmd\_}}, seguido del identificador. La función recibe como parámetro el nodo emisor (\texttt{self}) y una o varias direcciones IP de destino (\texttt{target} / \texttt{...targets}).
+
+\begin{verbatim}
+/**
+ * @name Comando
+ * @param {Object} self - El nodo que ejecuta el comando
+ * @param {string} self.mac - Dirección MAC
+ * @param {string} self.ip - Dirección IP
+ * @param {string} self.name - Nombre
+ * @param {string} self.type - Tipo
+ * @param {function(packet) => void} self.send - Función de envío
+ * @param {string} target - Dirección IP objetivo
+ * @returns {void}
+ */
+function cmd_Comando(self, target) {
+    ...
+}
+\end{verbatim}
+
+\subsubsection{Ataques}
+\label{subsubsec:BibliotecaExternaAtaques}
+Los ataques permiten generar flujos malignos entre un nodo ordenador y los demás nodos. Cada ataque debe definirse como una función cuyo nombre comience con el prefijo \textbf{\texttt{atk\_}}, seguido del identificador. La función recibe como parámetro el nodo atacante (\texttt{self}) y una o varias direcciones IP de destino (\texttt{target} / \texttt{...targets}).
+
+\begin{verbatim}
+/**
+ * @name Ataque Multiple
+ * @param {Object} self - El nodo que lanza el ataque
+ * @param {string} self.mac - Dirección MAC
+ * @param {string} self.ip - Dirección IP
+ * @param {string} self.name - Nombre
+ * @param {string} self.type - Tipo
+ * @param {function(packet) => void} self.send - Función de envío
+ * @param {...string} targets - Direcciones IP objetivos
+ * @returns {void}
+ */
+function atk_Ataque_Multiple(self, ...targets) {
+    ...
+}
+\end{verbatim}
+
+\subsubsection{Interceptores}
+\label{subsubsec:BibliotecaExternaInterceptores}
+Los interceptores permiten reaccionar a paquetes que llegan a un nodo. Para definir un interceptor debe de ser una función cuyo nombre sea:
+\begin{itemize}
+    \item \textbf{\texttt{intcp}}: interceptor genérico
+    \item \textbf{\texttt{intcp\_router}}: interceptor para el nodo de tipo router
+    \item \textbf{\texttt{intcp\_iot}}: interceptor para el nodo de tipo iot
+    \item \textbf{\texttt{intcp\_computer}}: interceptor para el nodo de tipo computer
+\end{itemize}
+La función recibe como parámetro el nodo interceptor (\texttt{self}) y el paquete que se ha interceptado (\texttt{packet}). En caso de que se desee descartar la ejecución del interceptor predeterminado, es necesario devolver \texttt{null} u otro valor.
+\begin{verbatim}
+/**
+ * @param {Object} self - El nodo que lanza el ataque
+ * @param {string} self.mac - Dirección MAC
+ * @param {string} self.ip - Dirección IP
+ * @param {string} self.name - Nombre
+ * @param {string} self.type - Tipo
+ * @param {function(packet) => void} self.send - Función de envío
+ * @param {Object} packet - Paquete interceptado
+ * @param {string} packet.srcIP - Dirección IP de origen
+ * @param {number} [packet.srcPort] - Puerto de origen
+ * @param {string} packet.dstIP - Dirección IP de destino
+ * @param {number} [packet.dstPort] - Puerto de destino
+ * @param {number} packet.transportProtocol - Protocolo de transporte
+ * @param {number} [packet.applicationProtocol] - Protocolo de aplicación
+ * @param {string} [packet.payload] - Carga útil
+ * @param {number} packet.totalBytes - Tamaño total en bytes
+ * @param {number} packet.headerSize - Tamaño de la cabecera
+ * @param {number} packet.payloadSize - Tamaño de la carga útil
+ * @param {Date} packet.timestamp - Marca temporal
+ * @param {number} packet.ttl - Tiempo de vida (TTL)
+ * @param {number} packet.type - Tipo de mensaje ICMP
+ * @param {number} packet.code - Código de mensaje ICMP
+ * @param {number} packet.identifier - Identificador del mensaje ICMP
+ * @param {number} packet.sequence - Número de secuencia del mensaje ICMP o TCP
+ * @param {number} packet.tcpFlags - Banderas TCP
+ * @param {number} packet.ack - Número de confirmación
+ * @returns {void} Retornar un valor, cancela el interceptor predeterminado
+ */
+function intcp(self, packet) {
+    ...
+}
+\end{verbatim}
+
+Para comprender mejor como escribir una biblioteca externa, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/library.mov}
+
+\subsection{Adaptar un modelo de inteligencia artificial}
+\label{subsec:AdaptarModelo}
+Para adaptar un modelo de inteligencia artificial desarrollado con \textbf{TensorFlow} en Python al simulador, es necesario convertirlo a un formato compatible con \textbf{TensorFlow.js} y crear un \textbf{script} que utilice el modelo para predecir. Estos archivos se comprimirán en una carpeta \textbf{\texttt{.zip}} que será lo que interpretará el simulador.
+
+\subsubsection{Convertir modelo}
+\label{subsubsec:AdaptarModeloConvertir}
+Para adaptar \cite{tensorflowjs} el modelo es necesario tener instalada la biblioteca \texttt{tensorflowjs} y tener un modelo\footnote{El modelo debe haber sido entrenado con una versión de Keras v2. En caso contrario, es necesario convertirlo para que sea compatible con esta versión.} en formato \texttt{.h5}.
+
+Para realizar la conversión, es necesario ejecutar el siguiente comando en la terminal del sistema:
+\begin{verbatim}
+$ tensorflowjs_converter --input_format=keras \
+        /ruta/al/modelo_guardado \
+        /ruta/de/salida
+\end{verbatim}
+Este proceso realiza una conversión a un modelo compatible con \textbf{TensorFlow.js}, generando un archivo \texttt{.json} con la configuración del modelo y uno o varios archivos \texttt{.bin} que contienen los pesos.
+
+\subsubsection{Script de análisis}
+\label{subsubsec:AdaptarModeloScript}
+Para utilizar el modelo, es necesario crear un archivo JavaScript que contenga una función llamada \textbf{\texttt{analyze}}. Esta función se encarga de analizar cada uno de los paquetes que se le pasen como parámetro y devolver un valor según el resultado:
+\begin{itemize}
+    \item \textbf{\texttt{true}}: se ha detectado un ataque
+    \item \textbf{\texttt{false}}: no se ha detectado ataque
+    \item \textbf{\texttt{any}}: el modelo no dispone de datos suficientes para realizar un análisis
+\end{itemize}
+
+Cabe destacar que el script dispone de dos variables globales:
+\begin{itemize}
+    \item \textbf{\texttt{tf}}: biblioteca de TensorFlow.js
+    \item \textbf{\texttt{model}}: modelo de predicción a usar
+\end{itemize}
+
+\begin{verbatim}
+/**
+ * @param {Object} packet - Paquete interceptado
+ * @param {string} packet.srcIP - Dirección IP de origen
+ * @param {number} [packet.srcPort] - Puerto de origen
+ * @param {string} packet.dstIP - Dirección IP de destino
+ * @param {number} [packet.dstPort] - Puerto de destino
+ * @param {number} packet.transportProtocol - Protocolo de transporte
+ * @param {number} [packet.applicationProtocol] - Protocolo de aplicación
+ * @param {string} [packet.payload] - Carga útil
+ * @param {number} packet.totalBytes - Tamaño total en bytes
+ * @param {number} packet.headerSize - Tamaño de la cabecera
+ * @param {number} packet.payloadSize - Tamaño de la carga útil
+ * @param {Date} packet.timestamp - Marca temporal
+ * @param {number} packet.ttl - Tiempo de vida (TTL)
+ * @param {number} packet.type - Tipo de mensaje ICMP
+ * @param {number} packet.code - Código de mensaje ICMP
+ * @param {number} packet.identifier - Identificador del mensaje ICMP
+ * @param {number} packet.sequence - Número de secuencia del mensaje ICMP o TCP
+ * @param {number} packet.tcpFlags - Banderas TCP
+ * @param {number} packet.ack - Número de confirmación
+ * @returns {boolean | void} - true: ataque, false: benigno, void: esperando
+ */
+function analyze(packet) {
+    ...
+}
+\end{verbatim}
+
+Para comprender mejor como adaptar un modelo de inteligencia artificial, hay un video explicativo disponible en el siguiente enlace: \url{https://github.com/AlejaDiez/iot_attack_detection/blob/main/docs/videos/model.mov}

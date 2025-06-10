@@ -1,0 +1,128 @@
+\apendice{Especificación de diseño}
+
+\section{Introducción}
+\label{sec:DisenoIntroduccion}
+La especificación de diseño ofrece la perspectiva de cómo debe ser desarrollado un software para que cumpla los requisitos definidos anteriormente. Esta sección es el camino a seguir para poder pasar de un software en fase de análisis a una implementación de software real. Para ello, se van a explicar los distintos aspectos del diseño del software, incluyendo los datos que se van a manejar, la arquitectura de la aplicación y el diseño procedimental.
+
+\section{Diseño de datos}
+\label{sec:DisenoDatos}
+\subsection{Entrada y Salida}
+\label{subsec:DatosEntradaSalida}
+Las entradas de datos del simulador están formadas principalmente por la topología de red, la cual será diseñada por el usuario. A partir de esta topología, el usuario podrá generar flujos de datos entre los nodos mediante una biblioteca externa. Además, se permite configurar los nodos y las conexiones entre estos. Otra entrada importante corresponde a los modelos de predicción de ataques, que el usuario podrá importar.
+
+Las salidas dependen del modelo utilizado, pero todas ofrecen una salida general como la predicción de los flujos y un historial de los paquetes que han recibido cada nodo. Además, se permite guardar el proyecto en un formato \texttt{.yaml}.
+
+En cuanto al script de aprendizaje federado, como entrada recibe el tipo de nodo federado con opciones adicionales, además de la configuración base del modelo junto con los datasets de entrenamiento y validación. La salida será el modelo entrenado y un archivo de métricas. También existe la posibilidad de obtener gráficas a partir de las métricas. 
+
+\subsection{Flujo de datos}
+\label{subsec:FlujoDatos}
+El flujo de datos del simulador sería el siguiente:
+\begin{enumerate}
+    \item El usuario importa o genera una nueva topología de red.
+    \item El usuario puede importar una biblioteca externa de comandos, ataques e interceptores para ampliar las opciones del simulador.
+    \item El usuario puede importar uno o varios modelos de predicción.
+    \item El usuario modificará los parámetros de los distintos nodos (nombre, tipo, posición) y conexiones (latencia, variabilidad de latencia, ancho de banda, modelo de predicción).
+    \item El usuario selecciona un comando o ataque a ejecutar y un objetivo.
+    \item El simulador transmite los paquetes entre los nodos, mientras estos registran el flujo.
+    \item Todas las conexiones con un modelo activo de predicción ejecutan su función de análisis y muestran información de la predicción en la pantalla.
+    \item Finalmente, el usuario puede guardar el proyecto actual.
+\end{enumerate}
+
+\imagen{flujo_de_datos_simulador}{Diagrama de flujo de datos del simulador}{0.4}
+
+El flujo de datos del aprendizaje federado sería el siguiente:
+\begin{enumerate}
+    \item El usuario selecciona el nodo federado que quiere iniciar.
+    \item El usuario carga la configuración base del modelo.
+    \item El usuario carga los datasets de entrenamiento y validación.
+    \item Se distribuye los modelos entre los clientes.
+    \item Se recopilan métricas.
+    \item Se genera un modelo global a partir de los locales.
+    \item Exportación del modelo global.
+    \item Exportación de las métricas.
+    \item Posible generación de gráficas.
+\end{enumerate}
+
+\imagen{flujo_de_datos_aprendizaje_federado}{Diagrama de flujo de datos del aprendizaje federado}{0.19}
+
+\section{Diseño arquitectónico}
+\label{sec:DisenoArquitectonico}
+Para garantizar que el desarrollo del proyecto sea organizado y escalable, se han seguido patrones específicos, a pesar de las limitaciones impuestas por las tecnologías utilizadas durante la implementación.
+
+\subsection{Patrón Maestro-Esclavo}
+\label{subsec:PatronMaestroEsclavo}
+El entrenamiento de aprendizaje federado sigue el patrón Maestro-Esclavo. Este patrón se caracteriza por la existencia de un maestro (servidor) que se encargaría de seleccionar los clientes en los que el modelo va a ser entrenado y evaluado, de generar el modelo global y de recopilar las métricas de los clientes. Y de uno o varios esclavos (clientes) que se encargarían de ``obedecer'' las normas que impone el maestro, en este caso entrenar el modelo y evaluarlo.
+
+Este patrón es muy común en arquitecturas distribuidas y establece una clara jerarquía entre los distintos nodos permitiendo una comunicación eficaz y un control centralizado del flujo de datos.
+
+\subsection{Patrón Modelo-Vista-Controlador (MVC)}
+\label{subsec:PatronModeloVistaControlador}
+Este patrón de diseño es uno de los más utilizados en el ámbito de diseño de software, aplicándose al desarrollo web, móvil, escritorio... El objetivo principal de este patrón es separar la capa de presentación y la capa de datos. Para ello usa tres componentes:
+\begin{itemize}
+    \item \textbf{Modelo}: se corresponde con el acceso a los datos. Se encarga de almacenar y proporcionar los datos que maneja la aplicación.
+    \item \textbf{Vista}: se corresponde con la visualización de los datos. Comunica todas las acciones que realiza el usuario al controlador.
+    \item \textbf{Controlador}: se encarga de conectar el modelo con la vista. Sincroniza todas las acciones que el usuario realiza en la vista con el modelo y ofrece los datos del modelo a la vista.
+\end{itemize}
+Como se puede observar este patrón ofrece una gran flexibilidad para realizar cambios en la vista y que no afecte a la representación de los datos.
+
+En este proyecto, se ha elegido realizar una adaptación del patrón MVC con el objetivo de desacoplar la interfaz lo máximo posible de los modelos. Para ello, se han unido los modelos con los controladores en clases unificadas que gestionan tanto la lógica como el almacenamiento de los datos. Por otro lado, los componentes encargados de la visualización se corresponden con las vistas. Cabe mencionar, que se han implementado controladores generales encargado de gestionar la interacción entre todos los modelos y las vistas, siendo un punto central del flujo del simulador.
+
+\subsection{Patrón basado en componentes}
+\label{subsec:PatronBasadoComponentes}
+Además del patrón MVC, este proyecto usa un patrón basado en componentes en la parte de vista. Este patrón lo que intenta es la reutilización de partes de la interfaz para simplificar el desarrollo y posteriormente la mantenibilidad.
+
+Se podría decir que el componente actúa como un pequeño controlador que se encarga de llamar a los métodos del modelo y coordinar todos los eventos que el usuario realice sobre la interfaz.
+
+\subsection{Patrón Observador}
+\label{subsec:PatronObservador}
+Este patrón se ha utilizado para implementar la comunicación basada en cambios de estados dentro de la aplicación. Consiste en que una clase exponga un \textit{Observable} y las diferentes clases se subscriben a este para poder obtener notificaciones cuando el estado de esa clase cambie y poder realizar tareas asociadas.
+
+Por ejemplo, este patrón se usa en notificar cuando el usuario ha importado una biblioteca externa, o modelos y así los nodos y conexiones puede implementar dichos cambios en sus instancias. También se implementa este patrón en el gestor de estados de la aplicación, así el controlador de Red se puede subscribir y volver o ir a un punto en el que había estado.
+
+\subsection{Patrón Decorador}
+\label{subsec:PatronDecorador}
+Los decoradores se han utilizado en este proyecto como una forma de extender la funcionalidad de las clases o métodos sin modificar directamente su implementación. Esto permite obtener un código más limpio y en caso de una futura modificación, será más fácil y rápida la implementación.
+
+Este patrón se ha usado en los cambios de estado de la aplicación. Solo era necesario añadir el decorador de establecer el estado en las funciones de modificación de propiedades y el decorador obtener el estado en la clase donde era necesario escuchar el estado.
+
+\subsection{Patrón Singleton}
+\label{subsec:PatronSingleton}
+El patrón Singleton ofrece la posibilidad de solo instanciar una única vez un clase y así obtener una instancia global durante la ejecución de la aplicación.
+
+Este patrón fue usado como una solución debido a la imposibilidad de acceder en cualquier instante a un servicio fuera de un contexto determinado. Gracias al uso de este patrón, es posible acceder a estos servicios, que por definición son instancias únicas de una clase, en cualquier instante de ejecución del programa.
+
+\subsection{Arquitectura general}
+\label{subsec:ArquitecturaGeneral}
+El resultado de la arquitectura tras aplicar los patrones explicados anteriormente sería:
+
+\imagen{arquitectura_general}{Arquitectura general del simulador}{1}
+
+Los rectángulos verdes representan los modelos, que contienen la lógica principal y la información estructural de la aplicación. Esta capa se detalla más profundamente en el diseño de clases.
+
+Los rectángulos azules representan los componentes de interfaz (vistas). Estos se conectan a los modelos para presentar y modificar la información.
+
+Los rectángulos amarillos representan los servicios, que funcionan como controladores globales. Estos servicios gestionan la comunicación entre los componentes de la interfaz y los modelos, y son accesibles desde cualquier parte del simulador.
+
+\subsection{Diseño de clases}
+\label{subsec:DisenoClases}
+Una vez descritos los principales patrones de diseño utilizados durante el desarrollo del proyecto, es necesario especificar uno de los aspectos clave que da cohesión y funcionalidad a toda la aplicación: el diseño de clases.
+
+Este diseño establece la base estructural del simulador, permitiendo que sus componentes se comuniquen de formas organizada, mantenible y eficiente. Gracias a esto, el simulador es capaz de cumplir con todos los requisitos funcionales, mediante una arquitectura limpia y escalable.
+
+La siguiente Figura \ref{fig:uml_clases} muestra una simplificación de la estructura básica de clases del simulador.
+
+\figuraApaisadaSinMarco{uml_clases}{Diagrama de clases}{1}
+\newpage
+
+\section{Diseño procedimental}
+\label{sec:DisenoProcedimental}
+En esta sección se describe el flujo de acciones que se realizan tanto en el simulador como durante el aprendizaje federado.
+
+En la Figura \ref{fig:secuencia_simulador} se ha representado las interacciones fundamentales que se genera en el uso del simulador como el inicio de una red, añadir nodos, conexión entre nodos, lanzar y predecir un ataque y la eliminación de un nodo.
+
+En la Figura \ref{fig:secuencia_aprendizaje_federado} se ha representado el flujo de acciones correspondiente al entrenamiento de forma federada.
+
+\figuraApaisadaSinMarco{secuencia_simulador}{Diagrama de secuencia de un flujo en el simulador}{1}
+\newpage
+
+\imagen{secuencia_aprendizaje_federado}{Diagrama de secuencia del aprendizaje federado}{0.9}

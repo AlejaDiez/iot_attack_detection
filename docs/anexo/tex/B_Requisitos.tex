@@ -1,0 +1,1031 @@
+\apendice{Especificación de Requisitos}
+
+\section{Introducción}
+\label{sec:RequisitosIntroduccion}
+Esta sección ofrece una visión general del proyecto, incluyendo su propósito, público objetivo y uso previsto del software desarrollado.
+
+\subsection{Propósito del producto}
+\label{subsec:Proposito}
+El propósito de este software es proporcionar un entorno de pruebas para diferentes modelos de inteligencia artificial orientados a la detección de ataques. La herramienta permite a los usuarios diseñar diferentes tipologías de red, y evaluar los modelos desarrollados para la identificación de ataques.
+
+Además, ofrece la posibilidad de entrenar un modelo desarrollado en TensorFlow mediante el uso de aprendizaje federado.
+
+\subsection{Valor del producto}
+\label{subsec:Valor}
+Este producto es de gran utilidad para el proceso de desarrollo y validación de modelos de inteligencia artificial en un entorno controlado, específico y realista sin la necesidad de invertir recursos en desarrollar una infraestructura costosa y que implique un alto consumo de tiempo.
+
+Se podría decir que es una solución ideal como primer paso en la evaluación de modelos antes de desplegarlos en entornos reales, pudiendo así identificar errores o aspectos a mejorar. También se podría usar como demostración del funcionamiento de un modelo ante diferentes tipos de flujos sobre la red.
+
+\subsection{Público objetivo}
+\label{subsec:PublicoObjetivo}
+Este proyecto está diseñado para investigadores en ciencia de datos y seguridad informática, así como para personas apasionadas de la inteligencia artificial que buscan un entorno controlado y accesible para probar y desarrollar modelos, sin la necesidad de una infraestructura compleja.
+
+\subsection{Uso previsto}
+\label{subsec:UsoPrevisto}
+La aplicación está diseñada para ser intuitiva y accesible, permitiendo usarse sin necesidad de registro ni de conocimientos avanzados.
+
+\section{Objetivos generales}
+\label{sec:Objetivos}
+Este proyecto se ha desarrollado cumpliendo una serie de objetivos básicos:
+\begin{itemize}
+    \item Implementación de una \textbf{arquitectura federada} para el entrenamiento de modelos desarrollados con TensorFlow.
+    \item Desarrollo de un software capaz de \textbf{simular el flujo de red entre dispositivos conectados}, siendo flexible y adaptable a cada necesidad.
+    \item \textbf{Detección de ataques} generados dentro del propio entorno de simulación, mediante el uso de modelos de redes neuronales.
+    \item Posibilidad para los usuarios de \textbf{crear sus propios ataques} y definir \textbf{flujos} de red personalizados.
+    \item Opción de cargar \textbf{modelos propios} para el análisis de trazas de red.
+\end{itemize}
+
+\section{Catálogo de requisitos}
+\label{sec:CatalogoRequisitos}
+
+\subsection{Requisitos funcionales}
+\label{subsec:RequisitosFuncionales}
+\begin{itemize}
+    \item \textbf{RF-1 Diseño de red}: el usuario debe poder configurar una topología de red de manera sencilla y flexible.
+    \begin{itemize}
+        \item \textbf{RF-1.1 Añadir nodos}: el usuario debe poder añadir el número indefinido de nodos a la red.
+        \item \textbf{RF-1.2 Eliminar nodos}: el usuario debe poder eliminar los nodos de la red.
+        \item \textbf{RF-1.3 Modificar nodos}: el usuario debe poder modificar cada una de las propiedades de los nodos según el diseño lo permita.
+        \item \textbf{RF-1.4 Conectar nodos}: el usuario debe poder conectar los nodos entre sí.
+        \item \textbf{RF-1.5 Modificar conexiones}: el usuario debe poder modificar las propiedades de las conexiones.
+        \item \textbf{RF-1.6 Importar configuración}: el usuario debe ser capaz de importar configuraciones guardadas.
+        \item \textbf{RF-1.7 Guardar configuración}: el usuario debe ser capaz de guardar topologías de red diseñadas.
+    \end{itemize}
+    \item \textbf{RF-2 Simulación de flujos}: el usuario debe poder simular flujos de red y que estos estén registrados.
+    \begin{itemize}
+        \item \textbf{RF-2.1 Ejecutar un comando}: el usuario debe poder ejecutar un comando desde un nodo a uno o varios nodos al mismo tiempo.
+        \item \textbf{RF-2.2 Ejecutar un ataque}: el usuario debe poder ejecutar un ataque desde un nodo de tipo ordenador a uno o varios nodos al mismo tiempo.
+        \item \textbf{RF-2.3 Interceptar un flujo}: el nodo debe de ser capaz de interceptar un flujo enviado por otro nodo.
+        \item \textbf{RF-2.4 Registro de flujos}: cada nodo debe tener un registro de los flujos que han pasado sobre este.
+        \item \textbf{RF-2.5 Importar biblioteca}: el usuario debe poder importar una biblioteca de comandos, ataques e interceptores y que aparezcan como disponibles en los nodos.
+        \item \textbf{RF-2.6 Eliminar biblioteca}: el usuario debe poder eliminar la biblioteca que ha sido importada.
+    \end{itemize}
+    \item \textbf{RF-3 Análisis de flujos}: el usuario debe poder analizar los flujos de datos en la red.
+    \begin{itemize}
+        \item \textbf{RF-3.1 Importar modelo entrenado}: el usuario debe ser capaz de importar uno o varios modelos entrenados con sus correspondientes scripts para su uso en el simulador.
+        \item \textbf{RF-3.2 Eliminar modelo entrenado}: el usuario debe ser capaz de eliminar los modelos importados del simulador.
+        \item \textbf{RF-3.3 Selección de modelo a usar}: el usuario debe ser capaz de seleccionar en cada conexión que modelo se debe usar para detectar los ataques.
+        \item \textbf{RF-3.4 Predicciones de ataques}: el simulador debe ser capaz de mostrar al usuario las predicciones que proporciona el modelo tras pasar las trazas de red.
+    \end{itemize}
+    \item \textbf{RF-4 Configuración del simulador}: el usuario debe poder configurar todas las opciones de visualización del simulador, así como tener la opción de deshacer y rehacer cambios.    
+    \item \textbf{RF-5 Entrenamiento federado}: el usuario debe ser capaz de entrenar un modelo de TensorFlow mediante aprendizaje federado.
+    \begin{itemize}
+         \item \textbf{RF-5.1 Cargar configuración del modelo base}: el usuario debe ser capaz de cargar la configuración del modelo base a cada cliente y servidor antes del entrenamiento federado.
+        \item \textbf{RF-5.2 Dividir dataset}: el usuario debe ser capaz de dividir un dataset en partes iguales para su uso en aprendizaje federado.
+        \item \textbf{RF-5.3 Cargar dataset}: el usuario debe ser capaz de cargar los dataset necesarios a cada cliente y servidor antes del entrenamiento federado.
+        \item \textbf{RF-5.4 Servidor federado}: el usuario debe ser capaz de lanzar un servidor federado con posibles configuraciones para coordinar el entrenamiento distribuido.
+        \begin{itemize}
+            \item \textbf{RF-5.4.1 Entrenamiento modelo global}: el servidor debe ser capaz de organizar el entrenamiento global del modelo.
+            \item \textbf{RF-5.4.2 Evaluación modelo global}: el servidor debe ser capaz de organizar la evaluación global del modelo.
+            \item \textbf{RF-5.4.3 Exportar modelo global}: el servidor debe ser capaz de exportar el modelo global al finalizar el entrenamiento.
+        \end{itemize}
+        \item \textbf{RF-5.5 Cliente federado}: el usuario debe ser capaz de lanzar varios clientes federados con posibles configuraciones desde distintos equipos y conectarlos al servidor.
+        \begin{itemize}
+            \item \textbf{RF-5.5.1 Entrenamiento modelo}: los clientes deben ser capaces de entrenar el modelo global.
+            \item \textbf{RF-5.5.2 Evaluación modelo}: los clientes deben ser capaces de evaluar el modelo global.
+        \end{itemize}   
+        \item \textbf{RF-5.6 Métricas}: el usuario debe ser capaz de visualizar las métricas del entrenamiento y la evaluación.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+\label{subsec:RequisitosNoFuncionales}
+\begin{itemize}
+    \item \textbf{RNF-1 Usabilidad}: la interfaz debe de ser intuitiva y accesible para usuarios no expertos, además de no requerir configuraciones complejas para su uso.
+    \item \textbf{RNF-2 Rendimiento y confiabilidad}: las simulaciones deben de ejecutarse en tiempos razonables. También es esperable que se gestionen correctamente los errores y que en caso de actualización de la página no se pierda el estado de la aplicación.
+    \item \textbf{RNF-3 Compatibilidad}: debe de ser compatible con la mayoría de los navegadores modernos y no requerir de funciones especiales que sean necesaria la configuración.
+    \item \textbf{RNF-4 Seguridad}: debe de ser un software estable ante posibles fallos que cometa el usuario, además de no comprometer al sistema.
+    \item \textbf{RNF-5 Mantenibilidad y escalabilidad}: el código debe de estar bien estructurado y la documentación debe ser clara y concisa.
+\end{itemize}
+
+\section{Especificación de requisitos}
+\label{sec:EspecificacionRequisitos}
+
+\imagen{casos_de_uso}{Diagrama de casos de uso}{1.1}
+\newpage
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Diseño de red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1, RF-1.1, RF-1.2, RF-1.3, RF-1.4, RF-1.5, RF-1.6, RF-1.7 \\
+		\textbf{Descripción}          & El usuario quiere modificar la topología de la red \\
+		\textbf{Precondición}         & El usuario tiene conexión a internet \\
+                                      & El simulador está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}\def\labelenumi{\arabic{enumi}.}\tightlist
+			\item El usuario entra al simulador
+			\item El simulador muestra la interfaz
+            \item El simulador inicia un proyecto nuevo
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Proyecto nuevo \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-1 Diseño de red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-2}    & \textbf{Añadir nodos a la red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.1 \\
+		\textbf{Descripción}          & El usuario añade uno o varios nodos a la red mediante la interfaz gráfica \\
+		\textbf{Precondición}         & El usuario está dentro del simulador \\
+		\textbf{Acciones}             &
+		\begin{enumerate}\def\labelenumi{\arabic{enumi}.}\tightlist
+			\item El usuario selecciona la opción ``Añadir router'' (en caso de añadir un router) o ``Añadir dispositivo'' (en caso de añadir un ordenador o dispositivo IoT)
+			\item El simulador pide al usuario datos del nodo (nombre y tipo)
+            \item El usuario completa el formulario
+            \item El simulador añade el nodo a la red
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El nodo se ha añadido a la red \\
+		\textbf{Excepciones}          & Falta algún dato de rellenar en el formulario \\
+                                      & Existe un nodo de tipo router en la red \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-2 Añadir nodos a la red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-3}    & \textbf{Eliminar nodos de la red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.2 \\
+		\textbf{Descripción}          & El usuario elimina un nodo de la red mediante la interfaz gráfica \\
+		\textbf{Precondición}         & El usuario está dentro del simulador \\
+        		                      & Existe el nodo a eliminar \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona un nodo a eliminar
+			\item El simulador solicita la confirmación de eliminación
+            \item El simulador desconecta el nodo y lo elimina
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El nodo y las conexiones de este se eliminan \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-3 Eliminar nodos de la red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-4}    & \textbf{Modificar propiedades del nodo}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.3 \\
+		\textbf{Descripción}          & El usuario modifica las propiedades de un nodo \\
+		\textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Existe el nodo a modificar \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona un nodo a modificar
+            \item El simulador muestra las propiedades del nodo
+            \item El usuario modifica las propiedades
+            \item El simulador guarda los cambios
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El nodo guarda las modificaciones \\
+		\textbf{Excepciones}          & Valores no válidos \\
+		\textbf{Importancia}          & Baja \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-4 Modificar propiedades del nodo}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-5}    & \textbf{Conectar los nodos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.4 \\
+		\textbf{Descripción}          & El usuario conecta dos nodos \\
+		\textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Existe un dispositivo sin conectar \\
+                                      & Existe un router al cual conectarse \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona un dispositivo a conectar
+            \item El simulador muestra la opción de conectarse al router
+            \item El usuario selecciona la opción de conectarse
+            \item El simulador conecta los nodos y asigna una IP al dispositivo
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El nodo está conectado y tiene una IP asignada \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-5 Conectar los nodos}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-6}    & \textbf{Modificar propiedades de la conexión}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.5 \\
+		\textbf{Descripción}          & El usuario modifica las propiedades de una conexión \\
+		\textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Existe una conexión a modificar \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona la conexión a modificar
+            \item El simulador muestra las propiedades de la conexión
+            \item El usuario modifica las propiedades
+            \item El simulador guarda los cambios
+		\end{enumerate}\\
+		\textbf{Postcondición}        & La conexión guarda las modificaciones \\
+		\textbf{Excepciones}          & Valores no válidos \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-6 Modificar propiedades de la conexión}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-7}    & \textbf{Importación configuración de red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.6 \\
+		\textbf{Descripción}          & El usuario importa una configuración guardada \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+        		                      & El usuario dispone de un archivo de configuración válido \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona la opción de ``Abrir''
+            \item Elige un archivo
+            \item El simulador carga la configuración
+		\end{enumerate}\\
+		\textbf{Postcondición}        & La red se muestra como estaba guardada \\
+		\textbf{Excepciones}          & Archivo incompatible \\
+		\textbf{Importancia}          & Baja \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-7 Importación configuración de red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-8}    & \textbf{Guardar configuración de red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-1.7 \\
+		\textbf{Descripción}          & El usuario guarda la configuración de red actual \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona la opción de ``Guardar''
+            \item El simulador exporta la configuración de la red actual
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El archivo se descarga \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Baja \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-8 Guardar configuración de red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-9}    & \textbf{Simulación de flujos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2, RF-2.1, RF-2.2, RF-2.3, RF-2.4, RF-2.5, RF-2.6 \\
+		\textbf{Descripción}          & El usuario quiere realizar simulaciones de flujos de red \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Hay una red diseñada \\
+                                      & Hay nodos conectados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario entra al simulador
+            \item El simulador muestra la interfaz
+            \item El simulador muestra la configuración de red actual
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Configuración de red actual \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-9 Simulación de flujos}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-10}    & \textbf{Ejecutar un comando}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.1 \\
+		\textbf{Descripción}          & El usuario quiere ejecutar un comando desde un nodo hacia otros \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Hay nodos conectados \\
+                                      & El simulador dispone de comandos \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona el nodo origen
+            \item El simulador muestra la vista de tráfico de red
+            \item El usuario selecciona el comando a enviar
+            \item El usuario selecciona los objetivos
+            \item El usuario selecciona la opción de enviar
+            \item El simulador simula el flujo
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Flujo registrado en los nodos \\
+		\textbf{Excepciones}          & Valores no válidos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-10 Ejecutar un comando}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-11}    & \textbf{Lanzar un ataque}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.2 \\
+		\textbf{Descripción}          & El usuario quiere lanzar un ataque desde un nodo hacia otros \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Hay nodos conectados \\
+                                      & Existe un ordenador conectado \\
+                                      & El ordenador dispone de ataques \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona el ordenador atacante
+            \item El simulador muestra la vista de tráfico de red
+            \item El usuario selecciona la sección de ataques
+            \item El usuario selecciona el ataque a enviar
+            \item El usuario selecciona los objetivos
+            \item El usuario selecciona la opción de atacar
+            \item El simulador simula el ataque
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Flujo registrado en los nodos \\
+		\textbf{Excepciones}          & Valores no válidos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-11 Lanzar un ataque}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-12}    & \textbf{Interceptar flujos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.3 \\
+		\textbf{Descripción}          & Un nodo puede capturar los flujos que pasan por el \\
+        \textbf{Precondición}         & Existe un nodo conectado \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El flujo llega al nodo
+            \item El nodo intercepta el tráfico
+            \item El nodo realiza una acción
+        \end{enumerate}\\
+		\textbf{Postcondición}        & Acción respuesta \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-12 Interceptar flujos}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-13}    & \textbf{Registros de flujos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.4 \\
+		\textbf{Descripción}          & Un nodo mantiene un registro de los flujos que pasan por el \\
+        \textbf{Precondición}         & Se ha iniciado al menos un flujo en la red \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El flujo llega al nodo
+            \item El nodo registra el flujo en el historial
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Historial de flujos actualizado \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-13 Registros de flujos}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-14}    & \textbf{Importar biblioteca de comandos, ataques e interceptores}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.5 \\
+		\textbf{Descripción}          & El usuario importa una biblioteca externa de scripts \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Archivo válido \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona ``Importar biblioteca externa''
+            \item El usuario selecciona un archivo a cargar
+            \item El simulador valida e importa las posibles funciones de la biblioteca
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Comandos, ataques e interceptores disponibles \\
+		\textbf{Excepciones}          & Archivo no válido o con nombres de funciones incorrectas \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-14 Importar biblioteca de comandos, ataques e interceptores}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-15}    & \textbf{Eliminar biblioteca importada}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-2.6 \\
+		\textbf{Descripción}          & El usuario elimina una biblioteca que había sido cargada \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & El simulador tiene una biblioteca cargada \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona ``Eliminar biblioteca externa''
+            \item El simulador elimina la biblioteca de todos los nodos
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Biblioteca externa eliminada \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-15 Eliminar biblioteca importada}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-16}    & \textbf{Análisis de flujos en la red}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-3, RF-3.1, RF-3.2, RF-3.3, RF-3.4 \\
+		\textbf{Descripción}          & El usuario quiere analizar los flujos de datos en la red \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Hay una topología de red establecida \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario entra al simulador
+            \item El simulador muestra la interfaz
+            \item El simulador muestra la configuración de red actual
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Configuración de red actual \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-16 Análisis de flujos en la red}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-17}    & \textbf{Importar modelo entrenado}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-3.1 \\
+		\textbf{Descripción}          & El usuario importa modelos de detección de ataques \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & El usuario dispone de modelos entrenados con su script de análisis correspondiente \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona ``Importar modelos''
+            \item El usuario selecciona los modelos a cargar
+            \item El simulador valida e importa los modelos
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Listas de modelos a utilizar \\
+		\textbf{Excepciones}          & Modelos no válidos o un script que no sigue la estructura adecuada \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-17 Importar modelo entrenado}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-18}    & \textbf{Eliminar modelos importados}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-3.2 \\
+		\textbf{Descripción}          & El usuario elimina los modelos que habían sido cargados \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & El simulador tiene modelos cargados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario selecciona ``Eliminar modelos''
+            \item El simulador elimina todos los modelos de las conexiones
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Modelos eliminados \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-18 Eliminar modelos importados}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-19}    & \textbf{Seleccionar modelo de detección}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-3.3 \\
+		\textbf{Descripción}          & El usuario selecciona qué modelo usar en cada conexión para la detección de ataques \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & El simulador tiene modelos cargados \\
+                                      & El simulador tiene nodos conectados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario accede a la configuración de una conexión
+            \item El usuario selecciona un modelo disponible
+            \item El simulador guarda los cambios
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Modelos eliminados \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-19 Seleccionar modelo de detección}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-20}    & \textbf{Ver predicciones de ataques}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-3.4 \\
+		\textbf{Descripción}          & El simulador muestra predicciones sobre los flujos interceptados \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+                                      & Existe nodos conectados \\
+                                      & La conexión tiene un modelo activo \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Un paquete pasa por una conexión
+            \item El simulador llama a la función ``analizar'' del script que fue importada con el modelo
+            \item El simulador cambia de color la conexión según el resultado
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Resultado de la predicción \\
+		\textbf{Excepciones}          & Fallo en el uso del script \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-20 Ver predicciones de ataques}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-21}    & \textbf{Configurar el simulador}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-4 \\
+		\textbf{Descripción}          & El usuario quiere modificar las opciones de visualización y gestionar los estados de esta \\
+        \textbf{Precondición}         & El usuario está dentro del simulador \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario busca en el menú la configuración a modificar
+            \item El usuario modifica los cambios que desea
+            \item El simulador muestra los nuevos cambios
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Nuevos cambios aplicados \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Baja \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-21 Configurar el simulador}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-22}    & \textbf{Ejecutar entrenamiento federado}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5, RF-5.1, RF-5.2, RF-5.3, RF-5.4, RF-5.4.1, RF-5.4.2, RF-5.4.3, RF-5.5, RF-5.5.1, RF-5.5.2, RF-5.6 \\
+		\textbf{Descripción}          & El usuario quiere entrena un modelo de redes neuronales de forma federada \\
+        \textbf{Precondición}         & Modelo base \\
+                                      & Datasets \\
+                                      & Tiene instaladas todas las dependencias \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario accede al módulo de entrenamiento federado
+            \item El usuario ejecuta el script
+            \item El script muestra las posibles ejecuciones disponibles
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Listado de posibles ejecuciones \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-22 Ejecutar entrenamiento federado}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-23}    & \textbf{Cargar configuración del modelo base}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.1 \\
+		\textbf{Descripción}          & El usuario quiere cargar la configuración base del modelo \\
+        \textbf{Precondición}         & Archivo base del modelo \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-{}-model} y la ruta del modelo
+            \item El script carga el modelo en memoria
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Modelo cargado en memoria \\
+		\textbf{Excepciones}          & No se ha encontrado el modelo \\
+                                      & Errores en la configuración del modelo \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-23 Cargar configuración del modelo base}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-24}    & \textbf{Dividir dataset para entrenamiento federado}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.2 \\
+		\textbf{Descripción}          & El usuario quiere dividir un dataset en partes iguales para los clientes federados \\
+        \textbf{Precondición}         & Dataset está cargado \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-d} seguido del número de archivos a crear
+            \item El script genera los archivos
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Archivos divididos \\
+		\textbf{Excepciones}          & - \\
+		\textbf{Importancia}          & Media \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-24 Dividir dataset para entrenamiento federado}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-25}    & \textbf{Cargar dataset}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.3 \\
+		\textbf{Descripción}          & El usuario quiere cargar el dataset en el cliente o servidor \\
+        \textbf{Precondición}         & Dataset válido \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-{}-train} (entrenamiento) o \texttt{-{}-test} (validación) seguido de la ruta de los archivos de datos y etiquetas
+            \item El script carga en memoria los datasets
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Datasets cargados en memoria \\
+		\textbf{Excepciones}          & No se han encontrado los datasets \\
+                                      & Error en los archivos \\
+		\textbf{Importancia}          &  \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-25 Cargar dataset}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-26}    & \textbf{Iniciar servidor federado}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.4, RF-5.4.1, RF-5.4.2, RF-5.4.3 \\
+		\textbf{Descripción}          & El usuario quiere iniciar un servidor de aprendizaje federado con parámetros configurables \\
+        \textbf{Precondición}         & Hay acceso a internet \\
+                                      & Modelo base está cargado \\
+                                      & Datasets están cargados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-s} y la dirección IP del servidor junto a su puerto
+            \item El usuario indica configuraciones adicionales como \texttt{-{}-batch-size} o \texttt{-{}-rounds}
+            \item El script inicializa el servidor
+            \item El servidor está pendiente de posibles clientes
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Servidor federado inicializado \\
+		\textbf{Excepciones}          & IP o puerto ocupado \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-26 Iniciar servidor federado}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-27}    & \textbf{Entrenamiento del modelo global}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.4.1 \\
+		\textbf{Descripción}          & El servidor organiza un entrenamiento global del modelo \\
+        \textbf{Precondición}         & Existen clientes conectados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El servidor elige diferentes clientes para que entrenen el modelo
+            \item El servidor recibe los modelos entrenados por los clientes
+            \item El servidor aplica un algoritmo de agregación 
+            \item Se actualiza el modelo global
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Nuevo modelo global \\
+		\textbf{Excepciones}          & Fallo en el entrenamiento de clientes \\
+                                      & Modelos de clientes diferentes \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-27 Entrenamiento del modelo global}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-28}    & \textbf{Evaluar modelo global}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.4.2 \\
+		\textbf{Descripción}          & El servidor organiza una evaluación global del modelo \\
+        \textbf{Precondición}         & Dataset de validación \\
+                                      & Clientes conectados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El servidor elige diferentes clientes para que evalúen el modelo
+            \item El servidor evalúa el modelo
+            \item El servidor recibe las métricas de evaluación de los clientes
+            \item El servidor guarda las métricas de evaluación
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Métricas de evaluación \\
+		\textbf{Excepciones}          & Fallo en la evaluación de los clientes \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-28 Evaluar modelo global}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-29}    & \textbf{Exportar modelo global}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.4.3 \\
+		\textbf{Descripción}          & Una vez terminado el entrenamiento, el servidor exporta el modelo global resultante \\
+        \textbf{Precondición}         & Se ha terminado el entrenamiento del modelo \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El servidor realiza la exportación del modelo global resultante
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Modelo global exportado \\
+		\textbf{Excepciones}          & El modelo no ha finalizado el entrenamiento \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-29 Exportar modelo global}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-30}    & \textbf{Iniciar cliente federado}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.5, RF-5.5.1, RF-5.5.2 \\
+		\textbf{Descripción}          & El usuario quiere iniciar un cliente de aprendizaje federado con parámetros configurables \\
+        \textbf{Precondición}         & Hay acceso a internet \\
+                                      & Modelo base está cargado \\
+                                      & Datasets están cargados \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-c} y la dirección IP del servidor junto a su puerto
+            \item El usuario indica configuraciones adicionales como \texttt{-{}-batch-size} o \texttt{-{}-epochs}
+            \item El script inicializa el cliente
+            \item El cliente se conecta con el servidor
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Cliente federado inicializado \\
+		\textbf{Excepciones}          & No se ha podido establecer conexión con el servidor\\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-30 Iniciar cliente federado}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-31}    & \textbf{Entrenar modelo}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.5.1 \\
+		\textbf{Descripción}          & El cliente entrena el modelo que ha recibido del servidor \\
+        \textbf{Precondición}         & Se ha recibido un modelo del servidor \\
+                                      & Dataset de entrenamiento \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El cliente entrena el modelo
+            \item El cliente envía el modelo al servidor junto a las métricas de entrenamiento
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Modelo local entrenado \\
+		\textbf{Excepciones}          & Error durante el entrenamiento \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-31 Entrenar modelo}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-32}    & \textbf{Evaluar modelo}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.5.2 \\
+		\textbf{Descripción}          & El cliente evalúa el modelo que ha recibido del servidor \\
+        \textbf{Precondición}         & Se ha recibido un modelo del servidor \\
+                                      & Dataset de validación \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El cliente evalúa el modelo
+            \item El cliente envía las métricas de evaluación al servidor
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Métricas de evaluación \\
+		\textbf{Excepciones}          & Error durante la evaluación \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-32 Evaluar modelo}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-33}    & \textbf{Visualizar métricas}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Alejandro Diez Bermejo \\
+		\textbf{Requisitos asociados} & RF-5.6 \\
+		\textbf{Descripción}          & El usuario quiere visualizar las métricas generadas durante el entrenamiento y la evaluación \\
+        \textbf{Precondición}         & Existe un archivo de métricas \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El usuario ejecuta el script con el argumento \texttt{-m} seguido de la ruta del archivo de métricas generado por el servidor
+            \item El script genera diferentes gráficas y archivos a partir del archivo de métricas
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Archivos de valores y gráficas \\
+		\textbf{Excepciones}          & Formato inválido del archivo \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-33 Visualizar métricas}
+\end{table}
