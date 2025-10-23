@@ -13,6 +13,10 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { HlmButtonImports } from "@components/ui/ui-button-helm/src";
+import { HlmLabelImports } from "@components/ui/ui-label-helm/src";
+import { HlmMenuSeparator } from "@components/ui/ui-menu-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
 import { Device } from "@models/device";
 import { Node } from "@models/node";
 import { Attack, PhantomAttacker } from "@models/phantom-attacker";
@@ -20,28 +24,23 @@ import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideUnplug } from "@ng-icons/lucide";
 import { TranslateModule } from "@ngx-translate/core";
 import { NetworkService } from "@services/network.service";
-import { BrnSelectModule } from "@spartan-ng/brain/select";
-import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
-import { HlmLabelModule } from "@spartan-ng/ui-label-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
-import { HlmMenuSeparatorComponent } from "../../../components/ui/ui-menu-helm/src/lib/hlm-menu-separator.component";
+import { BrnSelectImports } from "@spartan-ng/brain/select";
 
 @Component({
     imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
-        BrnSelectModule,
-        HlmButtonModule,
-        HlmLabelModule,
-        HlmMenuSeparatorComponent,
-        HlmSelectModule,
+        BrnSelectImports,
+        HlmButtonImports,
+        HlmLabelImports,
+        HlmMenuSeparator,
+        HlmSelectImports,
         NgIcon,
-        HlmMenuSeparatorComponent,
     ],
     providers: [provideIcons({ lucideUnplug })],
     templateUrl: "attack.component.html",
-    host: { class: "flex flex-col gap-4" },
+    host: { class: "flex flex-col gap-4 pb-6" },
 })
 export class AttackComponent implements OnChanges {
     public readonly network: NetworkService = inject(NetworkService);
@@ -86,7 +85,7 @@ export class AttackComponent implements OnChanges {
                 });
         });
     }
-    
+
     public ngOnChanges(changes: SimpleChanges): void {
         this.attack.set(null);
         this.target.set(null);

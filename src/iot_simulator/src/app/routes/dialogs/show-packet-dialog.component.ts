@@ -1,19 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import {
-    HlmTooltipComponent,
-    HlmTooltipTriggerDirective,
-} from "@components/ui/ui-tooltip-helm/src";
+import { HlmDialogImports } from "@components/ui/ui-dialog-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
+import { HlmTooltipImports } from "@components/ui/ui-tooltip-helm/src";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
-import { BrnTooltipContentDirective } from "@spartan-ng/brain/tooltip";
-import {
-    HlmDialogHeaderComponent,
-    HlmDialogTitleDirective,
-} from "@spartan-ng/ui-dialog-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
+import { BrnTooltipImports } from "@spartan-ng/brain/tooltip";
 
 export interface ShowPacketDialogContext {
     packet: any;
@@ -25,18 +19,16 @@ export interface ShowPacketDialogContext {
         CommonModule,
         TranslateModule,
         BrnSelectImports,
-        HlmTooltipComponent,
-        HlmTooltipTriggerDirective,
-        BrnTooltipContentDirective,
-        HlmDialogHeaderComponent,
-        HlmDialogTitleDirective,
-        HlmSelectModule,
+        HlmTooltipImports,
+        BrnTooltipImports,
+        HlmDialogImports,
+        HlmSelectImports,
     ],
     template: `
-        <hlm-dialog-header>
+        <hlm-dialog-header class="px-6">
             <h3 hlmDialogTitle>{{ "PACKET_DETAILS" | translate }}</h3>
         </hlm-dialog-header>
-        <div class="grid gap-4 py-4 overflow-y-auto">
+        <div class="grid gap-4 overflow-y-auto px-6 pb-6">
             <div class="grid grid-cols-4 items-center gap-4">
                 <label
                     hlmLabel
@@ -112,7 +104,7 @@ export interface ShowPacketDialogContext {
                     </span>
                     <span
                         *brnTooltipContent
-                        class="overflow-hidden whitespace-normal break-words break-all">
+                        class="wrap-break-word overflow-hidden whitespace-normal break-all">
                         {{ context.packet.payload }}
                     </span>
                 </hlm-tooltip>

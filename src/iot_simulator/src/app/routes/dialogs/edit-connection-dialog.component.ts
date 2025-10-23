@@ -1,18 +1,15 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { HlmSwitchModule } from "@components/ui/ui-switch-helm/src";
+import { HlmDialogImports } from "@components/ui/ui-dialog-helm/src";
+import { HlmInputImports } from "@components/ui/ui-input-helm/src";
+import { HlmLabelImports } from "@components/ui/ui-label-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
+import { HlmSwitchImports } from "@components/ui/ui-switch-helm/src";
 import { Connection } from "@models/connection";
 import { TranslateModule } from "@ngx-translate/core";
 import { injectBrnDialogContext } from "@spartan-ng/brain/dialog";
-import { BrnSelectModule } from "@spartan-ng/brain/select";
-import {
-    HlmDialogHeaderComponent,
-    HlmDialogTitleDirective,
-} from "@spartan-ng/ui-dialog-helm";
-import { HlmInputDirective } from "@spartan-ng/ui-input-helm";
-import { HlmLabelDirective } from "@spartan-ng/ui-label-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
+import { BrnSelectImports } from "@spartan-ng/brain/select";
 
 export interface EditConnectionContext {
     connection: Connection;
@@ -24,21 +21,20 @@ export interface EditConnectionContext {
         CommonModule,
         FormsModule,
         TranslateModule,
-        BrnSelectModule,
-        HlmDialogHeaderComponent,
-        HlmDialogTitleDirective,
-        HlmInputDirective,
-        HlmLabelDirective,
-        HlmSelectModule,
-        HlmSwitchModule,
+        BrnSelectImports,
+        HlmDialogImports,
+        HlmInputImports,
+        HlmLabelImports,
+        HlmSelectImports,
+        HlmSwitchImports,
     ],
     template: `
         <hlm-dialog-header>
             <h3 hlmDialogTitle>{{ "MODIFY_CONNECTION" | translate }}</h3>
         </hlm-dialog-header>
-        <div class="grid gap-4 py-4">
+        <div class="grid gap-4">
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "LATENCY" | translate
                 }}</label>
                 <input
@@ -50,7 +46,7 @@ export interface EditConnectionContext {
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "VARIABILITY" | translate
                 }}</label>
                 <input
@@ -63,7 +59,7 @@ export interface EditConnectionContext {
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "BANDWIDTH" | translate
                 }}</label>
                 <input
@@ -75,7 +71,7 @@ export interface EditConnectionContext {
                     class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "CYBER_SHIELD" | translate
                 }}</label>
                 <div class="col-span-3 inline-flex items-center justify-end">
@@ -88,7 +84,7 @@ export interface EditConnectionContext {
             </div>
             @if (connection.cyberShield.enabled) {
                 <div class="grid grid-cols-4 items-center gap-4">
-                    <label hlmLabel class="text-right">{{
+                    <label hlmLabel class="justify-end">{{
                         "MODEL" | translate
                     }}</label>
                     <brn-select

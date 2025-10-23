@@ -9,6 +9,7 @@ import {
     Signal,
 } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
+import { HlmCardImports } from "@components/ui/ui-card-helm/src";
 import { Node, NodeType } from "@models/node";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
@@ -20,11 +21,10 @@ import {
 } from "@ng-icons/lucide";
 import { ConfigService } from "@services/config.service";
 import { NetworkService } from "@services/network.service";
-import { HlmCardModule } from "@spartan-ng/ui-card-helm";
 
 @Component({
     selector: "app-node",
-    imports: [RouterModule, CommonModule, HlmCardModule, NgIcon],
+    imports: [RouterModule, CommonModule, HlmCardImports, NgIcon],
     providers: [
         provideIcons({
             lucideCpu,
