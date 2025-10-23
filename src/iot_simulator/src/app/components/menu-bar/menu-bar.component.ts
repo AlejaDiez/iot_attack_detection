@@ -7,44 +7,17 @@ import {
     output,
     OutputEmitterRef,
 } from "@angular/core";
+import { HlmMenuImports } from "@components/ui/ui-menu-helm/src";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfigService } from "@services/config.service";
 import { NetworkService } from "@services/network.service";
 import { StateService } from "@services/state.service";
-import { BrnMenuTriggerDirective } from "@spartan-ng/brain/menu";
-import {
-    HlmMenuBarComponent,
-    HlmMenuBarItemDirective,
-    HlmMenuComponent,
-    HlmMenuGroupComponent,
-    HlmMenuItemCheckboxDirective,
-    HlmMenuItemCheckComponent,
-    HlmMenuItemDirective,
-    HlmMenuItemSubIndicatorComponent,
-    HlmMenuSeparatorComponent,
-    HlmMenuShortcutComponent,
-    HlmSubMenuComponent,
-} from "@spartan-ng/ui-menu-helm";
+import { BrnMenuImports } from "@spartan-ng/brain/menu";
 import { name, version } from "../../../../package.json";
 
 @Component({
     selector: "app-menu-bar",
-    imports: [
-        CommonModule,
-        TranslateModule,
-        BrnMenuTriggerDirective,
-        HlmMenuComponent,
-        HlmMenuBarComponent,
-        HlmSubMenuComponent,
-        HlmMenuItemDirective,
-        HlmMenuItemSubIndicatorComponent,
-        HlmMenuShortcutComponent,
-        HlmMenuSeparatorComponent,
-        HlmMenuBarItemDirective,
-        HlmMenuItemCheckComponent,
-        HlmMenuGroupComponent,
-        HlmMenuItemCheckboxDirective,
-    ],
+    imports: [CommonModule, TranslateModule, BrnMenuImports, HlmMenuImports],
     templateUrl: "menu-bar.component.html",
 })
 export class MenuBarComponent {

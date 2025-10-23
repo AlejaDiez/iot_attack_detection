@@ -8,19 +8,15 @@ import {
     Signal,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { HlmButtonImports } from "@components/ui/ui-button-helm/src";
+import { HlmDialogImports } from "@components/ui/ui-dialog-helm/src";
+import { HlmInputImports } from "@components/ui/ui-input-helm/src";
+import { HlmLabelImports } from "@components/ui/ui-label-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
 import { NodeType } from "@models/node";
 import { TranslateModule } from "@ngx-translate/core";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
-import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
-import {
-    HlmDialogFooterComponent,
-    HlmDialogHeaderComponent,
-    HlmDialogTitleDirective,
-} from "@spartan-ng/ui-dialog-helm";
-import { HlmInputDirective } from "@spartan-ng/ui-input-helm";
-import { HlmLabelDirective } from "@spartan-ng/ui-label-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 
 export interface AddNodeDialogContext {
     name: string;
@@ -34,27 +30,25 @@ export interface AddNodeDialogContext {
         FormsModule,
         TranslateModule,
         BrnSelectImports,
-        HlmButtonDirective,
-        HlmDialogHeaderComponent,
-        HlmDialogTitleDirective,
-        HlmDialogFooterComponent,
-        HlmInputDirective,
-        HlmLabelDirective,
-        HlmSelectModule,
+        HlmButtonImports,
+        HlmDialogImports,
+        HlmInputImports,
+        HlmLabelImports,
+        HlmSelectImports,
     ],
     template: `
         <hlm-dialog-header>
             <h3 hlmDialogTitle>{{ "ADD_NODE" | translate }}</h3>
         </hlm-dialog-header>
-        <div class="grid gap-4 py-4">
+        <div class="grid gap-4">
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "NAME" | translate
                 }}</label>
                 <input hlmInput [(ngModel)]="name" class="col-span-3" />
             </div>
             <div class="grid grid-cols-4 items-center gap-4">
-                <label hlmLabel class="text-right">{{
+                <label hlmLabel class="justify-end">{{
                     "TYPE" | translate
                 }}</label>
                 <brn-select

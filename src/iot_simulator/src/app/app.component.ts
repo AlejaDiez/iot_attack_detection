@@ -11,7 +11,9 @@ import { CanvasComponent } from "@components/canvas/canvas.component";
 import { ConnectionComponent } from "@components/connection/connection.component";
 import { MenuBarComponent } from "@components/menu-bar/menu-bar.component";
 import { NodeComponent } from "@components/node/node.component";
-import { HlmButtonModule } from "@components/ui/ui-button-helm/src";
+import { HlmButtonImports } from "@components/ui/ui-button-helm/src";
+import { HlmMenuImports } from "@components/ui/ui-menu-helm/src";
+import { HlmToasterImports } from "@components/ui/ui-sonner-helm/src";
 import { Connection } from "@models/connection";
 import { Node, NodeType } from "@models/node";
 import { Router } from "@models/router";
@@ -28,16 +30,7 @@ import { LibraryService } from "@services/library.service";
 import { ModelsService } from "@services/models.service";
 import { NetworkService } from "@services/network.service";
 import { StateService } from "@services/state.service";
-import { BrnContextMenuTriggerDirective } from "@spartan-ng/brain/menu";
-import {
-    HlmMenuComponent,
-    HlmMenuGroupComponent,
-    HlmMenuItemDirective,
-    HlmMenuItemIconDirective,
-    HlmMenuSeparatorComponent,
-    HlmMenuShortcutComponent,
-} from "@spartan-ng/ui-menu-helm";
-import { HlmToasterComponent } from "@spartan-ng/ui-sonner-helm";
+import { BrnMenuImports } from "@spartan-ng/brain/menu";
 import { floatAnimation } from "./app.routes.transition";
 
 @Component({ template: "" })
@@ -47,17 +40,12 @@ export class BlankComponent {}
     selector: "app-root",
     imports: [
         RouterOutlet,
-        BrnContextMenuTriggerDirective,
         CanvasComponent,
         ConnectionComponent,
-        HlmButtonModule,
-        HlmMenuComponent,
-        HlmMenuGroupComponent,
-        HlmMenuItemDirective,
-        HlmMenuItemIconDirective,
-        HlmMenuSeparatorComponent,
-        HlmMenuShortcutComponent,
-        HlmToasterComponent,
+        HlmButtonImports,
+        HlmMenuImports,
+        BrnMenuImports,
+        HlmToasterImports,
         MenuBarComponent,
         NodeComponent,
         NgIcon,

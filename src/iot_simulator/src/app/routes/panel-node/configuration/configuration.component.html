@@ -1,13 +1,13 @@
-<label hlmLabel>
+<label hlmLabel class="flex-col items-start justify-start">
     {{ "NAME" | translate }}
     <input
         hlmInput
         type="text"
         [(ngModel)]="node().name"
         [placeholder]="'DEVICE_NAME' | translate"
-        class="!mt-2 w-full" />
+        class="mt-2! w-full" />
 </label>
-<label hlmLabel>
+<label hlmLabel class="flex-col items-start justify-start">
     {{ "IP" | translate }}
     <input
         hlmInput
@@ -15,15 +15,15 @@
         [ngModel]="node().ip"
         [placeholder]="'DEVICE_IP' | translate"
         disabled
-        class="!mt-2 w-full" />
+        class="mt-2! w-full" />
 </label>
-<label hlmLabel>
+<label hlmLabel class="flex-col items-start justify-start">
     {{ "TYPE" | translate }}
     <brn-select
         [(ngModel)]="node().type"
         [placeholder]="'SELECT_DEVICE_TYPE' | translate"
         [disabled]="NodeType.getTypes(node().type).length <= 1"
-        class="!mt-2 inline-block w-full">
+        class="mt-2! inline-block w-full">
         <hlm-select-trigger class="w-full">
             <hlm-select-value>
                 <ng-container *brnSelectValue="let item">

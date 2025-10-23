@@ -1,4 +1,4 @@
-import { Injectable, Signal } from "@angular/core";
+import { Inject, Injectable, Signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router as NavigationRouter } from "@angular/router";
 import { Device } from "@models/device";
@@ -16,7 +16,7 @@ import {
 } from "@routes/dialogs/delete-node-dialog.component";
 import { ConfigService } from "@services/config.service";
 import { StateService } from "@services/state.service";
-import { HlmDialogService } from "@spartan-ng/ui-dialog-helm";
+import { HlmDialogService } from "@spartan-ng/helm/dialog";
 import { dump, load } from "js-yaml";
 import { toast } from "ngx-sonner";
 import { filter, map } from "rxjs";
@@ -55,7 +55,7 @@ export class NetworkService {
      */
     public constructor(
         public readonly navigationRouter: NavigationRouter,
-        public readonly dialog: HlmDialogService,
+        @Inject(HlmDialogService) public readonly dialog: HlmDialogService,
         public readonly config: ConfigService,
         public readonly state: StateService,
         _: ModelsService,
@@ -99,7 +99,7 @@ export class NetworkService {
                     this.state.reset(false);
                     throw error;
                 }
-                
+
                 // Comprobar si hay un nodo seleccionado
                 if (
                     this.focusedNode() &&

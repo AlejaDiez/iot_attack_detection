@@ -10,8 +10,8 @@
 
 .connection.animate {
     @apply stroke-primary stroke-2;
-    stroke-dasharray: 10;
     animation: 5s linear 0ms infinite forwards normal dash;
+    stroke-dasharray: 10;
 }
 
 .connection.animate.reverse {

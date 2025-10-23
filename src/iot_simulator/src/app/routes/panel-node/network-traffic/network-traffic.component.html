@@ -1,62 +1,65 @@
 @if (node().connected) {
     @if (node().traffic.length > 0) {
-        <brn-table
-            hlm
-            stickyHeader
-            [dataSource]="node().traffic.slice(-50)"
-            [displayedColumns]="displayedColumns()"
-            class="block max-h-64 min-h-44 overflow-auto rounded-md border border-border"
-            [onRowClick]="viewPacket.bind(this)">
-            <brn-column-def name="icon" class="w-12 pointer-events-none">
-                <hlm-th *brnHeaderDef />
-                <hlm-td *brnCellDef="let item">
-                    @switch (node().ip) {
-                        @case (item.srcIP) {
-                            <ng-icon
-                                name="lucideReply"
-                                size="1rem"
-                                class="text-red-600 dark:text-red-400" />
-                        }
-                        @case (item.dstIP) {
-                            <ng-icon
-                                name="lucideForward"
-                                size="1rem"
-                                class="text-green-600 dark:text-green-400" />
-                        }
-                        @default {
-                            <ng-icon
-                                name="lucideRepeat"
-                                size="1rem"
-                                class="text-yellow-600 dark:text-yellow-400" />
-                        }
+        <div
+            hlmTableContainer
+            class="block max-h-64 min-h-44 overflow-auto rounded-md border border-border">
+            <table hlmTable>
+                <thead
+                    hlmTHead
+                    class="sticky top-0 bg-card shadow-[0_0_0_0.5px_hsl(var(--border))]">
+                    <tr hlmTr>
+                        <th hlmTh class="w-12 font-semibold"></th>
+                        <th hlmTh class="w-28 font-semibold">
+                            {{ "SOURCE" | translate }}
+                        </th>
+                        <th hlmTh class="w-28 font-semibold">
+                            {{ "DESTINATION" | translate }}
+                        </th>
+                        <th hlmTh class="w-[86px] font-semibold">
+                            {{ "BYTES" | translate }}
+                        </th>
+                        <th hlmTh class="w-56 font-semibold">
+                            {{ "DATA" | translate }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody hlmTBody>
+                    @for (
+                        item of node().traffic.slice(-50);
+                        track item.timestamp
+                    ) {
+                        <tr hlmTr (click)="viewPacket(item)">
+                            <td hlmTd class="text-center align-middle">
+                                @switch (node().ip) {
+                                    @case (item.srcIP) {
+                                        <ng-icon
+                                            name="lucideReply"
+                                            size="1rem"
+                                            class="text-red-600 dark:text-red-400" />
+                                    }
+                                    @case (item.dstIP) {
+                                        <ng-icon
+                                            name="lucideForward"
+                                            size="1rem"
+                                            class="text-green-600 dark:text-green-400" />
+                                    }
+                                    @default {
+                                        <ng-icon
+                                            name="lucideRepeat"
+                                            size="1rem"
+                                            class="text-yellow-600 dark:text-yellow-400" />
+                                    }
+                                }
+                            </td>
+                            <td hlmTd>{{ item.srcIP }}</td>
+                            <td hlmTd>{{ item.dstIP }}</td>
+                            <td hlmTd>{{ item.totalBytes }}</td>
+                            <td hlmTd>{{ item.payload }}</td>
+                        </tr>
                     }
-                </hlm-td>
-            </brn-column-def>
-            <brn-column-def name="source" class="w-28 pointer-events-none">
-                <hlm-th *brnHeaderDef>{{ "SOURCE" | translate }}</hlm-th>
-                <hlm-td *brnCellDef="let item">
-                    {{ item.srcIP }}
-                </hlm-td>
-            </brn-column-def>
-            <brn-column-def name="destination" class="w-28 pointer-events-none">
-                <hlm-th *brnHeaderDef>{{ "DESTINATION" | translate }}</hlm-th>
-                <hlm-td *brnCellDef="let item">
-                    {{ item.dstIP }}
-                </hlm-td>
-            </brn-column-def>
-            <brn-column-def name="size" class="w-[86px] pointer-events-none">
-                <hlm-th *brnHeaderDef>{{ "BYTES" | translate }}</hlm-th>
-                <hlm-td *brnCellDef="let item" class="justify-center">
-                    {{ item.totalBytes }}
-                </hlm-td>
-            </brn-column-def>
-            <brn-column-def name="data" class="w-56 pointer-events-none">
-                <hlm-th *brnHeaderDef>{{ "DATA" | translate }}</hlm-th>
-                <hlm-td truncate *brnCellDef="let item">
-                    {{ item.payload }}
-                </hlm-td>
-            </brn-column-def>
-        </brn-table>
+                </tbody>
+            </table>
+        </div>
     } @else {
         <ng-icon
             name="lucideTrafficCone"
@@ -68,12 +71,12 @@
         </p>
     }
     <div class="flex w-[584px] flex-row items-center justify-end gap-2">
-        <label hlmLabel class="w-40">
+        <label hlmLabel class="w-40 flex-col items-start justify-start">
             {{ "COMMAND" | translate }}
             <brn-select
                 [(ngModel)]="command"
                 [placeholder]="'SELECT_COMMAND' | translate"
-                class="!mt-2 inline-block w-full">
+                class="mt-2! inline-block w-full">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>
@@ -94,7 +97,7 @@
                 </hlm-select-content>
             </brn-select>
         </label>
-        <label hlmLabel class="grow">
+        <label hlmLabel class="grow flex-col items-start justify-start">
             {{ (multipleTargets() ? "TARGETS" : "TARGET") | translate }}
             <brn-select
                 [(ngModel)]="target"
@@ -102,7 +105,7 @@
                     (multipleTargets() ? 'TARGETS_IP' : 'TARGET_IP') | translate
                 "
                 [multiple]="multipleTargets()"
-                class="!mt-2 inline-block w-full">
+                class="mt-2! inline-block w-full">
                 <hlm-select-trigger class="w-full">
                     <hlm-select-value />
                 </hlm-select-trigger>

@@ -1,17 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, Signal } from "@angular/core";
+import { HlmButtonImports } from "@components/ui/ui-button-helm/src";
+import { HlmDialogImports } from "@components/ui/ui-dialog-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
 import { Node } from "@models/node";
 import { TranslateModule } from "@ngx-translate/core";
 import { BrnDialogRef, injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { BrnSelectImports } from "@spartan-ng/brain/select";
-import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
-import {
-    HlmDialogDescriptionDirective,
-    HlmDialogFooterComponent,
-    HlmDialogHeaderComponent,
-    HlmDialogTitleDirective,
-} from "@spartan-ng/ui-dialog-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
 
 export interface DeleteNodeDialogContext {
     node: Node;
@@ -23,12 +18,9 @@ export interface DeleteNodeDialogContext {
         CommonModule,
         TranslateModule,
         BrnSelectImports,
-        HlmButtonDirective,
-        HlmDialogDescriptionDirective,
-        HlmDialogHeaderComponent,
-        HlmDialogTitleDirective,
-        HlmDialogFooterComponent,
-        HlmSelectModule,
+        HlmButtonImports,
+        HlmDialogImports,
+        HlmSelectImports,
     ],
     template: `
         <hlm-dialog-header>

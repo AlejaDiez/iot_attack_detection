@@ -1,10 +1,10 @@
 @if (node().connected) {
-    <label hlmLabel>
+    <label hlmLabel class="flex-col items-start justify-start">
         {{ "ATTACK" | translate }}
         <brn-select
             [(ngModel)]="attack"
             [placeholder]="'SELECT_ATTACK' | translate"
-            class="!mt-2 inline-block w-full">
+            class="mt-2! inline-block w-full">
             <hlm-select-trigger class="w-full">
                 <hlm-select-value />
             </hlm-select-trigger>
@@ -23,7 +23,7 @@
             </hlm-select-content>
         </brn-select>
     </label>
-    <label hlmLabel>
+    <label hlmLabel class="flex-col items-start justify-start">
         {{ (multipleTargets() ? "TARGETS" : "TARGET") | translate }}
         <brn-select
             [(ngModel)]="target"
@@ -31,7 +31,7 @@
                 (multipleTargets() ? 'TARGETS_IP' : 'TARGET_IP') | translate
             "
             [multiple]="multipleTargets()"
-            class="!mt-2 inline-block w-full">
+            class="mt-2! inline-block w-full">
             <hlm-select-trigger class="w-full">
                 <hlm-select-value />
             </hlm-select-trigger>

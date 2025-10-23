@@ -13,9 +13,14 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { HlmButtonImports } from "@components/ui/ui-button-helm/src";
 import { HlmDialogService } from "@components/ui/ui-dialog-helm/src";
-import { HlmLabelModule } from "@components/ui/ui-label-helm/src";
-import { HlmMenuSeparatorComponent } from "@components/ui/ui-menu-helm/src";
+import { HlmInputImports } from "@components/ui/ui-input-helm/src";
+import { HlmLabelImports } from "@components/ui/ui-label-helm/src";
+import { HlmMenuSeparator } from "@components/ui/ui-menu-helm/src";
+import { HlmSelectImports } from "@components/ui/ui-select-helm/src";
+import { HlmTableImports } from "@components/ui/ui-table-helm/src";
+import { HlmTabsImports } from "@components/ui/ui-tabs-helm/src";
 import { Device } from "@models/device";
 import { Command } from "@models/flow-generator";
 import { Node, NodeType } from "@models/node";
@@ -32,28 +37,21 @@ import {
 import { TranslateModule } from "@ngx-translate/core";
 import { ShowPacketDialogComponent } from "@routes/dialogs/show-packet-dialog.component";
 import { NetworkService } from "@services/network.service";
-import { BrnSelectModule } from "@spartan-ng/brain/select";
-import { BrnTableModule } from "@spartan-ng/brain/table";
-import { HlmButtonModule } from "@spartan-ng/ui-button-helm";
-import { HlmInputModule } from "@spartan-ng/ui-input-helm";
-import { HlmSelectModule } from "@spartan-ng/ui-select-helm";
-import { HlmTableModule } from "@spartan-ng/ui-table-helm";
-import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
+import { BrnSelectImports } from "@spartan-ng/brain/select";
 
 @Component({
     imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
-        BrnSelectModule,
-        BrnTableModule,
-        HlmButtonModule,
-        HlmInputModule,
-        HlmLabelModule,
-        HlmMenuSeparatorComponent,
-        HlmSelectModule,
-        HlmTableModule,
-        HlmTabsModule,
+        BrnSelectImports,
+        HlmButtonImports,
+        HlmInputImports,
+        HlmLabelImports,
+        HlmMenuSeparator,
+        HlmSelectImports,
+        HlmTableImports,
+        HlmTabsImports,
         NgIcon,
     ],
     providers: [
@@ -67,7 +65,7 @@ import { HlmTabsModule } from "@spartan-ng/ui-tabs-helm";
         }),
     ],
     templateUrl: "network-traffic.component.html",
-    host: { class: "flex flex-col gap-4" },
+    host: { class: "flex flex-col gap-4 pb-6" },
 })
 export class NetworkTrafficComponent implements OnChanges {
     public readonly dialog: HlmDialogService = inject(HlmDialogService);
@@ -130,7 +128,10 @@ export class NetworkTrafficComponent implements OnChanges {
     }
 
     protected viewPacket(packet: Packet) {
-        this.dialog.open(ShowPacketDialogComponent, { context: { packet } });
+        this.dialog.open(ShowPacketDialogComponent, {
+            context: { packet },
+            contentClass: "pt-6 px-0 pb-0",
+        });
     }
 
     protected execute() {
